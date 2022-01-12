@@ -23,6 +23,7 @@ import nb.app.waterdelivery.alertdialog.WarningDialogChoice;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.jobs.EditMyJobActivity;
+import nb.app.waterdelivery.jobs.JobVisitActivity;
 import nb.app.waterdelivery.jobs.MyJobsActivity;
 
 public class CurrentJobAdapter extends RecyclerView.Adapter<CurrentJobAdapter.ViewHolder> {
@@ -67,7 +68,9 @@ public class CurrentJobAdapter extends RecyclerView.Adapter<CurrentJobAdapter.Vi
         }
 
         holder.item.setOnClickListener(v -> {
-            Toast.makeText(context, "Ez át fog vinni egy másik oldalra", Toast.LENGTH_SHORT).show();
+            Intent details = new Intent(activity, JobVisitActivity.class);
+            details.putExtra("job_id", job_list.get(position).getId());
+            activity.startActivityForResult(details, 1);
         });
 
         holder.item.setOnLongClickListener(v -> {

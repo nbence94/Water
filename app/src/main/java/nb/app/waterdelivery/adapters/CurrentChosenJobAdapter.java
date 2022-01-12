@@ -34,6 +34,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
     ArrayList<JobAndWaters> waters_in_jobs_list;
     ArrayList<Waters> water_details_list;
     ArrayList<Customers> customers_detail_list;
+    ArrayList<Boolean> expanded_list;
 
     DatabaseHelper dh;
     MyAlertDialog mad;
@@ -55,24 +56,68 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         dh = new DatabaseHelper(context, activity);
         mad = new MyAlertDialog(context, activity);
         jva = (JobVisitActivity) context;
+
+        this.expanded_list = new ArrayList<>();
+        for(int i = 0; i < customers_in_jobs_list.size(); i++) {
+            expanded_list.add(false);
+        }
     }
 
 
     @NonNull
     @Override
     public CurrentChosenJobAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.custom_current_job_customer_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_current_job_customer_layout, parent, false);
         return new CurrentChosenJobAdapter.ViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull CurrentChosenJobAdapter.ViewHolder holder, int position) {
 
+        boolean kinyitva = expanded_list.get(position);
+        holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
+
+        holder.customer_name.setOnClickListener(v -> {
+            expanded_list.set(position, !kinyitva);
+            notifyItemChanged(position);
+        });
+
+       int customer_id = customers_in_jobs_list.get(position).getCustomerid();
+       String name = "-";
+       for(int i = 0; i < customers_detail_list.size(); i++) {
+            if(customer_id == customers_detail_list.get(i).getId()) {
+                name = customers_detail_list.get(i).getFullname();
+            }
+       }
+       holder.customer_name.setText(name);
+
+       if( customers_in_jobs_list.get(position).getFinish() != null) {
+           String finish = "Lezárva: " + customers_in_jobs_list.get(position).getFinish();
+           holder.finish_date.setText(finish);
+       }
+
+       StringBuilder waters = new StringBuilder();
+       String water_name, water_amount, water_price;
+       for(int i = 0; i < waters_in_jobs_list.size(); i++) {
+           if(waters_in_jobs_list.get(i).getCustomerid() == customer_id) {
+               for(int j = 0; j < water_details_list.size(); j++) {
+                   if(water_details_list.get(j).getId() == waters_in_jobs_list.get(i).getWaterid()) {
+                       water_name = water_details_list.get(j).getName();
+                       water_amount = waters_in_jobs_list.get(i).getWateramount() + " db";
+                       water_price = String.valueOf(waters_in_jobs_list.get(i).getWateramount() * water_details_list.get(j).getPrice());
+                       waters.append(water_name).append(" [ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]").append("\n");
+                   }
+               }
+           }
+       }
+       holder.waters_text.setText(waters.toString());
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return customers_in_jobs_list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

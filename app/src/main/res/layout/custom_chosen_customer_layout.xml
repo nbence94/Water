@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="10dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/custom_customer_item">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_cardview_bg" >
+
+            <TextView
+                android:id="@+id/chosen_customer_name_gui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                android:text="Minta Megrendelő"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/chosen_customer_city_gui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Város"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chosen_customer_name_gui" />
+
+            <TextView
+                android:id="@+id/dash"
+                android:layout_width="wrap_content"
+                android:layout_height="29dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="-"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/chosen_customer_city_gui"
+                app:layout_constraintTop_toBottomOf="@+id/chosen_customer_name_gui" />
+
+            <TextView
+                android:id="@+id/chosen_customer_address_gui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Szállítási cím"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/dash"
+                app:layout_constraintTop_toBottomOf="@+id/chosen_customer_name_gui" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chosen_customer_water_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="15dp"
+                android:paddingBottom="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chosen_customer_address_gui" />
+
+            <TextView
+                android:id="@+id/cost_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="12dp"
+                android:text="Vizek végösszege:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chosen_customer_water_recycler" />
+
+            <TextView
+                android:id="@+id/chosen_customer_cost_gui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="20.000 Ft"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/cost_title"
+                app:layout_constraintTop_toBottomOf="@+id/chosen_customer_water_recycler" />
+
+            <ImageView
+                android:id="@+id/need_bill_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="12dp"
+                android:visibility="gone"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:layout_constraintEnd_toStartOf="@+id/add_more_water"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/paper_icon" />
+
+            <ImageView
+                android:id="@+id/add_more_water"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/add_box_icon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

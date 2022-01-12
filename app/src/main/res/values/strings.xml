@@ -1,0 +1,91 @@
+<resources>
+    <string name="app_name">WaterDelivery</string>
+
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+    <!-- Login Tartalom -->
+    <string name="login_title">Bejelentkezés</string>
+    <string name="login_email_hint">E-mail cím</string>
+    <string name="login_password_hint">Jelszó</string>
+    <string name="login_button_text">Belépés</string>
+    <string name="login_stay_logged_text">Maradjak bejelentkezve</string>
+
+    <!-- Kiosztott Megrendelő -->
+    <string name="my_customers_title">Megrendelők</string>
+    <string name="my_customer_details_title">Megrendelő adatai</string>
+    <string name="customer_detail_nem_title">Megrendelő megnevezése</string>
+
+    <!-- Tervezetek/Munkák  -->
+    <string name="my_jobs_title">Munkáim</string>
+    <string name="draft_title">Tervezet</string>
+    <string name="draft_name">Tervezet neve</string>
+    <string name="draft_expected_cost">Várható bevétel</string>
+
+    <!-- Felhasználók -->
+    <string name="admin_users_list_title">Munkatársak</string>
+    <string name="admin_new_user_title">Új munkatárs felvétele</string>
+    <string name="admin_edit_user_title">Adatok módosítása</string>
+
+    <string name="user_name_text">Teljes név</string>
+    <string name="user_email_text">E-mail cím</string>
+    <string name="user_phone_text">Telefonszám</string>
+    <string name="user_role_text">Szerepkörök</string>
+    <string name="user_password_text">Jelszó</string>
+    <string name="user_password_confirm_text">Jelszó megerősítése</string>
+
+    <!-- Víz -->
+    <string name="water_list_title">Víz készlet</string>
+    <string name="new_water_title">Új víz felvitele</string>
+    <string name="edit_water_title">Víz adatok módosítása</string>
+    <string name="water_details_title">Víz részletek</string>
+    <string name="water_name_text">A víz márkája</string>
+    <string name="water_price_text">Ár/Ballon</string>
+    <string name="water_amount_text">Jelenlegi készlet</string>
+
+    <!-- Profil -->
+    <string name="my_profile_title">Profil</string>
+    <string name="my_profile_name">Teljes neve</string>
+    <string name="my_profile_email">E-mail cím</string>
+    <string name="my_profile_phone">Telefonszám</string>
+    <string name="my_profile_role">Szerepkör</string>
+    <string name="my_profile_jobs">Elvégzett munkák:</string>
+
+    <string name="my_profile_edit_title">Adatok módosítása</string>
+    <string name="edit_user_password_text">Új jelszó (opcionális)</string>
+    <string name="edit_user_password_confirm_text">Új jelszó megerősítése (opcionális)</string>
+
+    <!-- ADMIN SZEKCIÓ -->
+    <string name="user_details_title">Munkatárs adatai</string>
+    <string name="user_details_name">Munkatárs neve</string>
+    <string name="user_phone_number">Telefonszám</string>
+    <string name="user_jobs_button_title">Munkáinak megtekintése</string>
+    <string name="users_customers_button_title">Megrendelők konfigurációja</string>
+    <string name="admin_user_jobs_title">Felhasználó munkái</string>
+    <string name="admin_user_customers_title">Társított megrendelők</string>
+
+    <!-- Megrendelők -->
+    <string name="all_customers_title">Összes megrendelő</string>
+    <string name="admin_add_customer_title">Megrendelő felvitele</string>
+    <string name="admin_edit_customer_title">Megrendelő adatainak módosítása</string>
+    <string name="customer_save_desc">Mentés</string>
+    <string name="customer_name_text">Megrendelő megnevezése</string>
+    <string name="customer_city_text">Település</string>
+    <string name="customer_address_text">Szállítási cím</string>
+    <string name="customer_availability">Elérhetőség</string>
+    <string name="customer_email_text">E-mail cím</string>
+    <string name="customer_phone_one_text">Telefonszám 1</string>
+    <string name="customer_phone_two_text">Telefonszám 2 (opcionális)</string>
+    <string name="customer_water_need_text">Hány hetente kell vizet szállítani?</string>
+    <string name="customer_request_weeks">Hány hetente legyen szállítás?</string>
+    <string name="customer_bill_need">Számlát kér</string>
+    <string name="customer_note_hint">Megjegyzés\.\.\.</string>
+    <string name="yes" />
+
+    <string-array name="weeks">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+</resources>

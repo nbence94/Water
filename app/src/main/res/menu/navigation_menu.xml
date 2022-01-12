@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:title="Főmenü">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_job"
+                    android:title="Munkák"
+                    android:icon="@drawable/jobs_icon" />
+
+                <item
+                    android:id="@+id/nav_my_customers"
+                    android:title="Megrendelőim"
+                    android:icon="@drawable/customers_icon" />
+
+                <item
+                    android:id="@+id/nav_waters"
+                    android:title="Víz készlet"
+                    android:icon="@drawable/water_icon" />
+            </menu>
+
+        </item>
+
+    </group>
+
+    <group>
+        <item
+            android:title="Profil">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_profile"
+                    android:title="Profil"
+                    android:icon="@drawable/profile_icon" />
+
+                <item
+                    android:id="@+id/nav_logout"
+                    android:title="Kijelentkezés"
+                    android:icon="@drawable/logout_icon" />
+            </menu>
+
+        </item>
+
+    </group>
+
+    <group>
+        <item
+            android:title="Admin">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_users"
+                    android:title="Munkatársak"
+                    android:icon="@drawable/users_icon" />
+
+                <item
+                    android:id="@+id/nav_customers"
+                    android:title="Megrendelők"
+                    android:icon="@drawable/customers_icon" />
+
+                </menu>
+
+        </item>
+
+    </group>
+
+</menu>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="nb.app.waterdelivery">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WaterDelivery">
+        <activity
+            android:name=".jobs.JobVisitActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".login.LoginSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".users.MyProfileEditActivity"
+            android:exported="false"
+            android:parentActivityName=".users.MyProfileActivity" />
+        <activity
+            android:name=".admin.AdminUserCustomersActivity"
+            android:exported="false"
+            android:parentActivityName=".admin.AdminCheckUserActivity" />
+        <activity
+            android:name=".admin.AdminUserJobsActivity"
+            android:exported="false"
+            android:parentActivityName=".admin.AdminCheckUserActivity" />
+        <activity
+            android:name=".users.MyProfileActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".waters.WaterDetailsActivity"
+            android:exported="true"
+            android:parentActivityName=".waters.WatersActivity" />
+        <activity
+            android:name=".waters.EditWaterActivity"
+            android:exported="true"
+            android:parentActivityName=".waters.WatersActivity" />
+        <activity
+            android:name=".admin.AdminCustomerEditActivity"
+            android:exported="true"
+            android:parentActivityName=".admin.AdminAllCustomersActivity" />
+        <activity
+            android:name=".admin.AdminUserEditActivity"
+            android:exported="true"
+            android:parentActivityName=".admin.AdminCheckUserActivity" />
+        <activity
+            android:name=".admin.AdminNewUserActivity"
+            android:exported="true"
+            android:parentActivityName=".admin.AdminAllUsersActivity" />
+        <activity
+            android:name=".admin.AdminCheckUserActivity"
+            android:exported="true"
+            android:parentActivityName=".admin.AdminAllUsersActivity" />
+        <activity
+            android:name=".waters.AddWaterActivity"
+            android:exported="true"
+            android:parentActivityName=".waters.WatersActivity" />
+        <activity
+            android:name=".waters.WatersActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".jobs.CreateJobActivity"
+            android:exported="true"
+            android:parentActivityName=".jobs.MyJobsActivity" />
+        <activity
+            android:name=".jobs.EditMyJobActivity"
+            android:exported="true"
+            android:parentActivityName=".jobs.MyJobsActivity" />
+        <activity
+            android:name=".customers.CustomerDetailsActivity"
+            android:exported="true"
+            android:parentActivityName=".customers.MyCustomersActivity" />
+        <activity
+            android:name=".admin.AdminNewCustomerActivity"
+            android:exported="true"
+            android:parentActivityName=".admin.AdminAllCustomersActivity" />
+        <activity
+            android:name=".admin.AdminAllCustomersActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".admin.AdminAllUsersActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".jobs.MyJobsActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".customers.MyCustomersActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".login.LoginScreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+    </application>
+
+</manifest>

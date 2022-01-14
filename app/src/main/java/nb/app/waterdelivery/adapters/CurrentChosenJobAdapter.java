@@ -95,23 +95,34 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
        if( customers_in_jobs_list.get(position).getFinish() != null) {
            String finish = "Lezárva: " + customers_in_jobs_list.get(position).getFinish();
            holder.finish_date.setText(finish);
-       }
+       } else holder.finish_date.setVisibility(View.GONE);
 
        StringBuilder waters = new StringBuilder();
+       StringBuilder water_details = new StringBuilder();
+       int global_income = 0;
+
        String water_name, water_amount, water_price;
        for(int i = 0; i < waters_in_jobs_list.size(); i++) {
            if(waters_in_jobs_list.get(i).getCustomerid() == customer_id) {
                for(int j = 0; j < water_details_list.size(); j++) {
                    if(water_details_list.get(j).getId() == waters_in_jobs_list.get(i).getWaterid()) {
                        water_name = water_details_list.get(j).getName();
+                       waters.append(water_name).append("\n");
+
                        water_amount = waters_in_jobs_list.get(i).getWateramount() + " db";
                        water_price = String.valueOf(waters_in_jobs_list.get(i).getWateramount() * water_details_list.get(j).getPrice());
-                       waters.append(water_name).append(" [ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]").append("\n");
+                       water_details.append("[ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]").append("\n");
+
+                       global_income += Integer.parseInt(water_price);
                    }
                }
            }
        }
        holder.waters_text.setText(waters.toString());
+       holder.water_details_text.setText(water_details.toString());
+
+       String income_text = "Teljes ár: " + global_income + " Ft";
+       holder.income_text.setText(income_text);
 
     }
 
@@ -122,7 +133,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView customer_name, waters_text, income_text, finish_date;
+        TextView customer_name, waters_text, water_details_text, income_text, finish_date;
         CheckBox finish_check;
         ConstraintLayout item;
 
@@ -131,6 +142,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
 
             customer_name = itemView.findViewById(R.id.job_customer_gui);
             waters_text = itemView.findViewById(R.id.current_job_water_datas);
+            water_details_text = itemView.findViewById(R.id.current_job_water_details_datas);
             income_text = itemView.findViewById(R.id.current_job_income);
             finish_date = itemView.findViewById(R.id.current_job_finish_date);
             finish_check = itemView.findViewById(R.id.current_job_customer_checkbox);

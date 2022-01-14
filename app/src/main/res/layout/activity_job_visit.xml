@@ -26,8 +26,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/current_job_recycler_gui"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="60dp"
+            android:layout_height="660dp"
+            android:layout_below="@+id/current_job_toolbar_gui"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

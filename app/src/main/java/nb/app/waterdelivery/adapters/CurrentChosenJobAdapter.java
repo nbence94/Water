@@ -106,12 +106,17 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
            if(waters_in_jobs_list.get(i).getCustomerid() == customer_id) {
                for(int j = 0; j < water_details_list.size(); j++) {
                    if(water_details_list.get(j).getId() == waters_in_jobs_list.get(i).getWaterid()) {
-                       water_name = water_details_list.get(j).getName();
-                       waters.append(water_name).append("\n");
+                        water_name = water_details_list.get(j).getName();
+                        waters.append(water_name);
 
-                       water_amount = waters_in_jobs_list.get(i).getWateramount() + " db";
-                       water_price = String.valueOf(waters_in_jobs_list.get(i).getWateramount() * water_details_list.get(j).getPrice());
-                       water_details.append("[ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]").append("\n");
+                        water_amount = waters_in_jobs_list.get(i).getWateramount() + " db";
+                        water_price = String.valueOf(waters_in_jobs_list.get(i).getWateramount() * water_details_list.get(j).getPrice());
+                        water_details.append("[ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]");
+
+                        if(i < waters_in_jobs_list.size() - 1) {
+                            water_details.append("\n");
+                            waters.append("\n");
+                        }
 
                        global_income += Integer.parseInt(water_price);
                    }

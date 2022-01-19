@@ -1,5 +1,6 @@
 package nb.app.waterdelivery.jobs;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,12 +34,13 @@ public class JobVisitActivity extends AppCompatActivity {
     Toolbar toolbar;
     CurrentChosenJobAdapter adapter;
 
-    ArrayList<CustomersInJob> customers_in_jobs_list;
+    public ArrayList<CustomersInJob> customers_in_jobs_list;
     ArrayList<JobAndWaters> waters_in_jobs_list;
     ArrayList<Waters> water_details_list;
     ArrayList<Customers> customers_detail_list;
 
     int job_id;
+    String job_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,8 @@ public class JobVisitActivity extends AppCompatActivity {
     private void getIntentData() {
         if(getIntent().hasExtra("job_id")) {
             job_id = getIntent().getIntExtra("job_id", -1);
-            Log.i(LOG_TITLE, "Értékek átemelve. (JobID: " + job_id + ")");
+            job_name = getIntent().getStringExtra("job_name");
+            Log.i(LOG_TITLE, "Értékek átemelve. (JobID: " + job_id + ", JobName: "  + job_name + ")");
         } else {
             Log.e(LOG_TITLE, "Az értékek átemelése sikertelen.");
         }

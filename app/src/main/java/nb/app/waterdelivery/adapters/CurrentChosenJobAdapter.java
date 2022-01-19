@@ -2,17 +2,23 @@ package nb.app.waterdelivery.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
@@ -69,7 +75,6 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
     public CurrentChosenJobAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_current_job_customer_layout, parent, false);
         return new CurrentChosenJobAdapter.ViewHolder(view);
-
     }
 
     @Override
@@ -88,14 +93,26 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
        for(int i = 0; i < customers_detail_list.size(); i++) {
             if(customer_id == customers_detail_list.get(i).getId()) {
                 name = customers_detail_list.get(i).getFullname();
+                if(customers_detail_list.get(i).getBill() == 1) {
+                    holder.bill.setVisibility(View.VISIBLE);
+                } else {
+                    holder.bill.setVisibility(View.GONE);
+                }
             }
        }
        holder.customer_name.setText(name);
+       holder.bill.setTooltipText("Kér számlát");
 
        if( customers_in_jobs_list.get(position).getFinish() != null) {
            String finish = "Lezárva: " + customers_in_jobs_list.get(position).getFinish();
            holder.finish_date.setText(finish);
-       } else holder.finish_date.setVisibility(View.GONE);
+           holder.finish_check.setChecked(true);
+           holder.finish_check.setEnabled(false);
+       } else {
+           holder.finish_date.setVisibility(View.GONE);
+           holder.finish_check.setChecked(false);
+           holder.finish_check.setEnabled(true);
+       }
 
        StringBuilder waters = new StringBuilder();
        StringBuilder water_details = new StringBuilder();
@@ -113,10 +130,13 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
                         water_price = String.valueOf(waters_in_jobs_list.get(i).getWateramount() * water_details_list.get(j).getPrice());
                         water_details.append("[ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]");
 
-                        if(i < waters_in_jobs_list.size() - 1) {
+                        /*if(i < waters_in_jobs_list.size() - 2) {
                             water_details.append("\n");
                             waters.append("\n");
-                        }
+                        }*/
+
+                       water_details.append("\n");
+                       waters.append("\n");
 
                        global_income += Integer.parseInt(water_price);
                    }
@@ -128,6 +148,23 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
 
        String income_text = "Teljes ár: " + global_income + " Ft";
        holder.income_text.setText(income_text);
+
+       holder.finish_check.setOnClickListener(v -> {
+           if(jva.customers_in_jobs_list.get(position).getFinish() == null) {
+               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+               String created_date = sdf.format(new Date());
+
+               int jid = customers_in_jobs_list.get(position).getJobid();
+               int cid = customers_in_jobs_list.get(position).getCustomerid();
+
+               if(!dh.sql("UPDATE " + dh.CIJ + " SET Finish = '" + created_date + "' WHERE CustomerID = " + cid)) {
+                   return;
+               }
+
+               jva.customers_in_jobs_list.set(position, new CustomersInJob(jid, cid, created_date));
+               notifyItemChanged(position);
+           }
+       });
 
     }
 
@@ -141,6 +178,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         TextView customer_name, waters_text, water_details_text, income_text, finish_date;
         CheckBox finish_check;
         ConstraintLayout item;
+        ImageView bill;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -152,6 +190,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
             finish_date = itemView.findViewById(R.id.current_job_finish_date);
             finish_check = itemView.findViewById(R.id.current_job_customer_checkbox);
             item = itemView.findViewById(R.id.expand_layout);
+            bill = itemView.findViewById(R.id._current_job_need_bill_icon);
         }
     }
 }

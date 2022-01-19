@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     CurrentJobAdapter adapter;
     RecyclerView recycler;
 
+    FloatingActionButton finish_jobs_button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigation_view = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.main_toolbar_gui);
         menu = navigation_view.getMenu();
+        finish_jobs_button = findViewById(R.id.main_check_button_gui);
 
         //Saját Toolbar
         setSupportActionBar(toolbar);
@@ -83,6 +88,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         job_list = new ArrayList<>();
         recycler = findViewById(R.id.main_activity_recycler_gui);
         showElements();
+
+        finish_jobs_button.setOnClickListener(v -> {
+            for(int i = 0; i < job_list.size(); i++) {
+                if(job_list.get(i).getFinish() == null) {
+                    Toast.makeText(this, "Nem végrehajtható, ameddig van lezáratlan munka!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            //TODO Meg kellene csinálni az új táblát,ahova be kerülhetnek a cuccok
+
+
+        });
     }
 
     @Override

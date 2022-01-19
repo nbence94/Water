@@ -63,6 +63,15 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
         }
 
         holder.item.setOnClickListener(v -> {
+            int number_of_rows = dh.getExactInt("SELECT COUNT(*) " +
+                    "FROM " + dh.CIJ +
+                    " WHERE JobID = " + job_list.get(position).getId() + " AND Finish IS NOT NULL");
+
+            if(number_of_rows > 0) {
+                mad.AlertInfoDialog("Figyelmeztetés","Ehhez a munkához már tartozik olyan megrendelő, akinek le lett adva a víz. \n Nem módosítható!","Rendben");
+                return;
+            }
+
             Intent edit_job = new Intent(activity, EditMyJobActivity.class);
             edit_job.putExtra("job_id", job_list.get(position).getId());
             edit_job.putExtra("job_name", job_list.get(position).getName());

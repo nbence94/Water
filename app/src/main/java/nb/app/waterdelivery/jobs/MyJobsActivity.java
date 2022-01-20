@@ -79,7 +79,7 @@ public class MyJobsActivity extends AppCompatActivity implements WarningDialogCh
 
     public void showElements() {
         job_list.clear();
-        dh.getJobsData("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + sld.loadUserID() + ";", job_list);
+        dh.getJobsData("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + sld.loadUserID() + " AND ID NOT IN ( SELECT JobID FROM " + dh.JIS + ");", job_list);
         adapter = new MyJobsAdapter(this,  this, job_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);

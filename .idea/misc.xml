@@ -55,13 +55,22 @@
         <entry key="..\:/02 PROGRAMING/00 PROGRAMNYELVEK/ANDROID/WaterDelivery/app/src/main/res/layout/navigation_header.xml" value="0.2513586956521739" />
         <entry key="..\:/02 PROGRAMING/00 PROGRAMNYELVEK/ANDROID/WaterDelivery/app/src/main/res/menu/navigation_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/02 PROGRAMING/00 PROGRAMNYELVEK/ANDROID/WaterDelivery/app/src/main/res/menu/search_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/activity_admin_new_customer.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/activity_job_visit.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_admin_usercustomers_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_admin_userjobs_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_allusers_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_chosen_customer_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_current_job_customer_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_main_jobs_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_multi_elements_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_my_customers_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_my_jobs_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_single_elements_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_water_for_customer_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/custom_water_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/menu/navigation_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

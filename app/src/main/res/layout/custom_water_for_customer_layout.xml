@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent_blue">
+        android:background="@drawable/custom_cardview_bg">
 
         <TextView
             android:id="@+id/custom_water_name_gui"

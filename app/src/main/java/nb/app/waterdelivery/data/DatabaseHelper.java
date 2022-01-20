@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DatabaseHelper {
 
@@ -44,6 +45,8 @@ public class DatabaseHelper {
     final public String CAW = "CustomerAndWaters";
     final public String DRAFT = "Draft";
     final public String EDITDRAFT = "JawDraft";
+    final public String SETTLEMENT = "Settlement";
+    final public String JIS = "JobsInSettlement";
 
     //Felhasználók
     final public int USERS_ID_INDEX = 1;
@@ -117,6 +120,16 @@ public class DatabaseHelper {
         this.sld = new SaveLocalDatas(activity);
     }
 
+    private static boolean isNumeric(String string) {
+        try {
+            Integer.parseInt(string);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
+
     public boolean checkEmail(String table, String email, String condition) {
         Connection con = connectionClass(context);
         String select = "SELECT Email FROM " + table + " " + condition + ";";
@@ -137,6 +150,61 @@ public class DatabaseHelper {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             Log.e(LOG_TITLE, "Sikertelen adatbázis lekérdezés (" + select +")");
+        }
+
+        return true;
+    }
+
+    public boolean insert(String[] values, String[] columns, String table) {
+
+        StringBuilder values_string = new StringBuilder();
+        for(int i = 0; i < values.length; i++) {
+            if(isNumeric(values[i])) values_string.append(values[i]);
+            else values_string.append("'").append(values[i]).append("'");
+            if(i < values.length-1) values_string.append(",");
+        }
+
+        StringBuilder columns_string = new StringBuilder();
+        for (int i = 0; i < columns.length; i++) {
+            columns_string.append(columns[i]);
+            if(i < columns.length-1) columns_string.append(",");
+        }
+
+        String insert = "INSERT INTO " + table + " (" + columns_string.toString() + ") VALUES (" + values_string.toString() + ");";
+        Connection con = this.connectionClass(context);
+
+        try {
+            if(con != null) {
+                Log.i(LOG_TITLE, insert);
+                Statement st = con.createStatement();
+                st.executeUpdate(insert);
+            }
+
+            Log.i(LOG_TITLE, "Adatbázis utasítás - SIKERES (" + insert + ")");
+        } catch (SQLException throwables) {
+            Log.e(LOG_TITLE, "Adatbázis utasítás - SIKERTELEN (" + insert + ")");
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean delete(String table, String condition) {
+        String delete = "DELETE FROM " + table;
+        if(!condition.equals("")) delete += " WHERE " + condition;
+        Connection con = this.connectionClass(context);
+
+        try {
+            if(con != null) {
+                Log.i(LOG_TITLE, delete);
+                Statement st = con.createStatement();
+                st.executeUpdate(delete);
+            }
+
+            Log.i(LOG_TITLE, "TÖRLÉS - SIKERES (" + delete + ")");
+        } catch (SQLException throwables) {
+            Log.e(LOG_TITLE, "TÖRLÉS - SIKERTELEN (" + delete + ")");
+            return false;
         }
 
         return true;

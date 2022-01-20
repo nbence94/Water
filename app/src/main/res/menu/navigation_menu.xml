@@ -20,6 +20,11 @@
                     android:id="@+id/nav_waters"
                     android:title="Víz készlet"
                     android:icon="@drawable/water_icon" />
+
+                <item
+                    android:id="@+id/nav_my_settlements"
+                    android:title="Elszámolásaim"
+                    android:icon="@drawable/list_icon" />
             </menu>
 
         </item>
@@ -51,6 +56,11 @@
             android:title="Admin">
 
             <menu>
+                <item
+                    android:id="@+id/nav_settlements"
+                    android:title="Elszámolások"
+                    android:icon="@drawable/list_icon" />
+
                 <item
                     android:id="@+id/nav_users"
                     android:title="Munkatársak"

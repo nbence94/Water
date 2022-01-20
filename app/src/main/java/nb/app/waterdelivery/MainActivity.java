@@ -18,7 +18,10 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import nb.app.waterdelivery.adapters.CurrentJobAdapter;
 import nb.app.waterdelivery.adapters.MyJobsAdapter;
@@ -83,7 +86,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(sld.loadUserRoleID() == dh.ROGZITO_ROLE || sld.loadUserRoleID() == dh.ADMIN_ROLE) {
             menu.findItem(R.id.nav_customers).setVisible(true);
-        } else menu.findItem(R.id.nav_customers).setVisible(false);
+        } else {
+            menu.findItem(R.id.nav_customers).setVisible(false);
+            menu.findItem(R.id.nav_settlements).setVisible(false);
+        }
 
         job_list = new ArrayList<>();
         recycler = findViewById(R.id.main_activity_recycler_gui);
@@ -97,8 +103,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
 
-            //TODO Meg kellene csinálni az új táblát,ahova be kerülhetnek a cuccok
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String created = sdf.format(new Date());
 
+            SimpleDateFormat sdf_ = new SimpleDateFormat("yy.MM.dd", Locale.getDefault());
+            String name_date = sdf_.format(new Date());
+
+            String settlement_name = name_date + "-" + sld.loadUserName();
+
+            if(!dh.insert(new String[] {settlement_name, created, String.valueOf(sld.loadUserID())}, new String[] {"Name, Created, UserID"}, dh.SETTLEMENT)) {
+                Toast.makeText(this, "Munkák leadása sikertelen", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int new_settlement_id = dh.getNewID(dh.SETTLEMENT);
+
+            for(int i = 0; i < job_list.size(); i++) {
+                if(!dh.insert(new String[] {String.valueOf(new_settlement_id), String.valueOf(job_list.get(i).getId())}, new String[] {"SettlementID", "JobID"}, dh.JIS)) {
+                    dh.delete(dh.SETTLEMENT, "SettlementID = " + new_settlement_id);
+                    dh.delete(dh.SETTLEMENT, "ID = " + new_settlement_id);
+                    break;
+                }
+            }
+
+            job_list.clear();
+            showElements();
 
         });
     }
@@ -134,6 +163,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(logout);
                 break;
 
+            case R.id.nav_my_settlements:
+                Toast.makeText(this, "Átvisz majd a leadott elszámolásokhoz", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.nav_settlements:
+                Toast.makeText(this, "Átvisz majd az elszámolásokhoz", Toast.LENGTH_SHORT).show();
+                break;
+
             case R.id.nav_users:
                 Intent users = new Intent(MainActivity.this, AdminAllUsersActivity.class);
                 startActivity(users);
@@ -151,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void showElements() {
         job_list.clear();
-        dh.getJobsData("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + sld.loadUserID() + ";", job_list);
+        dh.getJobsData("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + sld.loadUserID() + " AND ID NOT IN ( SELECT JobID FROM " + dh.JIS + ");", job_list);
         adapter = new CurrentJobAdapter(this,  this, job_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);

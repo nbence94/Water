@@ -82,6 +82,9 @@
     <string name="customer_note_hint">Megjegyzés\.\.\.</string>
     <string name="yes" />
 
+    <!-- Elszámolások -->
+    <string name="my_settlements_title">Elszámolásaim</string>
+
     <string-array name="weeks">
         <item>1</item>
         <item>2</item>

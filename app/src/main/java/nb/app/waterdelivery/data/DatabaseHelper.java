@@ -183,6 +183,7 @@ public class DatabaseHelper {
             Log.i(LOG_TITLE, "Adatbázis utasítás - SIKERES (" + insert + ")");
         } catch (SQLException throwables) {
             Log.e(LOG_TITLE, "Adatbázis utasítás - SIKERTELEN (" + insert + ")");
+            throwables.printStackTrace();
             return false;
         }
 
@@ -204,6 +205,7 @@ public class DatabaseHelper {
             Log.i(LOG_TITLE, "TÖRLÉS - SIKERES (" + delete + ")");
         } catch (SQLException throwables) {
             Log.e(LOG_TITLE, "TÖRLÉS - SIKERTELEN (" + delete + ")");
+            throwables.printStackTrace();
             return false;
         }
 
@@ -277,6 +279,61 @@ public class DatabaseHelper {
         }
         return -1;
     }
+
+    public String getExactString(String select) {
+        Connection con = this.connectionClass(context);
+
+        try {
+            if(con != null) {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(select);
+
+                while(rs.next()) {
+                    return rs.getString(1);
+                }
+            }
+
+            Log.i(LOG_TITLE, "Sikeres lekérdezés (" + select + ")");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            Log.e(LOG_TITLE, "Sikeretelen lekérdezés. (" + select + ")");
+            return "-";
+        } catch (Exception throwables) {
+            throwables.printStackTrace();
+        }
+        return "-";
+    }
+
+    public void getSettlementData(String select, ArrayList<Settlement> settlement_list) {
+        Connection con = this.connectionClass(context);
+
+        try {
+            if(con != null) {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(select);
+
+                int id, user_id, finisher_id;
+                String name, created, finish;
+
+                while(rs.next()) {
+                    id = Integer.parseInt(rs.getString(1));
+                    name = rs.getString(2);
+                    created = rs.getString(3);
+                    finish = rs.getString(4);
+                    user_id = Integer.parseInt(rs.getString(5));
+                    finisher_id = Integer.parseInt(rs.getString(6));
+
+                    settlement_list.add(new Settlement(id, name, created, finish, user_id, finisher_id));
+                }
+            }
+            Log.i(LOG_TITLE, "Elszámolások lekérdezése - SIKERES (" + select + ")");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            Log.e(LOG_TITLE, "Elszámolások lekérdezése - SIKERTELEN (" + select + ")");
+        }
+    }
+
 
     public void getDraftData(String select, ArrayList<Draft> draft_list) {
         Connection con = this.connectionClass(context);

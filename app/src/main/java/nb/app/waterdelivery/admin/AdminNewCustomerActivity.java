@@ -176,11 +176,13 @@ public class AdminNewCustomerActivity extends AppCompatActivity implements Adapt
                 for (int i = 0; i < chosen_waters.length; i++) {
                     if (chosen_waters[i]) {
                         water_id = water_list.get(i).getId();
-                        insert_waters = "INSERT INTO " + dh.CAW + " (CustomerID, WaterID) VALUES (" + new_customer + ", " + water_id + ");";
+                        /*insert_waters = "INSERT INTO " + dh.CAW + " (CustomerID, WaterID) VALUES (" + new_customer + ", " + water_id + ");";
                         if (!dh.sql(insert_waters)) {
                             return;
+                        }*/
+                        if (!dh.insert(new String[] {String.valueOf(new_customer), String.valueOf(water_id)}, new String[] {"CustomerID", "WaterID"}, dh.CAW)) {
+                            return;
                         }
-                        Log.i(LOG_TITLE, insert_waters);
                     }
                 }
             } else Log.i(LOG_TITLE, "Víz nem lett hozzáadva");

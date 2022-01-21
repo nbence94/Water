@@ -33,6 +33,7 @@ import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.jobs.MyJobsActivity;
 import nb.app.waterdelivery.login.LoginScreenActivity;
+import nb.app.waterdelivery.settlements.MySettlementsActivity;
 import nb.app.waterdelivery.users.MyProfileActivity;
 import nb.app.waterdelivery.waters.WatersActivity;
 
@@ -164,7 +165,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_my_settlements:
-                Toast.makeText(this, "Átvisz majd a leadott elszámolásokhoz", Toast.LENGTH_SHORT).show();
+                Intent settlements = new Intent(MainActivity.this, MySettlementsActivity.class);
+                startActivity(settlements);
                 break;
 
             case R.id.nav_settlements:

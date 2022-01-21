@@ -10,13 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="15dp"
-        android:layout_marginTop="10dp"
+        app:cardCornerRadius="10dp"
+        android:layout_marginTop="2.5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="2.5dp"
+
         android:id="@+id/custom_water_item">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/custom_cardview_bg">
 
             <TextView
@@ -24,25 +28,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="28dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:maxLength="25"
                 android:text="Minta Víz Név Teszt I"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.448" />
 
             <TextView
                 android:id="@+id/custom_water_cost_gui"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:maxLength="20"
                 android:text="200 Ft"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

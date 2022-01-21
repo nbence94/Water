@@ -10,17 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="10dp"
-        android:layout_marginTop="2.5dp"
-        android:layout_marginBottom="2.5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        app:cardCornerRadius="2dp"
+        android:layout_margin="2dp"
         android:id="@+id/custom_user_item">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/custom_cardview_bg">
+            android:background="@drawable/custom_cardview_grey_bg">
 
             <TextView
                 android:id="@+id/custom_user_name_gui"
@@ -36,17 +33,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
-
-            <ImageView
-                android:id="@+id/item_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/error_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

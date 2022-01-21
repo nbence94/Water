@@ -6,21 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.Objects;
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.adapters.MyCustomersAdapter;
 import nb.app.waterdelivery.adapters.MyJobsAdapter;
-import nb.app.waterdelivery.admin.AdminAllUsersActivity;
-import nb.app.waterdelivery.admin.AdminNewUserActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.alertdialog.WarningDialogChoice;
 import nb.app.waterdelivery.data.DatabaseHelper;
@@ -52,16 +46,13 @@ public class MyJobsActivity extends AppCompatActivity implements WarningDialogCh
         //Vissza gomb
         toolbar = findViewById(R.id.my_jobs_toolbar_gui);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Tervezet készítés (Munka létrehozás)
         new_draft_button = findViewById(R.id.my_jobs_add_button_gui);
 
-        new_draft_button.setOnClickListener(v -> {
-            mad.AlertWarningDialog("Válassz az alábbiak közül","Milyen tervezetet készítenél?","Heti","Egyéb", null, 0, this);
-
-        });
+        new_draft_button.setOnClickListener(v -> mad.AlertWarningDialog("Válassz az alábbiak közül","Milyen tervezetet készítenél?","Heti","Egyéb", null, 0, this));
 
         recycler = findViewById(R.id.my_jobs_recycler_gui);
         job_list = new ArrayList<>();

@@ -79,6 +79,7 @@ public class JobVisitActivity extends AppCompatActivity {
     }
 
     public void showElements() {
+
         adapter = new CurrentChosenJobAdapter(this,  this, customers_in_jobs_list, waters_in_jobs_list, water_details_list, customers_detail_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);

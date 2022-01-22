@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,16 +20,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.admin.AllSettlementActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
-import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.Settlement;
-import nb.app.waterdelivery.jobs.MyJobsActivity;
 import nb.app.waterdelivery.settlements.MySettlementsActivity;
 
-public class MySettlementsAdapter extends RecyclerView.Adapter<MySettlementsAdapter.ViewHolder> {
+public class AllSettlementsAdapter extends RecyclerView.Adapter<AllSettlementsAdapter.ViewHolder> {
 
-    private final String LOG_TITLE = "MySettlementsAdapter";
+    private final String LOG_TITLE = "AllSettlementsAdapter";
 
     LayoutInflater inflater;
     Context context;
@@ -36,34 +36,36 @@ public class MySettlementsAdapter extends RecyclerView.Adapter<MySettlementsAdap
     ArrayList<Settlement> settlement_list;
     DatabaseHelper dh;
     MyAlertDialog mad;
-    MySettlementsActivity mja;
+    AllSettlementActivity aja;
 
-    public MySettlementsAdapter(Context context, Activity activity, ArrayList<Settlement> settlement_list) {
+    public AllSettlementsAdapter(Context context, Activity activity, ArrayList<Settlement> settlement_list) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.activity = activity;
         this.settlement_list = settlement_list;
         dh = new DatabaseHelper(context, activity);
         mad = new MyAlertDialog(context, activity);
-        mja = (MySettlementsActivity) context;
+        aja = (AllSettlementActivity) context;
     }
 
     @NonNull
     @Override
-    public MySettlementsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AllSettlementsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_settlmentname_layout, parent, false);
-        return new MySettlementsAdapter.ViewHolder(view);
+        return new AllSettlementsAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MySettlementsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AllSettlementsAdapter.ViewHolder holder, int position) {
+        holder.checkbox.setVisibility(View.VISIBLE);
+
         Settlement settlement = settlement_list.get(position);
         holder.name.setText(settlement.getName());
 
         holder.item.setOnClickListener(v -> {
             StringBuilder dialog_message = new StringBuilder();
 
-            dialog_message.append("Munkák száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM jobsinsettlement WHERE settlementID = " + settlement.getId())).append("\n");
+            //dialog_message.append("Munkák száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM jobsinsettlement WHERE settlementID = " + settlement.getId())).append("\n");
             dialog_message.append("Megrendelők száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM customerinjob cij, jobsinsettlement jis WHERE cij.JobID = jis.JobID AND settlementid = " + settlement.getId())).append("\n").append("\n");
             dialog_message.append("Leadott vizek száma:").append("\n");
             dialog_message.append(getWaters("SELECT w.Name, SUM(WaterAmount) FROM jobsinsettlement jis, jobandwater jaw, waters w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId() + " GROUP BY w.Name")).append("\n");
@@ -78,6 +80,9 @@ public class MySettlementsAdapter extends RecyclerView.Adapter<MySettlementsAdap
 
             mad.AlertInfoDialog("Munka adatok",dialog_message.toString(), "Rendben");
         });
+
+        //TODO Mit akarok megjeleníteni?
+        //TODO
 
     }
 
@@ -112,12 +117,14 @@ public class MySettlementsAdapter extends RecyclerView.Adapter<MySettlementsAdap
 
         TextView name;
         CardView item;
+        CheckBox checkbox;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.custom_user_name_gui);
             item = itemView.findViewById(R.id.custom_user_item);
+            checkbox = itemView.findViewById(R.id.settlement_checkbox);
         }
     }
 }

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,6 +28,7 @@ import nb.app.waterdelivery.adapters.CurrentJobAdapter;
 import nb.app.waterdelivery.adapters.MyJobsAdapter;
 import nb.app.waterdelivery.admin.AdminAllCustomersActivity;
 import nb.app.waterdelivery.admin.AdminAllUsersActivity;
+import nb.app.waterdelivery.admin.AllSettlementActivity;
 import nb.app.waterdelivery.customers.MyCustomersActivity;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawer_layout;
     NavigationView navigation_view;
     Toolbar toolbar;
+    TextView no_jobs_text;
 
     ArrayList<Jobs> job_list;
     CurrentJobAdapter adapter;
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.main_toolbar_gui);
         menu = navigation_view.getMenu();
         finish_jobs_button = findViewById(R.id.main_check_button_gui);
+        no_jobs_text = findViewById(R.id.main_no_jobs_text);
 
         //Saját Toolbar
         setSupportActionBar(toolbar);
@@ -96,7 +100,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recycler = findViewById(R.id.main_activity_recycler_gui);
         showElements();
 
+        if(job_list.size() < 1) {
+            finish_jobs_button.setVisibility(View.GONE);
+            no_jobs_text.setVisibility(View.VISIBLE);
+        } else {
+            finish_jobs_button.setVisibility(View.VISIBLE);
+            no_jobs_text.setVisibility(View.GONE);
+        }
+
         finish_jobs_button.setOnClickListener(v -> {
+
             for(int i = 0; i < job_list.size(); i++) {
                 if(job_list.get(i).getFinish() == null) {
                     Toast.makeText(this, "Nem végrehajtható, ameddig van lezáratlan munka!", Toast.LENGTH_SHORT).show();
@@ -170,7 +183,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_settlements:
-                Toast.makeText(this, "Átvisz majd az elszámolásokhoz", Toast.LENGTH_SHORT).show();
+                Intent settlement = new Intent(MainActivity.this, AllSettlementActivity.class);
+                startActivity(settlement);
                 break;
 
             case R.id.nav_users:

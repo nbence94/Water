@@ -63,7 +63,7 @@ public class ChosenCustomerWatersAdapter extends RecyclerView.Adapter<ChosenCust
         holder.water_amount.setText(String.valueOf(water_amount));
         calculateCost(holder, position);
         holder.item.setOnClickListener(v -> {
-            //user_id = draft_list.get(position).getUserid();
+            user_id = draft_list.get(position).getUserid();
             customer_id = draft_list.get(position).getCustomerid();
             water_id = draft_list.get(position).getWaterid();
             mad.AlertInputDialog("Kért víz mennyisége", String.valueOf(water_amount), "Rendben", position, holder,1, this);

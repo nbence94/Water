@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,7 +70,6 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         }
     }
 
-
     @NonNull
     @Override
     public CurrentChosenJobAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -83,7 +83,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         boolean kinyitva = expanded_list.get(position);
         holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
 
-        holder.customer_name.setOnClickListener(v -> {
+        holder.job_item.setOnClickListener(v -> {
             expanded_list.set(position, !kinyitva);
             notifyItemChanged(position);
         });
@@ -162,7 +162,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
                }
 
                jva.customers_in_jobs_list.set(position, new CustomersInJob(jid, cid, created_date));
-               notifyItemChanged(position);
+               jva.showElements();
            }
        });
 
@@ -179,6 +179,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         CheckBox finish_check;
         ConstraintLayout item;
         ImageView bill;
+        CardView job_item;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -191,6 +192,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
             finish_check = itemView.findViewById(R.id.current_job_customer_checkbox);
             item = itemView.findViewById(R.id.expand_layout);
             bill = itemView.findViewById(R.id._current_job_need_bill_icon);
+            job_item = itemView.findViewById(R.id.current_job_item);
         }
     }
 }

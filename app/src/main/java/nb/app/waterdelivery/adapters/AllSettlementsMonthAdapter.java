@@ -2,14 +2,12 @@ package nb.app.waterdelivery.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,32 +15,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.admin.AllSettlementActivity;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Settlement;
 import nb.app.waterdelivery.settlements.MySettlementsActivity;
 
-public class MySettlementsMonthAdapter extends RecyclerView.Adapter<MySettlementsMonthAdapter.ViewHolder> {
+public class AllSettlementsMonthAdapter extends RecyclerView.Adapter<AllSettlementsMonthAdapter.ViewHolder> {
 
     LayoutInflater inflater;
     Context context;
     Activity activity;
     ArrayList<String> months_list;
     DatabaseHelper dh;
-    MySettlementsActivity msa;
+    AllSettlementActivity msa;
 
-    MySettlementsAdapter adapter;
+    AllSettlementsAdapter adapter;
     ArrayList<Settlement> settlement_list;
     SaveLocalDatas sld;
     ArrayList<Boolean> expanded_list;
 
-    public MySettlementsMonthAdapter(Context context, Activity activity, ArrayList<String> m_list) {
+    public AllSettlementsMonthAdapter(Context context, Activity activity, ArrayList<String> m_list) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.activity = activity;
         this.months_list = m_list;
         dh = new DatabaseHelper(context, activity);
-        msa = (MySettlementsActivity) context;
+        msa = (AllSettlementActivity) context;
 
         sld = new SaveLocalDatas(activity);
         settlement_list = new ArrayList<>();
@@ -54,16 +53,16 @@ public class MySettlementsMonthAdapter extends RecyclerView.Adapter<MySettlement
 
     @NonNull
     @Override
-    public MySettlementsMonthAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AllSettlementsMonthAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_my_settlements_layout, parent, false);
-        return new MySettlementsMonthAdapter.ViewHolder(view);
+        return new AllSettlementsMonthAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MySettlementsMonthAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AllSettlementsMonthAdapter.ViewHolder holder, int position) {
         holder.name.setText(months_list.get(position));
         String[] month = months_list.get(position).split("\\.");
-        showElements(holder, month[0], month[1]);
+        showElements(holder, month[0], getMonthsNumber(month[1]));
 
         boolean kinyitva = expanded_list.get(position);
         holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
@@ -74,10 +73,10 @@ public class MySettlementsMonthAdapter extends RecyclerView.Adapter<MySettlement
         });
     }
 
-    public void showElements(@NonNull MySettlementsMonthAdapter.ViewHolder holder, String year, String month) {
+    public void showElements(@NonNull AllSettlementsMonthAdapter.ViewHolder holder, String year, String month) {
         settlement_list.clear();
         dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE UserID = " + sld.loadUserID() + " AND YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
-        adapter = new MySettlementsAdapter(context,  activity, settlement_list);
+        adapter = new AllSettlementsAdapter(context,  activity, settlement_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);
         holder.recycler.setAdapter(adapter);
@@ -101,5 +100,23 @@ public class MySettlementsMonthAdapter extends RecyclerView.Adapter<MySettlement
             item = itemView.findViewById(R.id.expand_layout);
             recycler = itemView.findViewById(R.id.settlements_for_month_recycler);
         }
+    }
+
+    public String getMonthsNumber(String num_of_month) {
+        switch (num_of_month) {
+            case "Január": return "1";
+            case "Február": return "2";
+            case "Március": return "3";
+            case "Április": return "4";
+            case "Május": return "5";
+            case "Június": return "6";
+            case "Július": return "7";
+            case "Augusztus": return "8";
+            case "Szeptember": return "9";
+            case "Október": return "10";
+            case "November": return "11";
+            case "December": return "12";
+        }
+        return "0";
     }
 }

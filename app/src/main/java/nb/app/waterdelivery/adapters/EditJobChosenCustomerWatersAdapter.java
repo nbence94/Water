@@ -107,6 +107,7 @@ public class EditJobChosenCustomerWatersAdapter extends RecyclerView.Adapter<Edi
         if(!dh.sql("UPDATE " + dh.EDITDRAFT + " SET WaterAmount = " + mad.result_text + " WHERE WaterID=" + water_id + " AND JobID= " + emja.job_id + " AND CustomerID=" + customer_id + ";")) {
             Toast.makeText(context, "Sikertelen módosítás", Toast.LENGTH_SHORT).show();
         }
+
         draft_list.get(position).setWater_amount(Integer.parseInt(mad.result_text));
         calculateCost(holder, position);
         emja.calculateGlobalIncome();

@@ -13,9 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WaterDelivery">
         <activity
-            android:name=".settlements.MySettlementsActivity"
+            android:name=".admin.AllSettlementActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".settlements.MySettlementsActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".jobs.JobVisitActivity"
             android:exported="false"

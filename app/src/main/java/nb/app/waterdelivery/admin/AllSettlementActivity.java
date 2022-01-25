@@ -16,13 +16,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.adapters.AllSettlementsMonthAdapter;
-import nb.app.waterdelivery.adapters.MySettlementsAdapter;
-import nb.app.waterdelivery.adapters.MySettlementsMonthAdapter;
+import nb.app.waterdelivery.adapters.AllSettlementsAdapter;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;
-import nb.app.waterdelivery.data.Settlement;
 
 public class AllSettlementActivity extends AppCompatActivity {
 
@@ -34,7 +31,7 @@ public class AllSettlementActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView recycler;
-    AllSettlementsMonthAdapter adapter;
+    AllSettlementsAdapter adapter;
 
     ArrayList<String> months_list;
 
@@ -63,7 +60,7 @@ public class AllSettlementActivity extends AppCompatActivity {
     public void showMonthsElements() {
         months_list.clear();
         loadMonths();
-        adapter = new AllSettlementsMonthAdapter(this,  this, months_list);
+        adapter = new AllSettlementsAdapter(this,  this, months_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);

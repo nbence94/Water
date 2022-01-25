@@ -2,7 +2,6 @@ package nb.app.waterdelivery.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,114 +9,98 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
-import nb.app.waterdelivery.data.Jobs;
+import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Settlement;
-import nb.app.waterdelivery.jobs.MyJobsActivity;
 import nb.app.waterdelivery.settlements.MySettlementsActivity;
 
 public class MySettlementsAdapter extends RecyclerView.Adapter<MySettlementsAdapter.ViewHolder> {
 
-    private final String LOG_TITLE = "MySettlementsAdapter";
-
     LayoutInflater inflater;
     Context context;
     Activity activity;
-    ArrayList<Settlement> settlement_list;
+    ArrayList<String> months_list;
     DatabaseHelper dh;
-    MyAlertDialog mad;
-    MySettlementsActivity mja;
+    MySettlementsActivity msa;
 
-    public MySettlementsAdapter(Context context, Activity activity, ArrayList<Settlement> settlement_list) {
+    MySettlementsChildAdapter adapter;
+    ArrayList<Settlement> settlement_list;
+    SaveLocalDatas sld;
+    ArrayList<Boolean> expanded_list;
+
+    public MySettlementsAdapter(Context context, Activity activity, ArrayList<String> m_list) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.activity = activity;
-        this.settlement_list = settlement_list;
+        this.months_list = m_list;
         dh = new DatabaseHelper(context, activity);
-        mad = new MyAlertDialog(context, activity);
-        mja = (MySettlementsActivity) context;
+        msa = (MySettlementsActivity) context;
+
+        sld = new SaveLocalDatas(activity);
+        settlement_list = new ArrayList<>();
+        this.expanded_list = new ArrayList<>();
+        for(int i = 0; i < m_list.size(); i++) {
+            expanded_list.add(false);
+        }
     }
 
     @NonNull
     @Override
     public MySettlementsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.custom_settlmentname_layout, parent, false);
+        View view = inflater.inflate(R.layout.custom_my_settlements_layout, parent, false);
         return new MySettlementsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MySettlementsAdapter.ViewHolder holder, int position) {
-        Settlement settlement = settlement_list.get(position);
-        holder.name.setText(settlement.getName());
+        holder.name.setText(months_list.get(position));
+        String[] month = months_list.get(position).split("\\.");
+        showElements(holder, month[0], month[1]);
 
-        holder.item.setOnClickListener(v -> {
-            StringBuilder dialog_message = new StringBuilder();
+        boolean kinyitva = expanded_list.get(position);
+        holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
 
-            dialog_message.append("Munkák száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM jobsinsettlement WHERE settlementID = " + settlement.getId())).append("\n");
-            dialog_message.append("Megrendelők száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM customerinjob cij, jobsinsettlement jis WHERE cij.JobID = jis.JobID AND settlementid = " + settlement.getId())).append("\n").append("\n");
-            dialog_message.append("Leadott vizek száma:").append("\n");
-            dialog_message.append(getWaters("SELECT w.Name, SUM(WaterAmount) FROM jobsinsettlement jis, jobandwater jaw, waters w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId() + " GROUP BY w.Name")).append("\n");
-            dialog_message.append("Teljes bevétel: ").append(dh.getExactInt("SELECT SUM(w.Price * jaw.WaterAmount) As Ár FROM jobsinsettlement jis, jobandwater jaw, waters w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId())).append(" Ft").append("\n").append("\n");
-
-            if(dh.getExactInt("SELECT finisherid FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";") != 0) {
-                dialog_message.append(dh.getExactString("SELECT u.Fullname FROM settlement s, users u WHERE s.finisherID = u.ID AND s.ID = " + settlement.getId() + ";")).append(" jóváhagyta!");
-                dialog_message.append(dh.getExactString("SELECT Finished FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";"));
-            } else {
-                dialog_message.append("Még nincs jóváhagyva!");
-            }
-
-            mad.AlertInfoDialog("Munka adatok",dialog_message.toString(), "Rendben");
+        holder.card.setOnClickListener(v -> {
+            expanded_list.set(position, !kinyitva);
+            notifyItemChanged(position);
         });
-
     }
 
-    public String getWaters(String select) {
-        Connection con = dh.connectionClass(context);
-        StringBuilder result = new StringBuilder();
-
-        try {
-            if(con != null) {
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery(select);
-
-                while(rs.next()) {
-                    result.append(rs.getString(1)).append(": ").append(rs.getString(2)).append(" db").append("\n");
-                }
-            }
-            Log.i(LOG_TITLE, "SIKERES (" + select + ")");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Log.e(LOG_TITLE, "SIKERTELEN (" + select + ")");
-        }
-
-        return result.toString();
+    public void showElements(@NonNull MySettlementsAdapter.ViewHolder holder, String year, String month) {
+        settlement_list.clear();
+        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE UserID = " + sld.loadUserID() + " AND YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
+        adapter = new MySettlementsChildAdapter(context,  activity, settlement_list);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        holder.recycler.setLayoutManager(manager);
+        holder.recycler.setAdapter(adapter);
     }
 
     @Override
     public int getItemCount() {
-        return settlement_list.size();
+        return months_list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
-        CardView item;
+        ConstraintLayout item;
+        RecyclerView recycler;
+        CardView card;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = itemView.findViewById(R.id.custom_user_name_gui);
-            item = itemView.findViewById(R.id.custom_user_item);
+            name = itemView.findViewById(R.id.settlement_name_gui);
+            item = itemView.findViewById(R.id.expand_layout);
+            recycler = itemView.findViewById(R.id.settlements_for_month_recycler);
+            card = itemView.findViewById(R.id.my_settlements_carditem_gui);
         }
     }
 }

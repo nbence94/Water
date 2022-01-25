@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -33,6 +34,7 @@ import nb.app.waterdelivery.customers.MyCustomersActivity;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
+import nb.app.waterdelivery.data.Settlement;
 import nb.app.waterdelivery.jobs.MyJobsActivity;
 import nb.app.waterdelivery.login.LoginScreenActivity;
 import nb.app.waterdelivery.settlements.MySettlementsActivity;
@@ -83,6 +85,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer_layout.addDrawerListener(toggle);
         toggle.syncState();
         navigation_view.setNavigationItemSelectedListener(this);
+
+        MenuItem item = menu.findItem(R.id.nav_settlements);
+        ArrayList<Settlement> settlements_list = new ArrayList<>();
+        dh.getSettlementData("SELECT * FROM Settlement WHERE ", settlements_list);
+        int count = dh.getExactInt("SELECT COUNT(*)" +
+                "FROM settlement " +
+                "WHERE Finished IS NULL");
+
+        if(count > 0) item.setTitle(item.getTitle() + " (új)");
+
+
 
         //Login utáni szerepkörök
         if(sld.loadUserRoleID() == dh.ADMIN_ROLE) {
@@ -146,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 

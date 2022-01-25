@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,9 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.adapters.CurrentJobAdapter;
 import nb.app.waterdelivery.adapters.MySettlementsAdapter;
-import nb.app.waterdelivery.adapters.MySettlementsMonthAdapter;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;
@@ -36,7 +32,7 @@ public class MySettlementsActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView recycler;
-    MySettlementsMonthAdapter adapter;
+    MySettlementsAdapter adapter;
 
     ArrayList<Settlement> settlement_list;
     ArrayList<String> months_list;
@@ -67,7 +63,7 @@ public class MySettlementsActivity extends AppCompatActivity {
     public void showMonthsElements() {
         months_list.clear();
         loadMonths();
-        adapter = new MySettlementsMonthAdapter(this,  this, months_list);
+        adapter = new MySettlementsAdapter(this,  this, months_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);

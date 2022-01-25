@@ -225,6 +225,7 @@ public class DatabaseHelper {
             Log.i(LOG_TITLE, "Adatbázis utasítás - SIKERES (" + sql + ")");
         } catch (SQLException throwables) {
             Log.e(LOG_TITLE, "Adatbázis utasítás - SIKERTELEN (" + sql + ")");
+            throwables.printStackTrace();
             return false;
         }
 

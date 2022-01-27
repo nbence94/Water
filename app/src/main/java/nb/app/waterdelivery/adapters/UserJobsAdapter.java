@@ -1,105 +1,143 @@
 package nb.app.waterdelivery.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.admin.AdminUserJobsActivity;
+import nb.app.waterdelivery.admin.AllSettlementActivity;
+import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
+import nb.app.waterdelivery.data.SaveLocalDatas;
+import nb.app.waterdelivery.data.Settlement;
 
-public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHolder> implements Filterable {
+public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHolder> {
+
     LayoutInflater inflater;
     Context context;
+    Activity activity;
+    ArrayList<String> months_list;
+    DatabaseHelper dh;
+    AdminUserJobsActivity auja;
 
-    ArrayList<Jobs> job_list;
-    private final ArrayList<Jobs> search_data_list;
-    ArrayList<Jobs> result_data_list;
+    UserJobsChildAdapter adapter;
+    public ArrayList<Settlement> settlement_list;
+    SaveLocalDatas sld;
+    ArrayList<Boolean> expanded_list;
 
-    public UserJobsAdapter(Context context, ArrayList<Jobs> job_list) {
-        this.context = context;
+    public UserJobsAdapter(Context context, Activity activity, ArrayList<String> m_list) {
         this.inflater = LayoutInflater.from(context);
+        this.context = context;
+        this.activity = activity;
+        this.months_list = m_list;
+        dh = new DatabaseHelper(context, activity);
+        auja = (AdminUserJobsActivity) context;
 
-        this.job_list = job_list;
-        this.search_data_list = new ArrayList<>(job_list);
+        sld = new SaveLocalDatas(activity);
+        settlement_list = new ArrayList<>();
+        this.expanded_list = new ArrayList<>();
+        for(int i = 0; i < m_list.size(); i++) {
+            expanded_list.add(false);
+        }
     }
 
     @NonNull
     @Override
     public UserJobsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.custom_admin_userjobs_layout, parent, false);
+        View view = inflater.inflate(R.layout.custom_my_settlements_layout, parent, false);
         return new UserJobsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull UserJobsAdapter.ViewHolder holder, int position) {
-        holder.name.setText(job_list.get(position).getName());
-        holder.created.setText(job_list.get(position).getCreated());
-        holder.finish.setText(job_list.get(position).getFinish());
-        holder.income.setText(String.valueOf(job_list.get(position).getIncome()));
+        holder.name.setText(months_list.get(position));
+        String[] month = months_list.get(position).split("\\.");
+        showElements(holder, month[0], getMonthsNumber(month[1]));
 
-        holder.item.setOnClickListener(v -> {
+        boolean kinyitva = expanded_list.get(position);
+        holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
 
+        holder.card.setOnClickListener(v -> {
+            expanded_list.set(position, !kinyitva);
+            notifyItemChanged(position);
         });
+
+        for(int i = 0 ; i < settlement_list.size(); i++) {
+            if(settlement_list.get(i).getFinished() == null) {
+                holder.attention.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
+
+        holder.attention.setTooltipText("Vannak lezáratlan munkák!");
+    }
+
+    public void showElements(@NonNull UserJobsAdapter.ViewHolder holder, String year, String month) {
+        settlement_list.clear();
+        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE UserID = " + auja.user_id + " AND YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
+        if(settlement_list.size() == 0) {
+            settlement_list.add(new Settlement(-1, "Nincs leadott munka", "","", -1, -1));
+        }
+        adapter = new UserJobsChildAdapter(context,  activity, settlement_list);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        holder.recycler.setLayoutManager(manager);
+        holder.recycler.setAdapter(adapter);
     }
 
     @Override
     public int getItemCount() {
-        return job_list.size();
+        return months_list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name, created, finish, income;
-        CardView item;
+        TextView name;
+        ConstraintLayout item;
+        RecyclerView recycler;
+        CardView card;
+        ImageView attention;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = itemView.findViewById(R.id.custom_user_job_name_gui);
-            created = itemView.findViewById(R.id.custom_user_job_created_gui);
-            finish = itemView.findViewById(R.id.custom_user_job_finish_gui);
-            income = itemView.findViewById(R.id.custom_user_job_profit_gui);
-            item = itemView.findViewById(R.id.custom_user_job_item);
+            name = itemView.findViewById(R.id.settlement_name_gui);
+            item = itemView.findViewById(R.id.expand_layout);
+            recycler = itemView.findViewById(R.id.settlements_for_month_recycler);
+            card = itemView.findViewById(R.id.my_settlements_carditem_gui);
+            attention = itemView.findViewById(R.id.this_month_is_okay_gui);
         }
     }
 
-    @Override
-    public Filter getFilter() {
-        return searching;
+    public String getMonthsNumber(String num_of_month) {
+        switch (num_of_month) {
+            case "Január": return "1";
+            case "Február": return "2";
+            case "Március": return "3";
+            case "Április": return "4";
+            case "Május": return "5";
+            case "Június": return "6";
+            case "Július": return "7";
+            case "Augusztus": return "8";
+            case "Szeptember": return "9";
+            case "Október": return "10";
+            case "November": return "11";
+            case "December": return "12";
+        }
+        return "0";
     }
-
-    Filter searching = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence searchField) {
-            result_data_list = new ArrayList<>();
-
-            if(searchField.toString().isEmpty()) {
-                result_data_list.addAll(search_data_list);
-            } else {
-                for(int i = 0; i < search_data_list.size(); i++) {
-                    if(search_data_list.get(i).getName().toLowerCase().contains(searchField.toString().toLowerCase())) {
-                        result_data_list.add(search_data_list.get(i));
-                    }
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            job_list.clear();
-            job_list.addAll(result_data_list);
-            notifyDataSetChanged();
-        }
-    };
 }

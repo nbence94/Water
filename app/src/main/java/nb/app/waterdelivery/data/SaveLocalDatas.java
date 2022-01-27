@@ -121,7 +121,6 @@ public class SaveLocalDatas {
         return sp.getBoolean("key", false);
     }
 
-
     //Database
     public void saveDatabaseValues(String ip, int port, String database, String username, String password) {
         SharedPreferences sp = activity.getSharedPreferences("database_data", MODE_PRIVATE);

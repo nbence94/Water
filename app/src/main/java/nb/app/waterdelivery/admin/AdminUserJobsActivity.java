@@ -18,10 +18,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.adapters.AllSettlementsAdapter;
 import nb.app.waterdelivery.adapters.AllUsersAdapter;
 import nb.app.waterdelivery.adapters.UserJobsAdapter;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
+import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Users;
 
 public class AdminUserJobsActivity extends AppCompatActivity {
@@ -32,9 +34,11 @@ public class AdminUserJobsActivity extends AppCompatActivity {
     RecyclerView recycler;
     Toolbar toolbar;
     UserJobsAdapter adapter;
+    SaveLocalDatas sld;
     ArrayList<Jobs> jobs_list;
+    ArrayList<String> months_list;
 
-    int user_id;
+    public int user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class AdminUserJobsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_user_jobs);
 
         dh = new DatabaseHelper(this, this);
+        sld = new SaveLocalDatas(this);
 
         //Vissza gomb
         toolbar = findViewById(R.id.admin_user_jobs_toolbar_gui);
@@ -54,18 +59,31 @@ public class AdminUserJobsActivity extends AppCompatActivity {
 
         //Felhasználók megjelenítése
         recycler = findViewById(R.id.admin_user_jobs_recycler_gui);
-        jobs_list = new ArrayList<>();
-        getDatas("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + user_id + ";");
-        adapter = new UserJobsAdapter(this, jobs_list);
+        //jobs_list = new ArrayList<>();
+        months_list = new ArrayList<>();
+        //getDatas("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + user_id + ";");
+        showMonthsElements();
+        /*adapter = new UserJobsAdapter(this, this,months_list);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recycler.setLayoutManager(manager);
+        recycler.setAdapter(adapter);*/
+
+    }
+
+    public void showMonthsElements() {
+        months_list.clear();
+        loadMonths();
+        adapter = new UserJobsAdapter(this,  this, months_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);
-
     }
 
     private void getIntentData() {
         if(getIntent().hasExtra("user_id")) {
             user_id = getIntent().getIntExtra("user_id", 0);
+        } else {
+            user_id = sld.loadUserID();
         }
     }
 
@@ -100,7 +118,7 @@ public class AdminUserJobsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.action_search);
@@ -118,5 +136,48 @@ public class AdminUserJobsActivity extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }*/
+
+    public void loadMonths() {
+
+        Connection con = dh.connectionClass(this);
+        String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " GROUP BY year, month ORDER BY year DESC;";
+
+        try {
+            if(con != null) {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(select);
+
+                String value;
+
+                while(rs.next()) {
+                    value = rs.getString(1) + ".";
+                    value += getMonthsName(rs.getString(2));
+                    months_list.add(value);
+                }
+            }
+            Log.i(LOG_TITLE, "SIKERES lekérdezés (" + select + ")");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            Log.e(LOG_TITLE, "SIKERTELEN lekérdezé (" + select + ")");
+        }
+    }
+
+    public String getMonthsName(String num_of_month) {
+        switch (num_of_month) {
+            case "1": return "Január";
+            case "2": return "Február";
+            case "3": return "Március";
+            case "4": return "Április";
+            case "5": return "Május";
+            case "6": return "Június";
+            case "7": return "Július";
+            case "8": return "Augusztus";
+            case "9": return "Szeptember";
+            case "10": return "Október";
+            case "11": return "November";
+            case "12": return "December";
+        }
+        return "0";
     }
 }

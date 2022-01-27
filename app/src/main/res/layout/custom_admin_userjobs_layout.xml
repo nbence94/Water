@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="15dp"
-        android:layout_marginTop="10dp"
+        app:cardCornerRadius="5dp"
+        android:layout_margin="5dp"
         android:id="@+id/custom_user_job_item">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
                 android:text="Minta Munkanév"
-                android:textSize="25sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -35,36 +35,60 @@
                 android:id="@+id/custom_user_job_created_gui"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
                 android:text="Létrehozva:"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/custom_user_job_name_gui" />
+                app:layout_constraintTop_toBottomOf="@+id/custom_user_job_profit_gui" />
 
             <TextView
                 android:id="@+id/custom_user_job_finish_gui"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="15dp"
                 android:text="Elvégezve: - "
                 android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/custom_user_job_created_gui" />
+                app:layout_constraintTop_toBottomOf="@+id/custom_user_job_created_gui"
+                app:layout_constraintVertical_bias="0.009" />
 
             <TextView
                 android:id="@+id/custom_user_job_profit_gui"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="20 000 Ft"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/custom_user_job_name_gui" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/expand_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/custom_user_job_finish_gui" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/custom_user_job_finish_gui"
+                android:background="@color/neutral_color">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/customers_for_jobs_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

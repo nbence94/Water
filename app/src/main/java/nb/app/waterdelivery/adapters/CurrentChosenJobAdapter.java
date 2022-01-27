@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -157,12 +158,27 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
                int jid = customers_in_jobs_list.get(position).getJobid();
                int cid = customers_in_jobs_list.get(position).getCustomerid();
 
-               if(!dh.sql("UPDATE " + dh.CIJ + " SET Finish = '" + created_date + "' WHERE CustomerID = " + cid)) {
+               if(!dh.sql("UPDATE " + dh.CIJ + " SET Finish = '" + created_date + "' WHERE CustomerID = " + cid + " AND JobID=" + jid)) {
                    return;
                }
 
                jva.customers_in_jobs_list.set(position, new CustomersInJob(jid, cid, created_date));
                jva.showElements();
+
+               boolean all_of_theam_is_done = true;
+               for(int i = 0; i < jva.customers_in_jobs_list.size(); i++) {
+                   if(jva.customers_in_jobs_list.get(i).getFinish() == null) {
+                       all_of_theam_is_done = false;
+                       break;
+                   }
+               }
+
+               if(all_of_theam_is_done) {
+                   if(!dh.sql("UPDATE " + dh.JOBS + " SET Finish = '" + created_date + "' WHERE ID=" + jid)) {
+                       return;
+                   }
+                   Toast.makeText(context, "A tervezet automatikusan lezárásra került", Toast.LENGTH_SHORT).show();
+               }
            }
        });
 

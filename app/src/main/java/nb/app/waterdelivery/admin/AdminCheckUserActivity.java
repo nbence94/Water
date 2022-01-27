@@ -77,12 +77,12 @@ public class AdminCheckUserActivity extends AppCompatActivity {
             data.append("Név: ").append(user_data_list.get(0).getName()).append("\n")
                     .append("E-mail: ").append(user_data_list.get(0).getEmail()).append("\n")
                     .append("Telefonszám: ").append(user_data_list.get(0).getPhone()).append("\n")
-                    .append("Státusz: ").append((user_data_list.get(0).getStatus() == 1) ? "Aktív" : "Inaktív").append("\n")
                     .append("Szerepkör: ").append(roles_list.get(user_data_list.get(0).getRoleid()).getName()).append("\n")
                     .append("\n")
                     .append("Regisztrálva: ").append(user_data_list.get(0).getCreated()).append("\n")
-                    .append("Szállításai: ").append(user_data_list.get(0).getJobnumber()).append(" db").append("\n");
-            //AlertDialogHelper.setMessage(this, "Adatok", data.toString(), "Rendben");
+                    .append("Szállításai: ").append(user_data_list.get(0).getJobnumber()).append(" db").append("\n")
+                    .append("\n")
+                    .append("Státusz: ").append((user_data_list.get(0).getStatus() == 1) ? "Aktív" : "Inaktív").append("\n");
             mad.AlertInfoDialog("Adatok", data.toString(), "Rendben");
         });
 

@@ -5,11 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".admin.AdminUserJobsActivity"
+    tools:context=".admin.AdminUserJobDetailsActivity"
     android:background="@drawable/bg_all">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/admin_user_jobs_recycler_gui"
+        android:id="@+id/admin_user_jobs_details_recycler_gui"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
@@ -20,11 +20,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/admin_user_jobs_toolbar_gui"
+        app:layout_constraintTop_toBottomOf="@+id/admin_user_jobs_details_toolbar_gui"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/admin_user_jobs_toolbar_gui"
+        android:id="@+id/admin_user_jobs_details_toolbar_gui"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/toolbar_color"
@@ -34,5 +34,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/admin_user_jobs_title" />
+
+    <TextView
+        android:id="@+id/admin_user_jobs_details_leg_gui"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/admin_user_jobs_details_recycler_gui"
+        android:background="@color/toolbar_color"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:text="Teljes bevétel: 20.000 Ft"
+        android:textSize="25sp"
+        android:theme="?attr/actionBarTheme" />
 
 </RelativeLayout>

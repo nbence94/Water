@@ -16,12 +16,12 @@ import java.util.Objects;
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.adapters.MyJobsAdapter;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
-import nb.app.waterdelivery.alertdialog.WarningDialogChoice;
+import nb.app.waterdelivery.alertdialog.myWarningDialogChoice;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 
-public class MyJobsActivity extends AppCompatActivity implements WarningDialogChoice {
+public class MyJobsActivity extends AppCompatActivity implements myWarningDialogChoice {
 
     Toolbar toolbar;
     FloatingActionButton new_draft_button;
@@ -52,7 +52,7 @@ public class MyJobsActivity extends AppCompatActivity implements WarningDialogCh
         //Tervezet készítés (Munka létrehozás)
         new_draft_button = findViewById(R.id.my_jobs_add_button_gui);
 
-        new_draft_button.setOnClickListener(v -> mad.AlertWarningDialog("Válassz az alábbiak közül","Milyen tervezetet készítenél?","Heti","Egyéb", null, 0, this));
+        new_draft_button.setOnClickListener(v -> mad.myWarningDialog("Válassz az alábbiak közül","Milyen tervezetet készítenél?","Heti","Egyéb", null, 0, this));
 
         recycler = findViewById(R.id.my_jobs_recycler_gui);
         job_list = new ArrayList<>();
@@ -78,7 +78,7 @@ public class MyJobsActivity extends AppCompatActivity implements WarningDialogCh
     }
 
     @Override
-    public void OnPositiveClick(@NonNull MyJobsAdapter.ViewHolder holder, int position) {
+    public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
 
@@ -101,7 +101,7 @@ public class MyJobsActivity extends AppCompatActivity implements WarningDialogCh
     }
 
     @Override
-    public void OnNegativeClick(@NonNull MyJobsAdapter.ViewHolder holder, int position) {
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (0 == dh.getExactInt("SELECT COUNT(*) FROM Customers c WHERE c.UserID = " + sld.loadUserID() + "  AND c.ID NOT IN " +
                 "( SELECT c.ID FROM Customers c, customerinjob cij, jobs j WHERE c.ID = cij.CustomerID AND j.ID = cij.JobID AND j.Finish IS NULL )")) {
             Toast.makeText(this, "Minden megrendelő szállításhoz van már rendelve!", Toast.LENGTH_LONG).show();

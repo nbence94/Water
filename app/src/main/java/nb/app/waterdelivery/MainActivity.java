@@ -87,14 +87,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigation_view.setNavigationItemSelectedListener(this);
 
         MenuItem item = menu.findItem(R.id.nav_settlements);
-        ArrayList<Settlement> settlements_list = new ArrayList<>();
-        dh.getSettlementData("SELECT * FROM Settlement WHERE ", settlements_list);
         int count = dh.getExactInt("SELECT COUNT(*)" +
                 "FROM settlement " +
                 "WHERE Finished IS NULL");
 
         if(count > 0) item.setTitle(item.getTitle() + " (új)");
-
 
 
         //Login utáni szerepkörök
@@ -130,27 +127,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
 
+            //Create dátum előállítása
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             String created = sdf.format(new Date());
 
+            //A leadott munka neve: Dátum-Név ehhez kerül előállításra a dátum
             SimpleDateFormat sdf_ = new SimpleDateFormat("yy.MM.dd", Locale.getDefault());
             String name_date = sdf_.format(new Date());
-
             String settlement_name = name_date + "-" + sld.loadUserName();
 
+            //Az új adatok feltöltése a Settlement táblába
             if(!dh.insert(new String[] {settlement_name, created, String.valueOf(sld.loadUserID())}, new String[] {"Name, Created, UserID"}, dh.SETTLEMENT)) {
                 Toast.makeText(this, "Munkák leadása sikertelen", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            //Az új Settlement ID alapján feltöltésre kerülnek a munka-tervezetek
             int new_settlement_id = dh.getNewID(dh.SETTLEMENT);
-
             for(int i = 0; i < job_list.size(); i++) {
                 if(!dh.insert(new String[] {String.valueOf(new_settlement_id), String.valueOf(job_list.get(i).getId())}, new String[] {"SettlementID", "JobID"}, dh.JIS)) {
                     dh.delete(dh.SETTLEMENT, "SettlementID = " + new_settlement_id);
                     dh.delete(dh.SETTLEMENT, "ID = " + new_settlement_id);
                     break;
                 }
+            }
+
+            //Statisztika - Feltöltésre kerül a felhasználó által elvégzett munka
+            int user_jobs_number = dh.getExactInt("SELECT COUNT(*) FROM " + dh.SETTLEMENT + " WHERE UserId = " + sld.loadUserID());
+            if(!dh.sql("UPDATE " + dh.USERS + " SET NumberOfJobs='" + user_jobs_number + "' WHERE ID = " + sld.loadUserID() + ";")) {
+                return;
             }
 
             job_list.clear();

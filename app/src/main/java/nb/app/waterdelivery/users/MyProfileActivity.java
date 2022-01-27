@@ -5,20 +5,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
+import java.util.Objects;
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;
-import nb.app.waterdelivery.data.Users;
 
 public class MyProfileActivity extends AppCompatActivity {
 
@@ -41,7 +33,7 @@ public class MyProfileActivity extends AppCompatActivity {
         //Vissza gomb
         toolbar = findViewById(R.id.my_profile_toolbar_gui);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Elemek inicializálása
@@ -57,7 +49,7 @@ public class MyProfileActivity extends AppCompatActivity {
         email_text.setText(sld.loadUserEmail());
         role_text.setText(sld.loadUserRole());
         phone_text.setText(sld.loadUserPhonenumber());
-        String jobs_ = "Elvégzett munkák: " + sld.loadUserJobs();
+        String jobs_ = "Elvégzett munkák: " + dh.getExactInt("SELECT COUNT(*) FROM " + dh.SETTLEMENT + " WHERE userID = " + sld.loadUserID());
         jobnumber_text.setText(jobs_);
 
         //Beállítások

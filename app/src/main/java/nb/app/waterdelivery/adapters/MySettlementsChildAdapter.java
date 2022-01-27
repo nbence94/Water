@@ -63,15 +63,18 @@ public class MySettlementsChildAdapter extends RecyclerView.Adapter<MySettlement
         holder.item.setOnClickListener(v -> {
             StringBuilder dialog_message = new StringBuilder();
 
-            dialog_message.append("Munkák száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM jobsinsettlement WHERE settlementID = " + settlement.getId())).append("\n");
-            dialog_message.append("Megrendelők száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM customerinjob cij, jobsinsettlement jis WHERE cij.JobID = jis.JobID AND settlementid = " + settlement.getId())).append("\n").append("\n");
+            dialog_message.append("Munkák száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM " + dh.JIS + " WHERE settlementID = " + settlement.getId())).append("\n");
+            dialog_message.append("Megrendelők száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM " + dh.CIJ + " cij, " + dh.JIS + " jis WHERE cij.JobID = jis.JobID AND settlementid = " + settlement.getId())).append("\n").append("\n");
             dialog_message.append("Leadott vizek száma:").append("\n");
-            dialog_message.append(getWaters("SELECT w.Name, SUM(WaterAmount) FROM jobsinsettlement jis, jobandwater jaw, waters w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId() + " GROUP BY w.Name")).append("\n");
-            dialog_message.append("Teljes bevétel: ").append(dh.getExactInt("SELECT SUM(w.Price * jaw.WaterAmount) As Ár FROM jobsinsettlement jis, jobandwater jaw, waters w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId())).append(" Ft").append("\n").append("\n");
+            dialog_message.append(getWaters("SELECT w.Name, SUM(WaterAmount) FROM " + dh.JIS + " jis, " + dh.JAW + " jaw, " + dh.WATERS + " w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId() + " GROUP BY w.Name")).append("\n");
+            dialog_message.append("Teljes bevétel: ").append(dh.getExactInt("SELECT SUM(w.Price * jaw.WaterAmount) As Ár FROM " + dh.JIS + " jis, " + dh.JAW + " jaw, " + dh.WATERS + " w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId())).append(" Ft").append("\n").append("\n");
 
             if(dh.getExactInt("SELECT finisherid FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";") != 0) {
-                dialog_message.append(dh.getExactString("SELECT u.Fullname FROM settlement s, users u WHERE s.finisherID = u.ID AND s.ID = " + settlement.getId() + ";")).append(" jóváhagyta!");
-                dialog_message.append(dh.getExactString("SELECT Finished FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";"));
+                dialog_message.append(dh.getExactString("SELECT u.Fullname FROM " + dh.SETTLEMENT + " s, " + dh.USERS + " u WHERE s.finisherID = u.ID AND s.ID = " + settlement.getId() + ";")).append(" jóváhagyta!");
+
+                String date = dh.getExactString("SELECT Finished FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";");
+                String[] date_array = date.split("\\.");
+                dialog_message.append(date_array[0]);
             } else {
                 dialog_message.append("Még nincs jóváhagyva!");
             }

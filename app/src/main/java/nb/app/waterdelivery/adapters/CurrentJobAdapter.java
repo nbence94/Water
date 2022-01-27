@@ -22,13 +22,10 @@ import java.util.Locale;
 import nb.app.waterdelivery.MainActivity;
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
-import nb.app.waterdelivery.alertdialog.WarningDialogChoice;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
-import nb.app.waterdelivery.jobs.EditMyJobActivity;
 import nb.app.waterdelivery.jobs.JobVisitActivity;
-import nb.app.waterdelivery.jobs.MyJobsActivity;
 
 public class CurrentJobAdapter extends RecyclerView.Adapter<CurrentJobAdapter.ViewHolder> {
     LayoutInflater inflater;

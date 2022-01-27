@@ -17,13 +17,13 @@ import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
-import nb.app.waterdelivery.alertdialog.WarningDialogChoice;
+import nb.app.waterdelivery.alertdialog.myWarningDialogChoice;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.jobs.EditMyJobActivity;
 import nb.app.waterdelivery.jobs.MyJobsActivity;
 
-public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder> implements WarningDialogChoice {
+public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder> implements myWarningDialogChoice {
 
     LayoutInflater inflater;
     Context context;
@@ -32,6 +32,8 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
     DatabaseHelper dh;
     MyAlertDialog mad;
     MyJobsActivity mja;
+
+    int number_of_rows;
 
     public MyJobsAdapter(Context context, Activity activity, ArrayList<Jobs> job_list) {
         this.inflater = LayoutInflater.from(context);
@@ -52,6 +54,7 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyJobsAdapter.ViewHolder holder, int position) {
+
         holder.job_name.setText(job_list.get(position).getName());
         holder.income.setText(String.valueOf(job_list.get(position).getIncome()));
 
@@ -63,12 +66,8 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
         }
 
         holder.item.setOnClickListener(v -> {
-            int number_of_rows = dh.getExactInt("SELECT COUNT(*) " +
-                    "FROM " + dh.CIJ +
-                    " WHERE JobID = " + job_list.get(position).getId() + " AND Finish IS NOT NULL");
 
-            if(number_of_rows > 0) {
-                mad.AlertInfoDialog("Figyelmeztetés","Ehhez a munkához már tartozik olyan megrendelő, akinek le lett adva a víz. \n Nem módosítható!","Rendben");
+            if(!checkJobStatus(position, "Figyelmeztetés", "Nem módosítható, mert tartozik hozzá leadott víz!")) {
                 return;
             }
 
@@ -76,12 +75,15 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
             edit_job.putExtra("job_id", job_list.get(position).getId());
             edit_job.putExtra("job_name", job_list.get(position).getName());
             activity.startActivityForResult(edit_job, 1);
+
         });
 
         holder.item.setOnLongClickListener(v -> {
-            mad.AlertWarningDialog("Megerősítés", "Biztosan törlöd ezt a munkát?", "Igen", "Nem", holder, position, this);
+            mad.myWarningDialog("Megerősítés", "Biztosan törlöd ezt a munkát?", "Igen", "Nem", holder, position, this);
             return false;
+
         });
+
     }
 
     @Override
@@ -89,23 +91,63 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
         return job_list.size();
     }
 
-    @Override
-    public void OnPositiveClick(@NonNull ViewHolder holder, int position) {
-        int job_id = job_list.get(position).getId();
-        if(dh.sql("CALL delete_job(" + job_id + ");")) {
-            Toast.makeText(context, "A kijelölt munka törölve!", Toast.LENGTH_SHORT).show();
-            mja.showElements();
-            //notifyDataSetChanged();
-        }
-        else {
-            Toast.makeText(context, "Törlés sikertelen!", Toast.LENGTH_SHORT).show();
+    public boolean checkJobStatus(int position, String title, String msg) {
+        number_of_rows = dh.getExactInt("SELECT COUNT(*) " +
+                "FROM " + dh.CIJ +
+                " WHERE JobID = " + job_list.get(position).getId() + " AND Finish IS NOT NULL");
+
+        if(number_of_rows > 0) {
+            mad.AlertInfoDialog(title,msg,"Rendben");
+            return false;
         }
 
-        //TODO Megcsinálni, hogy törlés után újratöltsön az oldal
+        return true;
     }
 
     @Override
-    public void OnNegativeClick(@NonNull ViewHolder holder, int position) {
+    public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        int job_id = job_list.get(position).getId();
+
+        /*if(dh.sql("CALL delete_job(" + job_id + ");")) {
+            Toast.makeText(context, "A kijelölt munka törölve!", Toast.LENGTH_SHORT).show();
+            job_list.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, job_list.size());
+        }
+        else {
+            Toast.makeText(context, "Törlés sikertelen!", Toast.LENGTH_SHORT).show();
+        }*/
+
+        if(!checkJobStatus(position, "Figyelmeztetés", "Nem törölhető, mert tartozik hozzá leadott víz!")) {
+            return;
+        }
+
+        //TODO Ezt jó lenne megcsinálni TRANZAKCIÓval, mert így besülhet néha
+        if(!dh.delete(dh.JAW ,"JobID = " + job_id)) {
+            Toast.makeText(context, "A törlés sikertelen!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!dh.delete(dh.CIJ ,"JobID = " + job_id)) {
+            Toast.makeText(context, "A törlés sikertelen!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!dh.delete(dh.JOBS,"ID = " + job_id)) {
+            Toast.makeText(context, "A törlés sikertelen!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(context, "Munka törölve!", Toast.LENGTH_SHORT).show();
+        job_list.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, job_list.size());
+
+    }
+
+    @Override
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -121,5 +163,6 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
             item = itemView.findViewById(R.id.custom_job_item);
             income = itemView.findViewById(R.id.custom_job_income_gui);
         }
+
     }
 }

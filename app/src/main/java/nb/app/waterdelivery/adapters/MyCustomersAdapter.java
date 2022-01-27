@@ -67,12 +67,18 @@ public class MyCustomersAdapter extends RecyclerView.Adapter<MyCustomersAdapter.
                     .append("Telefon 2: ").append(telephone).append("\n")
                     .append("E-mail: ").append(data_list.get(position).getEmail()).append("\n")
                     .append("\n")
-                    .append("További adatok:").append("\n")
-                    .append(data_list.get(position).getWater_weeks()).append(" hetente kér vizet.").append("\n");
+                    .append("További adatok:").append("\n");
+
+            int week = data_list.get(position).getWater_weeks();
+
+            if(week > 1) {
+                data.append(week).append(" hetente kér vizet").append("\n");
+            } else {
+                data.append("Hetente kér vizet").append("\n");
+            }
 
             if(data_list.get(position).getBill() == 1) data.append("Számlát kér!");
 
-            //AlertDialogHelper.setMessage(context, "Adatok", data.toString(), "Rendben");
             mad.AlertInfoDialog("Adatok", data.toString(), "Rendben");
         });
     }

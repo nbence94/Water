@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -18,9 +19,12 @@ import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.admin.AdminCheckUserActivity;
+import nb.app.waterdelivery.alertdialog.MyAlertDialog;
+import nb.app.waterdelivery.alertdialog.myWarningDialogChoice;
+import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Users;
 
-public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHolder> implements Filterable {
+public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHolder> implements Filterable, myWarningDialogChoice {
 
     LayoutInflater inflater;
     ArrayList<Users> data_list;
@@ -31,6 +35,9 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHo
     Context context;
     Activity activity;
 
+    MyAlertDialog mad;
+    DatabaseHelper dh;
+
     public AllUsersAdapter(Context context, Activity activity, ArrayList<Users> users_data) {
         this.inflater = LayoutInflater.from(context);
         this.data_list = users_data;
@@ -38,6 +45,8 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHo
         this.activity = activity;
 
         this.search_data_list = new ArrayList<>(data_list);
+        mad = new MyAlertDialog(context, activity);
+        dh = new DatabaseHelper(context, activity);
     }
 
     @NonNull
@@ -52,16 +61,55 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHo
         holder.name_text.setText(data_list.get(position).getName());
 
         holder.item.setOnClickListener(v -> {
-            //activity.finish();
             Intent admin_user_details_screen = new Intent(context, AdminCheckUserActivity.class);
             admin_user_details_screen.putExtra("user_id", data_list.get(position).getId());
             activity.startActivityForResult(admin_user_details_screen, 1);
+        });
+
+        holder.item.setOnLongClickListener(v -> {
+            mad.myWarningDialog("Megerősítés", "Felhasználó státuszának megváltoztatása!", "Aktív", "Inaktív", holder, position, this);
+            return false;
         });
     }
 
     @Override
     public int getItemCount() {
         return data_list.size();
+    }
+
+    @Override
+    public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        int user_id = data_list.get(position).getId();
+
+        if(dh.getExactInt("SELECT Status FROM " + dh.USERS + " WHERE ID=" + user_id) == 1) {
+            Toast.makeText(context, "Ez a felhasználó már aktív!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(dh.sql("UPDATE " + dh.USERS + " SET Status = 1 WHERE ID = " + user_id + ";")) {
+            Toast.makeText(context, "Állapot módosítva!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(context, "Sikertelen módosítás!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int user_id = data_list.get(position).getId();
+
+        if(dh.getExactInt("SELECT Status FROM " + dh.USERS + " WHERE ID=" + user_id) == 0) {
+            Toast.makeText(context, "Ez a felhasználó már aktív!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(dh.sql("UPDATE " + dh.USERS + " SET Status = 0 WHERE ID = " + user_id + ";")) {
+            Toast.makeText(context, "Állapot módosítva!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(context, "Sikertelen módosítás!", Toast.LENGTH_SHORT).show();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

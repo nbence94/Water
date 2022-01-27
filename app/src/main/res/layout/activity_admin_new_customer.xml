@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,166 +8,228 @@
     tools:context=".admin.AdminNewCustomerActivity"
     android:background="@drawable/bg_all">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/admin_add_customer_toolbar_gui"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/admin_add_customer_title"
-        android:background="@color/toolbar_color"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/admin_add_customer_save_button_gui"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp"
         android:clickable="true"
+        android:contentDescription="@string/customer_save_desc"
         android:src="@drawable/save_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck"
-        android:contentDescription="@string/customer_save_desc" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/customers_add_waters_gui"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginStart="10dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="15sp"
-        android:scaleType="center"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/linear_limits"
-        app:layout_constraintStart_toStartOf="@+id/linear_limits"
-        app:srcCompat="@drawable/water_icon" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/waters_selected_gui"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:text="Víz kiválasztva"
-        android:layout_marginBottom="25dp"
-        android:textColor="@color/success_color"
-        android:layout_marginStart="10dp"
-        android:drawablePadding="10sp"
-        app:layout_constraintBottom_toBottomOf="@id/linear_limits"
-        app:layout_constraintStart_toEndOf="@id/customers_add_waters_gui"
-        app:drawableEndCompat="@drawable/done_icon" />
-
-    <LinearLayout
-        android:id="@+id/linear_limits"
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:orientation="vertical"
-        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/admin_add_customer_toolbar_gui"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="-16dp">
+        tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
 
-        <EditText
-            android:id="@+id/add_customer_name_gui"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxHeight="660dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/admin_add_customer_toolbar_gui">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/linear_limits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/admin_add_customer_toolbar_gui"
+                app:layout_constraintVertical_bias="0.0">
+
+                <EditText
+                    android:id="@+id/add_customer_name_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="60dp"
+                    android:hint="@string/customer_name_text"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:minHeight="48dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/add_customer_city_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="24dp"
+                    android:hint="@string/customer_city_text"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:minHeight="48dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_name_gui" />
+
+                <EditText
+                    android:id="@+id/add_customer_address_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:hint="@string/customer_address_text"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:minHeight="48dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_city_gui" />
+
+                <TextView
+                    android:id="@+id/helper_textview1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:text="@string/customer_availability"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_address_gui" />
+
+                <EditText
+                    android:id="@+id/add_customer_email_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/customer_email_text"
+                    android:importantForAutofill="no"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="48dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/helper_textview1" />
+
+                <EditText
+                    android:id="@+id/add_customer_telephone_one_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/customer_phone_one_text"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:minHeight="48dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_email_gui" />
+
+                <EditText
+                    android:id="@+id/add_customer_telephone_two_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="35dp"
+                    android:hint="@string/customer_phone_two_text"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:minHeight="48dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_telephone_one_gui" />
+
+                <TextView
+                    android:id="@+id/helper_textview2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:text="Egyéb"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_telephone_two_gui" />
+
+                <TextView
+                    android:id="@+id/helper_textview3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/customer_water_need_text"
+                    android:textColor="#616161"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/helper_textview2" />
+
+                <Spinner
+                    android:id="@+id/add_customer_water_spinner_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#616161"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/helper_textview3" />
+
+                <CheckBox
+                    android:id="@+id/add_customer_bill_checkbox_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/customer_bill_need"
+                    android:textColor="#616161"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_water_spinner_gui" />
+
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/customers_add_waters_gui"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="15sp"
+                    android:scaleType="center"
+                    app:fabSize="mini"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_bill_checkbox_gui"
+                    app:srcCompat="@drawable/water_icon" />
+
+                <TextView
+                    android:id="@+id/waters_selected_gui"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:drawablePadding="10sp"
+                    android:text="Víz kiválasztva"
+                    android:textColor="@color/success_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:drawableEndCompat="@drawable/done_icon"
+                    app:layout_constraintBottom_toTopOf="@+id/admin_add_customer_comment_gui"
+                    app:layout_constraintStart_toEndOf="@id/customers_add_waters_gui"
+                    app:layout_constraintTop_toBottomOf="@+id/add_customer_bill_checkbox_gui"
+                    app:layout_constraintVertical_bias="0.538" />
+
+                <EditText
+                    android:id="@+id/admin_add_customer_comment_gui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:hint="Megjegyzés (opcionális)"
+                    android:inputType="textMultiLine"
+                    android:gravity="top|left"
+                    android:lines="5"
+                    app:layout_constraintTop_toBottomOf="@+id/customers_add_waters_gui"
+                    tools:ignore="TextViewEdits"
+                    tools:layout_editor_absoluteX="6dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/admin_add_customer_toolbar_gui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/customer_name_text"
-            android:minHeight="48dp"
-            android:inputType="text"
-            android:importantForAutofill="no" />
+            android:background="@color/toolbar_color"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/admin_add_customer_title" />
 
-        <EditText
-            android:id="@+id/add_customer_city_gui"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/customer_city_text"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:importantForAutofill="no" />
+    </RelativeLayout>
 
-        <EditText
-            android:id="@+id/add_customer_address_gui"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/customer_address_text"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:importantForAutofill="no" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/customer_availability"
-            android:layout_marginTop="10dp"/>
-
-        <EditText
-            android:id="@+id/add_customer_email_gui"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/customer_email_text"
-            android:inputType="textEmailAddress"
-            android:minHeight="48dp"
-            android:importantForAutofill="no" />
-
-        <EditText
-            android:id="@+id/add_customer_telephone_one_gui"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/customer_phone_one_text"
-            android:inputType="number"
-            android:minHeight="48dp"
-            android:importantForAutofill="no" />
-
-        <EditText
-            android:id="@+id/add_customer_telephone_two_gui"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/customer_phone_two_text"
-            android:inputType="number"
-            android:minHeight="48dp"
-            android:importantForAutofill="no" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Egyéb"
-            android:layout_marginTop="10dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/customer_water_need_text"
-            android:textColor="#616161" />
-
-        <Spinner
-            android:id="@+id/add_customer_water_spinner_gui"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#616161" />
-
-        <CheckBox
-            android:id="@+id/add_customer_bill_checkbox_gui"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/customer_bill_need"
-            android:textColor="#616161" />
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout >

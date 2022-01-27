@@ -1,5 +1,6 @@
 package nb.app.waterdelivery.alertdialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -17,15 +18,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Type;
-
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.adapters.ChosenCustomerWatersAdapter;
 import nb.app.waterdelivery.adapters.ChosenCustomersAdapter;
 import nb.app.waterdelivery.adapters.EditJobChosenCustomerAdapter;
 import nb.app.waterdelivery.adapters.EditJobChosenCustomerWatersAdapter;
 import nb.app.waterdelivery.adapters.MultiSelectAdapter;
-import nb.app.waterdelivery.adapters.MyJobsAdapter;
 import nb.app.waterdelivery.adapters.SingleSelectAdapter;
 
 public class MyAlertDialog {
@@ -87,6 +85,7 @@ public class MyAlertDialog {
         alertDialog.show();
     }
 
+    @SuppressLint("CutPasteId")
     public void AlertInputDialog(String title, String message, String button_title, int position, @NonNull ChosenCustomerWatersAdapter.ViewHolder holder, int input_type, final OnDialogTextChange listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_edittext_dialog, activity.findViewById(R.id.layoutDialogContainer));
@@ -371,7 +370,38 @@ public class MyAlertDialog {
         alertDialog.show();
     }
 
-    public void AlertWarningDialog(String title, String message, String buttonYes, String ButtonNo, @NonNull MyJobsAdapter.ViewHolder holder, int position, final WarningDialogChoice listener) {
+    /*public void AlertWarningDialog(String title, String message, String buttonYes, String ButtonNo, @NonNull MyJobsAdapter.ViewHolder holder, int position, final WarningDialogChoice listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
+        View my_view = LayoutInflater.from(context).inflate(R.layout.layout_warning_dialog, activity.findViewById(R.id.layoutDialogContainer));
+        builder.setView(my_view);
+
+        ((TextView) my_view.findViewById(R.id.textTitle)).setText(title);
+        ((TextView) my_view.findViewById(R.id.textMessage)).setText(message);
+        ((Button) my_view.findViewById(R.id.buttonYes)).setText(buttonYes);
+        ((Button) my_view.findViewById(R.id.buttonNo)).setText(ButtonNo);
+        ((ImageView) my_view.findViewById(R.id.imageIcon)).setImageResource(R.drawable.warning_icon);
+
+        final AlertDialog alertDialog = builder.create();
+
+        my_view.findViewById(R.id.buttonYes).setOnClickListener(v -> {
+            listener.OnPositiveClick(holder, position);
+            alertDialog.dismiss();
+        });
+
+        my_view.findViewById(R.id.buttonNo).setOnClickListener(v -> {
+            listener.OnNegativeClick(holder, position);
+            alertDialog.dismiss();
+
+        });
+
+        if(alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+
+        alertDialog.show();
+    }*/
+
+    public void myWarningDialog(String title, String message, String buttonYes, String ButtonNo, @NonNull RecyclerView.ViewHolder holder, int position, final myWarningDialogChoice listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
         View my_view = LayoutInflater.from(context).inflate(R.layout.layout_warning_dialog, activity.findViewById(R.id.layoutDialogContainer));
         builder.setView(my_view);

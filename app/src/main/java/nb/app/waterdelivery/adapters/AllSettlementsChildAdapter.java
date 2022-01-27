@@ -39,7 +39,7 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
     ArrayList<Settlement> settlement_list;
     DatabaseHelper dh;
     MyAlertDialog mad;
-    AllSettlementActivity aja;
+    AllSettlementActivity asa;
     SaveLocalDatas sld;
 
     public AllSettlementsChildAdapter(Context context, Activity activity, ArrayList<Settlement> settlement_list) {
@@ -49,7 +49,7 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
         this.settlement_list = settlement_list;
         dh = new DatabaseHelper(context, activity);
         mad = new MyAlertDialog(context, activity);
-        aja = (AllSettlementActivity) context;
+        asa = (AllSettlementActivity) context;
         sld = new SaveLocalDatas(activity);
     }
 
@@ -95,7 +95,6 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
             //dialog_message.append("Munkák száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM jobsinsettlement WHERE settlementID = " + settlement.getId())).append("\n");
             //dialog_message.append("Megrendelők száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM customerinjob cij, jobsinsettlement jis WHERE cij.JobID = jis.JobID AND settlementid = " + settlement.getId())).append("\n").append("\n");
             dialog_message.append("Befolyt összeg megrendelőnként:").append("\n");
-            //dialog_message.append(getWaters("SELECT w.Name, SUM(WaterAmount) FROM jobsinsettlement jis, jobandwater jaw, waters w WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID AND settlementid = " + settlement.getId() + " GROUP BY w.Name")).append("\n");
             dialog_message.append(getItems("SELECT c.Fullname, SUM(jaw.WaterAmount * w.Price) AS Ár " +
                                                 "FROM customers c, jobandwater jaw, waters w, jobsinsettlement jis " +
                                                 "WHERE c.ID = jaw.CustomerID AND jaw.WaterID = w.ID AND jis.JobID = jaw.JobID " +
@@ -118,7 +117,10 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
 
             if(dh.getExactInt("SELECT finisherid FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";") != 0) {
                 dialog_message.append(dh.getExactString("SELECT u.Fullname FROM settlement s, users u WHERE s.finisherID = u.ID AND s.ID = " + settlement.getId() + ";")).append(" jóváhagyta!");
-                dialog_message.append(dh.getExactString("SELECT Finished FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";"));
+
+                String date = dh.getExactString("SELECT Finished FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";");
+                String[] date_array = date.split("\\.");
+                dialog_message.append(date_array[0]);
             } else {
                 dialog_message.append("Még nincs jóváhagyva!");
             }

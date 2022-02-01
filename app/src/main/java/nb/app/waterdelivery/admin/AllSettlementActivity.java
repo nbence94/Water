@@ -69,7 +69,8 @@ public class AllSettlementActivity extends AppCompatActivity {
     public void loadMonths() {
 
         Connection con = dh.connectionClass(this);
-        String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " GROUP BY year, month ORDER BY year DESC;";
+        //String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " GROUP BY year, month ORDER BY year DESC;";
+        String select = "call getSettlements(0)";
 
         try {
             if(con != null) {

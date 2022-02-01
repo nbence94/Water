@@ -52,7 +52,14 @@ public class MyJobsActivity extends AppCompatActivity implements myWarningDialog
         //Tervezet készítés (Munka létrehozás)
         new_draft_button = findViewById(R.id.my_jobs_add_button_gui);
 
-        new_draft_button.setOnClickListener(v -> mad.myWarningDialog("Válassz az alábbiak közül","Milyen tervezetet készítenél?","Heti","Egyéb", null, 0, this));
+
+            new_draft_button.setOnClickListener(v -> {
+                if(dh.ROGZITO_ROLE != sld.loadUserRoleID()) {
+                    mad.myWarningDialog("Válassz az alábbiak közül", "Milyen tervezetet készítenél?", "Heti", "Egyéb", null, 0, this);
+                } else {
+                    openCreate();
+                }
+            });
 
         recycler = findViewById(R.id.my_jobs_recycler_gui);
         job_list = new ArrayList<>();
@@ -79,6 +86,23 @@ public class MyJobsActivity extends AppCompatActivity implements myWarningDialog
 
     @Override
     public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
+        openCreate();
+    }
+
+    @Override
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (0 == dh.getExactInt("SELECT COUNT(*) FROM Customers c WHERE c.UserID = " + sld.loadUserID() + "  AND c.ID NOT IN " +
+                "( SELECT c.ID FROM Customers c, customerinjob cij, jobs j WHERE c.ID = cij.CustomerID AND j.ID = cij.JobID AND j.Finish IS NULL )")) {
+            Toast.makeText(this, "Minden megrendelő szállításhoz van már rendelve!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        finish();
+        Intent new_draft = new Intent(MyJobsActivity.this, CreateJobActivity.class);
+        startActivity(new_draft);
+    }
+
+    private void openCreate() {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
 
@@ -97,19 +121,5 @@ public class MyJobsActivity extends AppCompatActivity implements myWarningDialog
         } else {
             Toast.makeText(this, "Nincs hétvége!", Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-    @Override
-    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (0 == dh.getExactInt("SELECT COUNT(*) FROM Customers c WHERE c.UserID = " + sld.loadUserID() + "  AND c.ID NOT IN " +
-                "( SELECT c.ID FROM Customers c, customerinjob cij, jobs j WHERE c.ID = cij.CustomerID AND j.ID = cij.JobID AND j.Finish IS NULL )")) {
-            Toast.makeText(this, "Minden megrendelő szállításhoz van már rendelve!", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        finish();
-        Intent new_draft = new Intent(MyJobsActivity.this, CreateJobActivity.class);
-        startActivity(new_draft);
     }
 }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,6 +28,7 @@ public class AdminUserJobDetailsActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView recycler;
+    TextView global_income_text;
 
     UserJobsDetailsAdapter adapter;
     DatabaseHelper dh;
@@ -54,7 +56,16 @@ public class AdminUserJobDetailsActivity extends AppCompatActivity {
 
         getIntentData();
         showElements();
+
+        global_income_text = findViewById(R.id.admin_user_jobs_details_leg_gui);
+        int income = 0;
+        for(int i = 0; i < job_list.size(); i++) {
+            income += job_list.get(i).getIncome();
+        }
+        String income_text = "Teljes bevétel: " + income + " Ft";
+        global_income_text.setText(income_text);
     }
+
 
     public void showElements() {
         job_list.clear();

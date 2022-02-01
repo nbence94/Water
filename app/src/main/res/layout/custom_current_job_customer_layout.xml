@@ -63,7 +63,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_customer_gui"
-                android:background="@color/details_color">
+                android:background="@drawable/custom_cardview_grey_bg">
 
                 <TextView
                     android:id="@+id/current_job_water_datas"
@@ -72,7 +72,7 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="8dp"
                     android:text="Balfi"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -83,7 +83,7 @@
                     android:layout_marginEnd="80dp"
                     android:layout_marginTop="8dp"
                     android:text="[6 db - 5000 Ft ]"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

@@ -105,7 +105,7 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
         water_list = new ArrayList<>();
         caw_list = new ArrayList<>();
 
-        dh.getWatersData(water_list, "");//Mindent meg kell jeleníteni
+        dh.getWatersData("SELECT * FROM " + dh.WATERS, water_list);//Mindent meg kell jeleníteni
         waters_name_to_show = new String[water_list.size()];
         chosen_waters = new boolean[water_list.size()];
         tmp_chosen_waters = new boolean[water_list.size()];

@@ -557,8 +557,8 @@ public class DatabaseHelper {
         }
     }
 
-    public void getWatersData(ArrayList<Waters> waters_list, String condition) {
-        String select = "SELECT * FROM " + WATERS + " " + condition + ";";
+    public void getWatersData(String select, ArrayList<Waters> waters_list) {
+        //String select = "SELECT * FROM " + WATERS + " " + condition + ";";
         Connection con = this.connectionClass(context);
 
         try {

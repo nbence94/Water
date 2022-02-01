@@ -14,8 +14,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="4dp"
         android:paddingTop="55dp"
+        android:paddingBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -38,14 +38,15 @@
     <TextView
         android:id="@+id/admin_user_jobs_details_leg_gui"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignBottom="@id/admin_user_jobs_details_recycler_gui"
-        android:background="@color/toolbar_color"
+        android:background="@drawable/custom_cardview_grey_bg"
         android:minHeight="?attr/actionBarSize"
-        android:paddingStart="10dp"
+        android:paddingStart="12dp"
         android:paddingTop="10dp"
         android:text="Teljes bevétel: 20.000 Ft"
         android:textSize="25sp"
+        android:textStyle="bold"
         android:theme="?attr/actionBarTheme" />
 
 </RelativeLayout>

@@ -70,7 +70,7 @@ public class JobVisitActivity extends AppCompatActivity {
         //Listák feltöltése
         dh.getCIJData("SELECT * FROM " + dh.CIJ + " WHERE JobID=" + job_id + ";", customers_in_jobs_list);
         dh.getJAWData("SELECT * FROM " + dh.JAW + " WHERE JobID=" + job_id + ";", waters_in_jobs_list);
-        dh.getWatersData(water_details_list, "");
+        dh.getWatersData("SELECT * FROM " + dh.WATERS, water_details_list);
         dh.getCustomersData("SELECT * FROM " + dh.CUSTOMERS + " WHERE UserID=" + sld.loadUserID() + ";", customers_detail_list);
 
         //--

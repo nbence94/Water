@@ -20,8 +20,11 @@ import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.admin.AdminUserJobDetailsActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.Customers;
+import nb.app.waterdelivery.data.CustomersInJob;
 import nb.app.waterdelivery.data.DatabaseHelper;
+import nb.app.waterdelivery.data.JobAndWaters;
 import nb.app.waterdelivery.data.Jobs;
+import nb.app.waterdelivery.data.Waters;
 
 
 public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetailsAdapter.ViewHolder>{
@@ -38,6 +41,9 @@ public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetails
     //Gyerek-adapter
     ArrayList<Customers> customers_list;
     UserJobsDetailsChildAdapter adapter;
+    ArrayList<CustomersInJob> cij_list;
+    ArrayList<Waters> waters_list;
+    ArrayList<JobAndWaters> jaw_list;
 
     public UserJobsDetailsAdapter(Context context, Activity activity, ArrayList<Jobs> job_list) {
         this.inflater = LayoutInflater.from(context);
@@ -54,6 +60,9 @@ public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetails
         }
 
         customers_list = new ArrayList<>();
+        cij_list = new ArrayList<>();
+        waters_list = new ArrayList<>();
+        jaw_list = new ArrayList<>();
     }
 
     @NonNull
@@ -66,6 +75,7 @@ public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetails
     @Override
     public void onBindViewHolder(@NonNull UserJobsDetailsAdapter.ViewHolder holder, int position) {
 
+        //A gyerek-adapter elemei, vagyis a megrendelők megjelenítése
         showElements(holder, position);
 
         holder.job_name.setText(job_list.get(position).getName());
@@ -103,8 +113,13 @@ public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetails
 
     public void showElements(@NonNull UserJobsDetailsAdapter.ViewHolder holder, int position) {
         customers_list.clear();
+        waters_list.clear();
+        jaw_list.clear();
         dh.getCustomersData("SELECT * FROM " + dh.CUSTOMERS + " c, " + dh.CIJ + " cij WHERE c.ID = cij.CustomerID AND cij.JobID = " +  job_list.get(position).getId() + "; ", customers_list);
-        adapter = new UserJobsDetailsChildAdapter(context,  activity, customers_list);
+        dh.getCIJData("SELECT * FROM " + dh.CIJ + " WHERE jobID = " +  job_list.get(position).getId() + "; ", cij_list);
+        dh.getWatersData("SELECT * FROM " + dh.WATERS, waters_list);
+        dh.getJAWData("SELECT * FROM " + dh.JAW + " WHERE jobID = " + job_list.get(position).getId(), jaw_list);
+        adapter = new UserJobsDetailsChildAdapter(context,  activity, customers_list, cij_list, waters_list, jaw_list, job_list.get(position).getId());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);
         holder.recycler.setAdapter(adapter);

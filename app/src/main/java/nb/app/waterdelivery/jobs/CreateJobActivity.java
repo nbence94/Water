@@ -123,7 +123,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
         dh.getCAWData(all_caw_list, "");
 
         //Víz adatok
-        dh.getWatersData(all_water_list, "");
+        dh.getWatersData("SELECT * FROM " + dh.WATERS, all_water_list);
 
         //AlertDialog beállítások
         initializeArrays(all_customers_list.size());

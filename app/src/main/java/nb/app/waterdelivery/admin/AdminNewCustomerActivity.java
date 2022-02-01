@@ -94,7 +94,7 @@ public class AdminNewCustomerActivity extends AppCompatActivity implements Adapt
 
         //Víz választás
         water_list = new ArrayList<>();
-        dh.getWatersData(water_list, "");
+        dh.getWatersData("SELECT * FROM " + dh.WATERS, water_list);
         waters_name_to_show = new String[water_list.size()];
         chosen_waters = new boolean[water_list.size()];
         tmp_chosen_waters = new boolean[water_list.size()];

@@ -40,7 +40,7 @@ public class SaveLocalDatas {
     }
 
     public void saveCurrentUser(int id) {
-        Log.i(LOG_TITLE, "Aktuális felhasználó azonosítójának mentése");
+        Log.i(LOG_TITLE, "Aktuális felhasználó azonosítójának mentése. (" + id + ")");
         SharedPreferences sp = activity.getSharedPreferences("current_user_data", MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
         edit.putInt("user_id", id);

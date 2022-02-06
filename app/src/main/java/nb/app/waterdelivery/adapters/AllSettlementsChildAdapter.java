@@ -94,25 +94,25 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
 
             //dialog_message.append("Munkák száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM jobsinsettlement WHERE settlementID = " + settlement.getId())).append("\n");
             //dialog_message.append("Megrendelők száma: ").append(dh.getExactInt("SELECT COUNT(*) FROM customerinjob cij, jobsinsettlement jis WHERE cij.JobID = jis.JobID AND settlementid = " + settlement.getId())).append("\n").append("\n");
-            dialog_message.append("Befolyt összeg megrendelőnként:").append("\n");
+            dialog_message.append("MEGRENDELŐK").append("\n");
             dialog_message.append(getItems("SELECT c.Fullname, SUM(jaw.WaterAmount * w.Price) AS Ár " +
                                                 "FROM customers c, jobandwater jaw, waters w, jobsinsettlement jis " +
                                                 "WHERE c.ID = jaw.CustomerID AND jaw.WaterID = w.ID AND jis.JobID = jaw.JobID " +
                                                 "AND jis.SettlementID = " + settlement.getId() + " " +
                                                 "GROUP BY c.Fullname", " Ft")).append("\n");
 
-            dialog_message.append("Teljes bevétel: ")
-                    .append(dh.getExactInt("SELECT SUM(w.Price * jaw.WaterAmount) As Ár " +
-                                                "FROM jobsinsettlement jis, jobandwater jaw, waters w " +
-                                                "WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID " +
-                                                "AND settlementid = " + settlement.getId())).append(" Ft").append("\n").append("\n");
-
-            dialog_message.append("Leadott vízmennyiség: ").append("\n");
+            dialog_message.append("LEADOTT VIZEK").append("\n");
             dialog_message.append(getItems("SELECT w.Name, SUM(jaw.WaterAmount) " +
                     "FROM customers c, jobandwater jaw, waters w, jobsinsettlement jis " +
                     "WHERE c.ID = jaw.CustomerID AND jaw.WaterID = w.ID AND jis.JobID = jaw.JobID " +
                     "AND jis.SettlementID = " + settlement.getId() +
                     " GROUP BY w.Name", " db")).append("\n");
+
+            dialog_message.append("TELJES BEVÉTEL ").append("\n")
+                    .append(dh.getExactInt("SELECT SUM(w.Price * jaw.WaterAmount) As Ár " +
+                            "FROM jobsinsettlement jis, jobandwater jaw, waters w " +
+                            "WHERE jaw.JobID = jis.JobID AND w.ID = jaw.WaterID " +
+                            "AND settlementid = " + settlement.getId())).append(" Ft").append("\n").append("\n");
 
 
             if(dh.getExactInt("SELECT finisherid FROM " + dh.SETTLEMENT + " WHERE ID = " + settlement.getId() + ";") != 0) {

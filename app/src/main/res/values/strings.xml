@@ -82,6 +82,12 @@
     <string name="customer_note_hint">Megjegyzés\.\.\.</string>
     <string name="yes" />
 
+    <!-- Adminisztáció -->
+    <string name="admin_control_title">Adminisztráció</string>
+    <string name="admin_user_settlements_title">Leadott munkák</string>
+    <string name="admin_month_title">Havi elszámolás</string>
+
+
     <!-- Elszámolások -->
     <string name="my_settlements_title">Elszámolásaim</string>
 

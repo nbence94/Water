@@ -82,12 +82,12 @@ public class UserJobsDetailsChildAdapter extends RecyclerView.Adapter<UserJobsDe
             for(int i = 0; i < cij_list.size(); i++) {
                     if (cij_list.get(i).getCustomerid() == customers_list.get(position).getId()) {
                         String[] date_array = cij_list.get(i).getFinish().split("\\.");
-                        msg.append("A rendelés leadva:").append("\n").append(date_array[0]).append("\n").append("\n");
+                        msg.append("SZÁLLÍTÁS LEADVA").append("\n").append(date_array[0]).append("\n").append("\n");
                         break;
                 }
             }
 
-            msg.append("Leadott vizek:").append("\n");
+            msg.append("LEADOTT VIZEK").append("\n");
             int income = 0;
             for(int i = 0; i < waters_list.size(); i++) {
                 for(int j = 0; j < jaw_list.size(); j++) {
@@ -100,8 +100,7 @@ public class UserJobsDetailsChildAdapter extends RecyclerView.Adapter<UserJobsDe
                 }
             }
 
-            msg.append("\n").append("Fizetett:").append("\n").append(income).append(" Ft");
-
+            msg.append("\n").append("BEVÉTEL").append("\n").append(income).append(" Ft");
 
             mad.AlertInfoDialog("További információ", msg.toString(),"Rendben");
         });

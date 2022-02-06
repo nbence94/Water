@@ -72,7 +72,8 @@ public class MySettlementsActivity extends AppCompatActivity {
     public void loadMonths() {
 
         Connection con = dh.connectionClass(this);
-        String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " WHERE UserID = " + sld.loadUserID() + " GROUP BY year, month ORDER BY year DESC;";
+        //String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " WHERE UserID = " + sld.loadUserID() + " GROUP BY year, month ORDER BY year DESC;";
+        String select = "call getMySettlements(" + sld.loadUserID() + ")";
 
         try {
             if(con != null) {

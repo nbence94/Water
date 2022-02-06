@@ -82,6 +82,7 @@ public class UserJobsChildAdapter extends RecyclerView.Adapter<UserJobsChildAdap
             if(settlement_list.get(position).getId() > 0) {
                 Intent jobs = new Intent(context, AdminUserJobDetailsActivity.class);
                 jobs.putExtra("settlementid", settlement_list.get(position).getId());
+                sld.saveCurrentUser(settlement_list.get(position).getUserid());
                 activity.startActivityForResult(jobs, 1);
             }
         });

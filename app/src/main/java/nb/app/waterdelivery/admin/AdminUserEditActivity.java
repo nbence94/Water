@@ -84,35 +84,12 @@ public class AdminUserEditActivity extends AppCompatActivity implements OnDialog
 
         for(int i = 0; i < roles_list.size(); i++) {
             roles_array[i] = roles_list.get(i).getName();
-            if(roles_list.get(i).getId() == role_id_value) chosen_role_item[i] = true;
         }
-        chosen_role = role_id_value;
-        //chosen_role_item[chosen_role] = true;//Ez csak a módosításnál kell
-        //TODO AZért azt megcsinálni, hogy itt nem elég a chosen_role-t beletenni. Az értékek elcsúszhatnak
+        chosen_role_item[role_id_value] = true;//Ez csak a módosításnál kell
         role_field.setText(roles_list.get(role_id_value).getName());
 
         role_field.setOnClickListener(v -> {
-            /*AlertDialog.Builder roles = new AlertDialog.Builder(this);
-            roles.setTitle("Válassz szerepkört");
-            tmp_role = chosen_role;
-
-            roles.setSingleChoiceItems(roles_array, chosen_role, (dialog, which) -> {
-                chosen_role = which;
-            });
-
-            roles.setPositiveButton("Rendben", (dialog, which) -> {
-                role_field.setText(roles_array[chosen_role]);
-                dialog.dismiss();
-            });
-
-            roles.setNegativeButton("Mégse", (dialog, which) -> {
-                chosen_role = tmp_role;
-                dialog.dismiss();
-            });
-
-            roles.show();*/
             mad.AlertSingleSelectDialog("Válassz szerepkört", roles_array, chosen_role_item, tmp_chosen_item, "Rendben", "Mégsem", null, 0, this);
-
         });
 
         //Módosítás mentése

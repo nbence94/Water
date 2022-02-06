@@ -65,27 +65,75 @@
                 app:layout_constraintTop_toBottomOf="@+id/job_customer_gui"
                 android:background="@drawable/custom_cardview_grey_bg">
 
+
+                <TextView
+                    android:id="@+id/current_job_address_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Szállítási adatok"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/current_job_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="3dp"
+                    android:text="5000 Szolnok Cím 23 1/2"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/current_job_address_title" />
+
+                <TextView
+                    android:id="@+id/current_job_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="8dp"
+                    android:text="+36 30 350 1237"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/current_job_address" />
+
+                <TextView
+                    android:id="@+id/current_job_waters_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="28dp"
+                    android:text="Szállítandó vizek"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/current_job_phone" />
+
                 <TextView
                     android:id="@+id/current_job_water_datas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
                     android:text="Balfi"
                     android:textSize="22sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/current_job_waters_title" />
 
                 <TextView
                     android:id="@+id/current_job_water_details_datas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="80dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="76dp"
                     android:text="[6 db - 5000 Ft ]"
                     android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/current_job_waters_title" />
 
                 <TextView
                     android:id="@+id/current_job_income"
@@ -95,7 +143,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="Teljes összeg: 5000 Ft"
-                    android:textSize="17sp"
+                    android:textSize="25sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

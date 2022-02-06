@@ -85,7 +85,7 @@ public class AllSettlementsAdapter extends RecyclerView.Adapter<AllSettlementsAd
 
     public void showElements(@NonNull AllSettlementsAdapter.ViewHolder holder, String year, String month) {
         settlement_list.clear();
-        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE UserID = " + sld.loadUserID() + " AND YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
+        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE YEAR(Created) = " + year + " AND MONTH(Created) = " + month + " ORDER BY ID DESC;", settlement_list);
         adapter = new AllSettlementsChildAdapter(context,  activity, settlement_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);

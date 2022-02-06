@@ -29,6 +29,7 @@ import nb.app.waterdelivery.adapters.CurrentJobAdapter;
 import nb.app.waterdelivery.adapters.MyJobsAdapter;
 import nb.app.waterdelivery.admin.AdminAllCustomersActivity;
 import nb.app.waterdelivery.admin.AdminAllUsersActivity;
+import nb.app.waterdelivery.admin.AdminControlActivity;
 import nb.app.waterdelivery.admin.AllSettlementActivity;
 import nb.app.waterdelivery.customers.MyCustomersActivity;
 import nb.app.waterdelivery.data.DatabaseHelper;
@@ -202,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_settlements:
-                Intent settlement = new Intent(MainActivity.this, AllSettlementActivity.class);
+                Intent settlement = new Intent(MainActivity.this, AdminControlActivity.class);
                 startActivity(settlement);
                 break;
 

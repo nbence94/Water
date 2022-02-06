@@ -118,25 +118,6 @@ public class CurrentJobAdapter extends RecyclerView.Adapter<CurrentJobAdapter.Vi
         return job_list.size();
     }
 
-    /*@Override
-    public void OnPositiveClick(@NonNull CurrentJobAdapter.ViewHolder holder, int position) {
-        int job_id = job_list.get(position).getId();
-        if(dh.sql("CALL delete_job(" + job_id + ");")) {
-            Toast.makeText(context, "A kijelölt munka törölve!", Toast.LENGTH_SHORT).show();
-            mja.showElements();
-            //notifyDataSetChanged();
-        }
-        else {
-            Toast.makeText(context, "Törlés sikertelen!", Toast.LENGTH_SHORT).show();
-        }
-
-        //TODO Megcsinálni, hogy törlés után újratöltsön az oldal
-    }
-
-    @Override
-    public void OnNegativeClick(@NonNull CurrentJobAdapter.ViewHolder holder, int position) {
-    }*/
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView job_name, job_date, income;

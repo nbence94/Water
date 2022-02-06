@@ -1,5 +1,6 @@
 package nb.app.waterdelivery.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -89,20 +90,34 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
             notifyItemChanged(position);
         });
 
+
        int customer_id = customers_in_jobs_list.get(position).getCustomerid();
        String name = "-";
+        String full_address = "-";
+        String phones = "Tel.: ";
        for(int i = 0; i < customers_detail_list.size(); i++) {
             if(customer_id == customers_detail_list.get(i).getId()) {
+
                 name = customers_detail_list.get(i).getFullname();
+                full_address = customers_detail_list.get(i).getCity() + " - " + customers_detail_list.get(i).getAddress();
+                phones += customers_detail_list.get(i).getPhone_one();
+                if(!customers_detail_list.get(i).getPhone_two().equals(""))
+                    phones += "\nTel2.: " + customers_detail_list.get(i).getPhone_two();
+
                 if(customers_detail_list.get(i).getBill() == 1) {
                     holder.bill.setVisibility(View.VISIBLE);
                 } else {
                     holder.bill.setVisibility(View.GONE);
                 }
+                break;
             }
        }
        holder.customer_name.setText(name);
        holder.bill.setTooltipText("Kér számlát");
+       holder.customers_address.setText(full_address);
+
+
+       holder.customers_tel.setText(phones);
 
        if( customers_in_jobs_list.get(position).getFinish() != null) {
            String finish = "Lezárva: " + customers_in_jobs_list.get(position).getFinish();
@@ -131,15 +146,12 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
                         water_price = String.valueOf(waters_in_jobs_list.get(i).getWateramount() * water_details_list.get(j).getPrice());
                         water_details.append("[ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]");
 
-                        /*if(i < waters_in_jobs_list.size() - 2) {
+                        if(i < waters_in_jobs_list.size() - 1) {
                             water_details.append("\n");
                             waters.append("\n");
-                        }*/
+                        }
 
-                       water_details.append("\n");
-                       waters.append("\n");
-
-                       global_income += Integer.parseInt(water_price);
+                        global_income += Integer.parseInt(water_price);
                    }
                }
            }
@@ -147,7 +159,8 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
        holder.waters_text.setText(waters.toString());
        holder.water_details_text.setText(water_details.toString());
 
-       String income_text = "Teljes ár: " + global_income + " Ft";
+       @SuppressLint("DefaultLocale") String separated_income_text = String.format("%,d", global_income).replace(",", " ");
+       String income_text = "Teljes ár: " + separated_income_text + " Ft";
        holder.income_text.setText(income_text);
 
        holder.finish_check.setOnClickListener(v -> {
@@ -191,7 +204,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView customer_name, waters_text, water_details_text, income_text, finish_date;
+        TextView customer_name, customers_address, customers_tel, waters_text, water_details_text, income_text, finish_date;
         CheckBox finish_check;
         ConstraintLayout item;
         ImageView bill;
@@ -209,6 +222,8 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
             item = itemView.findViewById(R.id.expand_layout);
             bill = itemView.findViewById(R.id._current_job_need_bill_icon);
             job_item = itemView.findViewById(R.id.current_job_item);
+            customers_address = itemView.findViewById(R.id.current_job_address);
+            customers_tel = itemView.findViewById(R.id.current_job_phone);
         }
     }
 }

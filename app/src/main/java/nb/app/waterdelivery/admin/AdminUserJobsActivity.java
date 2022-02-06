@@ -59,14 +59,8 @@ public class AdminUserJobsActivity extends AppCompatActivity {
 
         //Felhasználók megjelenítése
         recycler = findViewById(R.id.admin_user_jobs_recycler_gui);
-        //jobs_list = new ArrayList<>();
         months_list = new ArrayList<>();
-        //getDatas("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + user_id + ";");
         showMonthsElements();
-        /*adapter = new UserJobsAdapter(this, this,months_list);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recycler.setLayoutManager(manager);
-        recycler.setAdapter(adapter);*/
 
     }
 
@@ -83,7 +77,7 @@ public class AdminUserJobsActivity extends AppCompatActivity {
         if(getIntent().hasExtra("user_id")) {
             user_id = getIntent().getIntExtra("user_id", 0);
         } else {
-            user_id = sld.loadUserID();
+            user_id = sld.loadCurrentUserID();
         }
     }
 
@@ -118,30 +112,10 @@ public class AdminUserJobsActivity extends AppCompatActivity {
         }
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView sv = (SearchView) item.getActionView();
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }*/
-
     public void loadMonths() {
 
         Connection con = dh.connectionClass(this);
-        String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " GROUP BY year, month ORDER BY year DESC;";
+        String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " WHERE userID = " + user_id + " GROUP BY year, month ORDER BY year DESC;";
 
         try {
             if(con != null) {

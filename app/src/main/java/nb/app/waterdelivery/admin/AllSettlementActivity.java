@@ -71,7 +71,7 @@ public class AllSettlementActivity extends AppCompatActivity {
         Connection con = dh.connectionClass(this);
         //String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " GROUP BY year, month ORDER BY year DESC;";
         String select = "call getSettlements(0)";
-
+        //TODO ugyanezt megcsinálni a MySettlementsben
         try {
             if(con != null) {
                 Statement st = con.createStatement();

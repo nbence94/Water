@@ -16,14 +16,6 @@ public class SaveLocalDatas {
         this.activity = activity;
     }
 
-    public void saveStayLoggedStatus(boolean stay_logged_in) {
-        Log.i(LOG_TITLE, "Automata bejelentkeztetés adatok elmentve. (" + stay_logged_in + ")");
-        SharedPreferences sp = activity.getSharedPreferences("open_check", MODE_PRIVATE);
-        SharedPreferences.Editor edit = sp.edit();
-        edit.putBoolean("key", stay_logged_in);
-        edit.apply();
-    }
-
     public void saveUserDatas(int id, String name, String email, String phonenumber, String role_name, int role_id, short status, int jobs) {
         Log.i(LOG_TITLE, "Felhasználó adatok eltárolva");
         SharedPreferences sp = activity.getSharedPreferences("user_datas", MODE_PRIVATE);
@@ -39,6 +31,7 @@ public class SaveLocalDatas {
         edit.apply();
     }
 
+    //Kell, hogy mindig gyorsan el lehessen érni adminként a kívánt felhasználót
     public void saveCurrentUser(int id) {
         Log.i(LOG_TITLE, "Aktuális felhasználó azonosítójának mentése. (" + id + ")");
         SharedPreferences sp = activity.getSharedPreferences("current_user_data", MODE_PRIVATE);
@@ -53,6 +46,8 @@ public class SaveLocalDatas {
         return sp.getInt("user_id", -1);
     }
 
+
+    //Ez a tervezet piszkozatának státuszát menti el. Szükség van rá, hogy tudni lehessen, mit töltsön be
     public void saveDraftStatus(boolean status) {
         SharedPreferences sp = activity.getSharedPreferences("save_draft_elements", MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
@@ -67,6 +62,8 @@ public class SaveLocalDatas {
         return sp.getBoolean("draft_status", false);
     }
 
+
+    //Saját adatainknak a megjelenítése
     public int loadUserID() {
         Log.i(LOG_TITLE, " Felhasználó azonosítójának betöltése ");
         SharedPreferences sp = activity.getSharedPreferences("user_datas", MODE_PRIVATE);
@@ -119,6 +116,14 @@ public class SaveLocalDatas {
         SharedPreferences sp = activity.getSharedPreferences("open_check", MODE_PRIVATE);
         Log.i(LOG_TITLE, "Automatikus bejelentkeztetés állapota: " + sp.getBoolean("key", false));
         return sp.getBoolean("key", false);
+    }
+
+    public void saveStayLoggedStatus(boolean stay_logged_in) {
+        Log.i(LOG_TITLE, "Automata bejelentkeztetés adatok elmentve. (" + stay_logged_in + ")");
+        SharedPreferences sp = activity.getSharedPreferences("open_check", MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putBoolean("key", stay_logged_in);
+        edit.apply();
     }
 
     //Database

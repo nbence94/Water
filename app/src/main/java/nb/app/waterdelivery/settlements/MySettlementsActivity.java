@@ -71,7 +71,13 @@ public class MySettlementsActivity extends AppCompatActivity {
 
     public void loadMonths() {
 
-        Connection con = dh.connectionClass(this);
+        Connection con = null;
+        try {
+            con = dh.connectionClass(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         //String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " WHERE UserID = " + sld.loadUserID() + " GROUP BY year, month ORDER BY year DESC;";
         String select = "call getMySettlements(" + sld.loadUserID() + ")";
 
@@ -83,8 +89,11 @@ public class MySettlementsActivity extends AppCompatActivity {
                 String value;
 
                 while(rs.next()) {
-                    value = rs.getString(1) + ".";
+                    /*value = rs.getString(1) + ".";
                     value += rs.getString(2) + ". - Leadott munkák";
+                    months_list.add(value);*/
+                    value = rs.getString(1) + ".";
+                    value += getMonthsName(rs.getString(2));
                     months_list.add(value);
                 }
             }
@@ -93,5 +102,23 @@ public class MySettlementsActivity extends AppCompatActivity {
             throwables.printStackTrace();
             Log.e(LOG_TITLE, "SIKERTELEN lekérdezé (" + select + ")");
         }
+    }
+
+    public String getMonthsName(String num_of_month) {
+        switch (num_of_month) {
+            case "1": return "Január";
+            case "2": return "Február";
+            case "3": return "Március";
+            case "4": return "Április";
+            case "5": return "Május";
+            case "6": return "Június";
+            case "7": return "Július";
+            case "8": return "Augusztus";
+            case "9": return "Szeptember";
+            case "10": return "Október";
+            case "11": return "November";
+            case "12": return "December";
+        }
+        return "0";
     }
 }

@@ -89,7 +89,7 @@
 
 
     <!-- Elszámolások -->
-    <string name="my_settlements_title">Elszámolásaim</string>
+    <string name="my_settlements_title">Leadott munkáim</string>
 
     <string-array name="weeks">
         <item>1</item>

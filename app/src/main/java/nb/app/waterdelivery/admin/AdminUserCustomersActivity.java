@@ -69,7 +69,7 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
         //Felhasználók megjelenítése
         recycler = findViewById(R.id.admin_user_customers_recycler_gui);
         user_customers_list = new ArrayList<>();
-        getDatas("SELECT * FROM " + dh.CUSTOMERS + " WHERE UserID = " + user_id + ";", user_customers_list);
+        dh.getCustomersData("SELECT * FROM " + dh.CUSTOMERS + " WHERE UserID = " + user_id + ";", user_customers_list);
         showElements();
 
         //Megrendelő választása
@@ -88,47 +88,6 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
 
         add_customer.setOnClickListener(v -> {
             mad.AlertMultiSelectDialog("Válassz megrendelőket", customers, chosen_customers, tmp_chosen_customers, "Rendben", "Mégse", null, 0, this);
-            /*AlertDialog.Builder ablak = new AlertDialog.Builder(this);
-            ablak.setTitle("Válassz megrendelőket");
-
-            //Korábbi választások megadása
-            System.arraycopy(chosen_customers, 0, tmp_chosen_customers, 0, chosen_customers.length);
-
-            ablak.setMultiChoiceItems(customers, chosen_customers, (dialog, which, isChecked) -> {
-                if(isChecked) {
-                    chosen_customers[which] = true;
-                } else {
-                    chosen_customers[which] = false;
-                }
-            });
-
-            ablak.setPositiveButton("Oké", (dialog, which) -> {
-                String update_sql;
-                for(int i = 0; i < chosen_customers.length; i++) {
-                    if(chosen_customers[i]) {
-                        update_sql = "UPDATE Customers SET UserID = " + user_id + " WHERE ID = " + choseable_customers_list.get(i).getId();
-                    } else {
-                        update_sql = "UPDATE Customers SET UserID = CAST(NULL As int) WHERE ID = " + choseable_customers_list.get(i).getId();
-                    }
-
-                    if(!dh.sql(update_sql)) {
-                        Toast.makeText(this, "Megrendelő(k) csatolása sikertelen.", Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                }
-                dialog.dismiss();
-                recreate();
-            });
-
-            ablak.setNegativeButton("Mégse", (dialog, which) -> {
-                for(int i = 0; i < chosen_customers.length; i++) {
-                    chosen_customers[i] = tmp_chosen_customers[i];
-                }
-                dialog.dismiss();
-            });
-
-            ablak.show();*/
-
 
         });
 
@@ -147,7 +106,15 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
     }
 
     private void getDatas(String select, ArrayList<Customers> list) {
-        Connection con = dh.connectionClass(this);
+        //Connection con = dh.connectionClass(this);
+        Connection con = null;
+        try {
+            con = dh.connectionClass(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
 
         try {
             if(con != null) {

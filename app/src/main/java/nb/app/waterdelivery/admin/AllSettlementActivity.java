@@ -26,8 +26,6 @@ public class AllSettlementActivity extends AppCompatActivity {
     private final String LOG_TITLE = "AllSettlementsActivity";
 
     DatabaseHelper dh;
-    SaveLocalDatas sld;
-    MyAlertDialog mad;
 
     Toolbar toolbar;
     RecyclerView recycler;
@@ -41,8 +39,6 @@ public class AllSettlementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_settlement);
 
         dh = new DatabaseHelper(this, this);
-        sld = new SaveLocalDatas(this);
-        mad = new MyAlertDialog(this, this);
 
         //Vissza gomb
         toolbar = findViewById(R.id.all_settlements_toolbar_gui);
@@ -68,10 +64,16 @@ public class AllSettlementActivity extends AppCompatActivity {
 
     public void loadMonths() {
 
-        Connection con = dh.connectionClass(this);
+        Connection con = null;
+        try {
+            con = dh.connectionClass(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         //String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " GROUP BY year, month ORDER BY year DESC;";
         String select = "call getSettlements(0)";
-        //TODO ugyanezt megcsinálni a MySettlementsben
+
         try {
             if(con != null) {
                 Statement st = con.createStatement();

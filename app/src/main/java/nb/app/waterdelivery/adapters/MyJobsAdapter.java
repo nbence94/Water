@@ -29,9 +29,9 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
     Context context;
     Activity activity;
     ArrayList<Jobs> job_list;
+
     DatabaseHelper dh;
     MyAlertDialog mad;
-    MyJobsActivity mja;
 
     int number_of_rows;
 
@@ -42,7 +42,6 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
         this.job_list = job_list;
         dh = new DatabaseHelper(context, activity);
         mad = new MyAlertDialog(context, activity);
-        mja = (MyJobsActivity) context;
     }
 
     @NonNull
@@ -108,16 +107,6 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
     public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         int job_id = job_list.get(position).getId();
-
-        /*if(dh.sql("CALL delete_job(" + job_id + ");")) {
-            Toast.makeText(context, "A kijelölt munka törölve!", Toast.LENGTH_SHORT).show();
-            job_list.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, job_list.size());
-        }
-        else {
-            Toast.makeText(context, "Törlés sikertelen!", Toast.LENGTH_SHORT).show();
-        }*/
 
         if(!checkJobStatus(position, "Figyelmeztetés", "Nem törölhető, mert tartozik hozzá leadott víz!")) {
             return;

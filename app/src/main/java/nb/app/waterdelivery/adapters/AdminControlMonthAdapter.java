@@ -1,12 +1,11 @@
 package nb.app.waterdelivery.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,37 +18,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.admin.AdminMonthSettlementActivity;
 import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
-import nb.app.waterdelivery.admin.AllSettlementActivity;
+import nb.app.waterdelivery.data.CustomData;
 import nb.app.waterdelivery.data.DatabaseHelper;
-import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Settlement;
 
-public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHolder> {
+public class AdminControlMonthAdapter extends RecyclerView.Adapter<AdminControlMonthAdapter.ViewHolder> {
 
     LayoutInflater inflater;
     Context context;
     Activity activity;
     ArrayList<String> months_list;
     DatabaseHelper dh;
-    AdminUserSettlementsActivity auja;
+    AdminMonthSettlementActivity auja;
 
-    UserJobsChildAdapter adapter;
-    public ArrayList<Settlement> settlement_list;
+    AdminControlMonthChildAdapter adapter;
+    //public ArrayList<Settlement> settlement_list;
+    public ArrayList<CustomData> customers_list;
     SaveLocalDatas sld;
     ArrayList<Boolean> expanded_list;
 
-    public UserJobsAdapter(Context context, Activity activity, ArrayList<String> m_list) {
+    public AdminControlMonthAdapter(Context context, Activity activity, ArrayList<String> m_list) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.activity = activity;
         this.months_list = m_list;
         dh = new DatabaseHelper(context, activity);
-        auja = (AdminUserSettlementsActivity) context;
+        auja = (AdminMonthSettlementActivity) context;
 
         sld = new SaveLocalDatas(activity);
-        settlement_list = new ArrayList<>();
+        customers_list = new ArrayList<>();
         this.expanded_list = new ArrayList<>();
         for(int i = 0; i < m_list.size(); i++) {
             expanded_list.add(false);
@@ -58,13 +58,13 @@ public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHo
 
     @NonNull
     @Override
-    public UserJobsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdminControlMonthAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_my_settlements_layout, parent, false);
-        return new UserJobsAdapter.ViewHolder(view);
+        return new AdminControlMonthAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UserJobsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdminControlMonthAdapter.ViewHolder holder, int position) {
         holder.name.setText(months_list.get(position));
         String[] month = months_list.get(position).split("\\.");
         showElements(holder, month[0], getMonthsNumber(month[1]));
@@ -77,23 +77,36 @@ public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHo
             notifyItemChanged(position);
         });
 
-        for(int i = 0 ; i < settlement_list.size(); i++) {
-            if(settlement_list.get(i).getFinished() == null) {
+        /*for(int i = 0 ; i < customers_list.size(); i++) {
+            if(customers_list.get(i).getFinished() == null) {
                 holder.attention.setVisibility(View.VISIBLE);
                 break;
             }
-        }
+        }*/
 
         holder.attention.setTooltipText("Vannak lezáratlan munkák!");
     }
 
-    public void showElements(@NonNull UserJobsAdapter.ViewHolder holder, String year, String month) {
-        settlement_list.clear();
-        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE UserID = " + auja.user_id + " AND YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
-        if(settlement_list.size() == 0) {
-            settlement_list.add(new Settlement(-1, "Nincs leadott munka", "","", -1, -1));
+    public void showElements(@NonNull AdminControlMonthAdapter.ViewHolder holder, String year, String month) {
+        customers_list.clear();
+        //TODO Ide nem is feltétlen Settlement kell!
+        //dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
+        dh.getCustomData("SELECT c.ID, c.Fullname, SUM(jaw.WaterAmount * w.Price) AS Income\n" +
+                "FROM customers c " +
+                "JOIN customerinjob cij ON cij.CustomerID = c.ID " +
+                "JOIN jobsinsettlement jis ON jis.JobID = cij.JobID " +
+                "JOIN jobandwater jaw ON jaw.JobID = jis.JobID " +
+                "JOIN waters w ON w.ID = jaw.WaterID " +
+                "JOIN settlement s ON s.ID = jis.SettlementID " +
+                "WHERE YEAR(s.Created) = " + year + " AND MONTH(s.Created) = " + month + " " +
+                "GROUP BY c.ID", customers_list);
+        int income = 0;
+        for(int i = 0; i < customers_list.size(); i++) {
+            income += customers_list.get(i).getNumber();
         }
-        adapter = new UserJobsChildAdapter(context,  activity, settlement_list);
+        @SuppressLint("DefaultLocale") String result_cost = String.format("%,d", income).replace(",", " ");
+        customers_list.add(new CustomData(-1, "Havi bevétel: " + result_cost + " Ft", 0));
+        adapter = new AdminControlMonthChildAdapter(context,  activity, customers_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);
         holder.recycler.setAdapter(adapter);

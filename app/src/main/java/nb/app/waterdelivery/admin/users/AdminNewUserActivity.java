@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.admin;
+package nb.app.waterdelivery.admin.users;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.adapters.ChosenCustomersAdapter;
+import nb.app.waterdelivery.admin.users.AdminAllUsersActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.alertdialog.OnDialogChoice;
 import nb.app.waterdelivery.data.DataCoding;

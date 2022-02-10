@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.admin;
+package nb.app.waterdelivery.admin.users;
 
 import android.content.Intent;
 import android.os.Bundle;

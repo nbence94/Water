@@ -60,18 +60,18 @@ public class LoginScreenActivity extends AppCompatActivity {
 
         //Ha bejelentkezve marad
         if(sld.checkStayLoggedStatus()) {
-            Connection conn = dh.connectionClass(this);
+            /*Connection conn = dh.connectionClass(this);
 
-            if(conn != null) {
+            if(conn != null) {*/
 
                 finish();
                 Intent main = new Intent(LoginScreenActivity.this, MainActivity.class);
                 startActivity(main);
                 return;
 
-            } else {
+            /*} else {
                 Toast.makeText(this, "Sikertelen belépés", Toast.LENGTH_SHORT).show();
-            }
+            }*/
         }
 
         login_button.setOnClickListener(v -> {
@@ -112,9 +112,17 @@ public class LoginScreenActivity extends AppCompatActivity {
     }
 
     private boolean getLoginData(String email, String password) {
-        String select = "";
-        Connection con = dh.connectionClass(this);
+        String select;
+        Connection con = null;
+        try {
+            con = dh.connectionClass(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(LOG_TITLE, "Nem sikerült kapcsolódni a szerverhez!");
+            Toast.makeText(this, "Nincs kapcsolat", Toast.LENGTH_SHORT).show();
 
+            return false;
+        }
 
         try {
             if(con != null) {

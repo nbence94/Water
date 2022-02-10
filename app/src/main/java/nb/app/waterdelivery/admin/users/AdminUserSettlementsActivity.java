@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.admin;
+package nb.app.waterdelivery.admin.users;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -26,7 +26,7 @@ import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Users;
 
-public class AdminUserJobsActivity extends AppCompatActivity {
+public class AdminUserSettlementsActivity extends AppCompatActivity {
 
     private final String LOG_TITLE = "AdminUserJobsActivity";
 
@@ -81,40 +81,15 @@ public class AdminUserJobsActivity extends AppCompatActivity {
         }
     }
 
-    private void getDatas(String select) {
-        Connection con = dh.connectionClass(this);
-
-        try {
-            if(con != null) {
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery(select);
-
-                String name, created, finish;
-                int id, income, userid;
-
-                while(rs.next()) {
-
-                    id = Integer.parseInt(rs.getString(dh.JOBS_ID_INDEX));
-                    created = rs.getString(dh.JOBS_CREATED_INDEX);
-                    finish = rs.getString(dh.JOBS_FINISH_INDEX);
-                    name = rs.getString(dh.JOBS_NAME_INDEX);
-                    income = Integer.parseInt(rs.getString(dh.JOBS_INCOME_INDEX));
-                    userid = Integer.parseInt(rs.getString(dh.JOBS_USERID_INDEX));
-
-                    jobs_list.add(new Jobs(id, created, finish, name, income, userid));
-                }
-            }
-            Log.i(LOG_TITLE, "Adatbázis lekérdezés sikeres. (" + select + ")");
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Log.e(LOG_TITLE, "Sikertelen adatbázis lekérdezés");
-        }
-    }
-
     public void loadMonths() {
+        Connection con = null;
+        try {
+            con = dh.connectionClass(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
-        Connection con = dh.connectionClass(this);
         String select = "SELECT YEAR(Created) AS year, MONTH(Created) As month FROM " + dh.SETTLEMENT + " WHERE userID = " + user_id + " GROUP BY year, month ORDER BY year DESC;";
 
         try {

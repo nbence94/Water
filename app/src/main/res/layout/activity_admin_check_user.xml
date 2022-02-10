@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".admin.AdminCheckUserActivity"
+    tools:context=".admin.users.AdminCheckUserActivity"
     android:background="@drawable/bg_all">
 
     <androidx.appcompat.widget.Toolbar
@@ -90,11 +90,10 @@
 
         <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/import_card"
-            android:padding="15dp"
+            android:layout_height="250dp"
             android:columnCount="1"
-            android:rowCount="2">
+            android:padding="15dp"
+            android:rowCount="3">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/user_jobs_button_gui"
@@ -108,7 +107,7 @@
                 android:layout_margin="3dp"
                 android:foreground="?android:attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/transparent_blue"
-                app:cardCornerRadius="8dp"
+                app:cardCornerRadius="3dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -121,14 +120,13 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                         />
+                        android:layout_gravity="center" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="Munkáinak megtekintése" />
+                        android:text="Munkáinak megtekintése"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -146,7 +144,7 @@
                 android:layout_margin="3dp"
                 android:foreground="?android:attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/transparent_blue"
-                app:cardCornerRadius="8dp"
+                app:cardCornerRadius="3dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -159,14 +157,50 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        />
+                        android:layout_gravity="center" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="Megrendelők konfigurációja" />
+                        android:text="Megrendelők konfigurációja"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/admin_user_jobs_button_gui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_rowWeight="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill"
+                android:layout_margin="3dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/transparent_blue"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tervezetek létrehozása"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 

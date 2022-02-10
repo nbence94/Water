@@ -62,7 +62,7 @@ public class MySettlementsAdapter extends RecyclerView.Adapter<MySettlementsAdap
     public void onBindViewHolder(@NonNull MySettlementsAdapter.ViewHolder holder, int position) {
         holder.name.setText(months_list.get(position));
         String[] month = months_list.get(position).split("\\.");
-        showElements(holder, month[0], month[1]);
+        showElements(holder, month[0], getMonthsNumber(month[1]));
 
         boolean kinyitva = expanded_list.get(position);
         holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
@@ -102,5 +102,23 @@ public class MySettlementsAdapter extends RecyclerView.Adapter<MySettlementsAdap
             recycler = itemView.findViewById(R.id.settlements_for_month_recycler);
             card = itemView.findViewById(R.id.my_settlements_carditem_gui);
         }
+    }
+
+    public String getMonthsNumber(String num_of_month) {
+        switch (num_of_month) {
+            case "Január": return "1";
+            case "Február": return "2";
+            case "Március": return "3";
+            case "Április": return "4";
+            case "Május": return "5";
+            case "Június": return "6";
+            case "Július": return "7";
+            case "Augusztus": return "8";
+            case "Szeptember": return "9";
+            case "Október": return "10";
+            case "November": return "11";
+            case "December": return "12";
+        }
+        return "0";
     }
 }

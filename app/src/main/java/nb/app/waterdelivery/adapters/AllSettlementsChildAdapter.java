@@ -131,7 +131,14 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
     }
 
     public String getItems(String select, String amount) {
-        Connection con = dh.connectionClass(context);
+        Connection con = null;
+        try {
+            con = dh.connectionClass(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
         StringBuilder result = new StringBuilder();
 
         try {

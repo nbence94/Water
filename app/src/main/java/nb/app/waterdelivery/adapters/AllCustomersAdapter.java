@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AdminCheckUserActivity;
+import nb.app.waterdelivery.admin.users.AdminCheckUserActivity;
 import nb.app.waterdelivery.admin.AdminCustomerEditActivity;
 import nb.app.waterdelivery.data.Customers;
 import nb.app.waterdelivery.data.Users;

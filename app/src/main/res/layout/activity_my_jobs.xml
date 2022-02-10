@@ -7,18 +7,6 @@
     tools:context=".jobs.MyJobsActivity"
     android:background="@drawable/bg_all">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_jobs_toolbar_gui"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/my_jobs_title"
-        android:background="@color/toolbar_color"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/my_jobs_add_button_gui"
         android:layout_width="wrap_content"
@@ -32,16 +20,34 @@
         tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck"
         android:contentDescription="Tervezés" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/my_jobs_recycler_gui"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_jobs_toolbar_gui"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/my_jobs_recycler_gui"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_jobs_toolbar_gui"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_jobs_toolbar_gui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/my_jobs_title"
+            android:background="@color/toolbar_color"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,7 +28,7 @@ import java.util.Locale;
 import nb.app.waterdelivery.adapters.CurrentJobAdapter;
 import nb.app.waterdelivery.adapters.MyJobsAdapter;
 import nb.app.waterdelivery.admin.AdminAllCustomersActivity;
-import nb.app.waterdelivery.admin.AdminAllUsersActivity;
+import nb.app.waterdelivery.admin.users.AdminAllUsersActivity;
 import nb.app.waterdelivery.admin.AdminControlActivity;
 import nb.app.waterdelivery.admin.AllSettlementActivity;
 import nb.app.waterdelivery.customers.MyCustomersActivity;

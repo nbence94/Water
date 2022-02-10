@@ -85,7 +85,13 @@ public class MySettlementsChildAdapter extends RecyclerView.Adapter<MySettlement
     }
 
     public String getWaters(String select) {
-        Connection con = dh.connectionClass(context);
+        Connection con = null;
+        try {
+            con = dh.connectionClass(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
         StringBuilder result = new StringBuilder();
 
         try {

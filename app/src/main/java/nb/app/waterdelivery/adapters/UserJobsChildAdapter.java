@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.admin.AdminUserJobDetailsActivity;
-import nb.app.waterdelivery.admin.AdminUserJobsActivity;
+import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
 import nb.app.waterdelivery.admin.AllSettlementActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
@@ -42,7 +42,7 @@ public class UserJobsChildAdapter extends RecyclerView.Adapter<UserJobsChildAdap
     ArrayList<Settlement> settlement_list;
     DatabaseHelper dh;
     MyAlertDialog mad;
-    AdminUserJobsActivity auja;
+    AdminUserSettlementsActivity auja;
     SaveLocalDatas sld;
 
     public UserJobsChildAdapter(Context context, Activity activity, ArrayList<Settlement> settlement_list) {
@@ -52,7 +52,7 @@ public class UserJobsChildAdapter extends RecyclerView.Adapter<UserJobsChildAdap
         this.settlement_list = settlement_list;
         dh = new DatabaseHelper(context, activity);
         mad = new MyAlertDialog(context, activity);
-        auja = (AdminUserJobsActivity) context;
+        auja = (AdminUserSettlementsActivity) context;
         sld = new SaveLocalDatas(activity);
     }
 

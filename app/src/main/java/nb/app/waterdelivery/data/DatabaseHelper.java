@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.lang.reflect.AccessibleObject;
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -114,42 +115,88 @@ public class DatabaseHelper {
         this.context = context;
     }
 
+    Connection con;
+
     public DatabaseHelper(Context context, Activity activity) {
         this.context = context;
         this.activity = activity;
         this.sld = new SaveLocalDatas(activity);
+
+        try {
+            con = this.connectionClass(context);
+        } catch (Exception e) {
+            Toast.makeText(context, "Sikertelen kapcsolódás", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public Connection connectionClass(Context context) throws Exception {
+        Connection con = null;
+        this.sld = new SaveLocalDatas(activity);
+
+        //IP: 192.168.0.17 - PORT: 3306 - teszt_user / jelszo123 - WaterDelivery
+
+        String ip = sld.loadIP();
+        int port = sld.loadPort();
+        String database = "WaterDelivery";
+        String username = sld.loadUsername();
+        String password = sld.loadPassword();
+
+        StrictMode.ThreadPolicy tp = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(tp);
+
+        String conURL = "jdbc:mysql://" + ip + ":" + port + "/" + database;
+
+        if (ip != null && !ip.isEmpty() && port != -1 &&
+                !username.isEmpty() && !password.isEmpty()) {
+            if (!ip.equals("-") && !username.equals("-") && !password.equals("-")) {
+
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection(conURL, username, password);
+
+
+            } else {
+                Toast.makeText(context, "Nincsenek kapcsolódási adatok", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(context, "Nincsenek kapcsolódási adatok", Toast.LENGTH_SHORT).show();
+        }
+
+        Log.i(LOG_TITLE, "Sikeres adatbázis kapcsolat. (" + ip + ", " + port + ", " + DATABASE + ")");
+        return con;
+
     }
 
     private static boolean isNumeric(String string) {
         try {
             Integer.parseInt(string);
             return true;
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             return false;
         }
     }
 
 
     public boolean checkEmail(String table, String email, String condition) {
-        Connection con = connectionClass(context);
         String select = "SELECT Email FROM " + table + " " + condition + ";";
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
-                while(rs.next()) {
+                while (rs.next()) {
 
-                    if(rs.getString(1).equals(email)) {
+                    if (rs.getString(1).equals(email)) {
                         return false;
                     }
                 }
             }
-            Log.i(LOG_TITLE, "Adatbáizs lekérdezés (" + select +")");
+            Log.i(LOG_TITLE, "Adatbáizs lekérdezés (" + select + ")");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-            Log.e(LOG_TITLE, "Sikertelen adatbázis lekérdezés (" + select +")");
+            Log.e(LOG_TITLE, "Sikertelen adatbázis lekérdezés (" + select + ")");
         }
 
         return true;
@@ -158,23 +205,23 @@ public class DatabaseHelper {
     public boolean insert(String[] values, String[] columns, String table) {
 
         StringBuilder values_string = new StringBuilder();
-        for(int i = 0; i < values.length; i++) {
-            if(isNumeric(values[i])) values_string.append(values[i]);
+        for (int i = 0; i < values.length; i++) {
+            if (isNumeric(values[i])) values_string.append(values[i]);
             else values_string.append("'").append(values[i]).append("'");
-            if(i < values.length-1) values_string.append(",");
+            if (i < values.length - 1) values_string.append(",");
         }
 
         StringBuilder columns_string = new StringBuilder();
         for (int i = 0; i < columns.length; i++) {
             columns_string.append(columns[i]);
-            if(i < columns.length-1) columns_string.append(",");
+            if (i < columns.length - 1) columns_string.append(",");
         }
 
         String insert = "INSERT INTO " + table + " (" + columns_string.toString() + ") VALUES (" + values_string.toString() + ");";
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Log.i(LOG_TITLE, insert);
                 Statement st = con.createStatement();
                 st.executeUpdate(insert);
@@ -192,11 +239,11 @@ public class DatabaseHelper {
 
     public boolean delete(String table, String condition) {
         String delete = "DELETE FROM " + table;
-        if(!condition.equals("")) delete += " WHERE " + condition;
-        Connection con = this.connectionClass(context);
+        if (!condition.equals("")) delete += " WHERE " + condition;
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Log.i(LOG_TITLE, delete);
                 Statement st = con.createStatement();
                 st.executeUpdate(delete);
@@ -213,10 +260,8 @@ public class DatabaseHelper {
     }
 
     public boolean sql(String sql) {
-        Connection con = this.connectionClass(context);
-
         try {
-            if(con != null) {
+            if (con != null) {
                 Log.i(LOG_TITLE, sql);
                 Statement st = con.createStatement();
                 st.executeUpdate(sql);
@@ -234,14 +279,14 @@ public class DatabaseHelper {
 
     public int getNewID(String table) {
         String s = "SELECT MAX(ID) FROM " + table + ";";
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(s);
 
-                while(rs.next()) {
+                while (rs.next()) {
                     return Integer.parseInt(rs.getString(1));
                 }
             }
@@ -257,14 +302,14 @@ public class DatabaseHelper {
     }
 
     public int getExactInt(String select) {
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
-                while(rs.next()) {
+                while (rs.next()) {
                     return Integer.parseInt(rs.getString(1));
                 }
             }
@@ -282,14 +327,14 @@ public class DatabaseHelper {
     }
 
     public String getExactString(String select) {
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
-                while(rs.next()) {
+                while (rs.next()) {
                     return rs.getString(1);
                 }
             }
@@ -307,17 +352,15 @@ public class DatabaseHelper {
     }
 
     public void getSettlementData(String select, ArrayList<Settlement> settlement_list) {
-        Connection con = this.connectionClass(context);
-
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 int id, user_id, finisher_id;
                 String name, created, finish;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     id = Integer.parseInt(rs.getString(1));
                     name = rs.getString(2);
                     created = rs.getString(3);
@@ -337,21 +380,21 @@ public class DatabaseHelper {
 
 
     public void getDraftData(String select, ArrayList<Draft> draft_list) {
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 int user_id, customer_id, water_id, water_amount;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     user_id = Integer.parseInt(rs.getString(DRAFT_USERID_INDEX));
                     customer_id = Integer.parseInt(rs.getString(DRAFT_CUSTOMERID_INDEX));
                     water_id = Integer.parseInt(rs.getString(DRAFT_WATERID_INDEX));
                     water_amount = Integer.parseInt(rs.getString(DRAFT_AMOUNT_INDEX));
-                    draft_list.add(new Draft(user_id,customer_id, water_id, water_amount));
+                    draft_list.add(new Draft(user_id, customer_id, water_id, water_amount));
                 }
             }
             Log.i(LOG_TITLE, "Piszkozat lekérdezése - SIKERES (" + select + ")");
@@ -362,21 +405,21 @@ public class DatabaseHelper {
     }
 
     public void getJawDraftData(String select, ArrayList<JawDraft> draft_list) {
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 int user_id, customer_id, water_id, water_amount;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     user_id = Integer.parseInt(rs.getString(DRAFT_USERID_INDEX));
                     customer_id = Integer.parseInt(rs.getString(DRAFT_CUSTOMERID_INDEX));
                     water_id = Integer.parseInt(rs.getString(DRAFT_WATERID_INDEX));
                     water_amount = Integer.parseInt(rs.getString(DRAFT_AMOUNT_INDEX));
-                    draft_list.add(new JawDraft(user_id,customer_id, water_id, water_amount));
+                    draft_list.add(new JawDraft(user_id, customer_id, water_id, water_amount));
                 }
             }
             Log.i(LOG_TITLE, "Piszkozat lekérdezése - SIKERES (" + select + ")");
@@ -387,21 +430,19 @@ public class DatabaseHelper {
     }
 
     public void getCIJData(String select, ArrayList<CustomersInJob> cij_list) {
-        Connection con = this.connectionClass(context);
-
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 int job_id, customer_id;
                 String finish;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     job_id = Integer.parseInt(rs.getString(CIJ_JOBID_INDEX));
                     customer_id = Integer.parseInt(rs.getString(CIJ_CUSTOMERID_INDEX));
                     finish = rs.getString(CIJ_FINISH_INDEX);
-                    cij_list.add(new CustomersInJob(job_id,customer_id, finish));
+                    cij_list.add(new CustomersInJob(job_id, customer_id, finish));
                 }
             }
             Log.i(LOG_TITLE, "Munkához tarotzó megrendelők lekérdezése - SIKERES (" + select + ")");
@@ -412,21 +453,21 @@ public class DatabaseHelper {
     }
 
     public void getJAWData(String select, ArrayList<JobAndWaters> jaw_list) {
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 int job_id, customer_id, water_id, amount;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     job_id = Integer.parseInt(rs.getString(JAW_JOBID_INDEX));
                     customer_id = Integer.parseInt(rs.getString(JAW_CUSTOMERID_INDEX));
                     water_id = Integer.parseInt(rs.getString(JAW_WATERID_INDEX));
                     amount = Integer.parseInt(rs.getString(JAW_WATERAMOUNT_INDEX));
-                    jaw_list.add(new JobAndWaters(job_id,customer_id, water_id, amount));
+                    jaw_list.add(new JobAndWaters(job_id, customer_id, water_id, amount));
                 }
             }
             Log.i(LOG_TITLE, "Munkához tarotzó vizek lekérdezése - SIKERES (" + select + ")");
@@ -438,17 +479,17 @@ public class DatabaseHelper {
 
     public void getRolesData(ArrayList<Roles> roles_list) {
         String select = "SELECT * FROM " + ROLES + ";";
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 String role_name;
                 int role_id;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     role_id = Integer.parseInt(rs.getString(ROLES_ID_INDEX));
                     role_name = rs.getString(ROLES_NAME_INDEX);
                     roles_list.add(new Roles(role_id, role_name));
@@ -464,7 +505,7 @@ public class DatabaseHelper {
     }
 
     public void getJobsData(String select, ArrayList<Jobs> list) {
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
             if (con != null) {
@@ -487,7 +528,7 @@ public class DatabaseHelper {
 
                 Log.i(LOG_TITLE, "Munkák lekérdezése - SIKERES (" + select + ")");
             }
-        } catch(SQLException throwables) {
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
             Log.e(LOG_TITLE, "Munkák lekérdezése - SIKERTELEN (" + select + ")");
         }
@@ -495,17 +536,17 @@ public class DatabaseHelper {
 
     public void getCustomersData(String select, ArrayList<Customers> list) {
         //String s = "SELECT * FROM " + CUSTOMERS + " " +  condition + ";";
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 String fullname, created, city, address, email, phone, phoneplus;
                 int id, userid, water_week, bill;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     id = Integer.parseInt(rs.getString(CUSTOMERS_ID_INDEX));
                     created = rs.getString(CUSTOMERS_CREATED_INDEX);
                     fullname = rs.getString(CUSTOMERS_NAME_INDEX);
@@ -533,16 +574,16 @@ public class DatabaseHelper {
 
     public void getCAWData(ArrayList<CustomerAndWaters> caw_list, String condition) {
         String select = "SELECT * FROM " + CAW + " " + condition + ";";
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 int customerid, waterid;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     customerid = Integer.parseInt(rs.getString(CAW_CUSTOMERID_INDEX));
                     waterid = Integer.parseInt(rs.getString(CAW_WATERID_INDEX));
                     caw_list.add(new CustomerAndWaters(customerid, waterid));
@@ -558,18 +599,17 @@ public class DatabaseHelper {
     }
 
     public void getWatersData(String select, ArrayList<Waters> waters_list) {
-        //String select = "SELECT * FROM " + WATERS + " " + condition + ";";
-        Connection con = this.connectionClass(context);
+        //Connection con = this.connectionClass(context);
 
         try {
-            if(con != null) {
+            if (con != null) {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
                 String name;
                 int id, cost;
 
-                while(rs.next()) {
+                while (rs.next()) {
                     id = Integer.parseInt(rs.getString(WATERS_ID_INDEX));
                     name = rs.getString(WATERS_NAME_INDEX);
                     cost = Integer.parseInt(rs.getString(WATERS_COST_INDEX));
@@ -585,57 +625,31 @@ public class DatabaseHelper {
         }
     }
 
-    @SuppressLint("NewApi")
-    public Connection connectionClass(Context context) {
-        Connection con = null;
-        this.sld = new SaveLocalDatas(activity);
+    public void getCustomData(String select, ArrayList<CustomData> data_list) {
+        //Connection con = this.connectionClass(context);
 
-        /*String ip_add = "192.168.100.16";
-        String port = "3306";
-        String username = "teszt_user";
-        String password ="jelszo123";
-        String databasename="WaterDelivery";*/
+        try {
+            if (con != null) {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(select);
 
-        //this.sld = new SaveLocalDatas(activity);
+                String name;
+                int id, number;
 
-        //IP: 192.168.0.17 - PORT: 3306 - teszt_user / jelszo123 - WaterDelivery
-
-        String ip = sld.loadIP();
-        int port = sld.loadPort();
-        String database = "WaterDelivery";
-        String username = sld.loadUsername();
-        String password = sld.loadPassword();
-
-        StrictMode.ThreadPolicy tp = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(tp);
-
-        String conURL = "jdbc:mysql://" + ip + ":" + port + "/"+ database;
-
-        if(     ip != null
-                && !ip.isEmpty()
-                && port != -1
-                && !username.isEmpty()
-                && !password.isEmpty()
-                && password != null) {
-            if(!ip.equals("-") && !username.equals("-") && !password.equals("-")) {
-                try {
-
-                    Class.forName("com.mysql.jdbc.Driver");
-                    con = DriverManager.getConnection(conURL, username, password);
-
-
-                } catch (Exception e) {
-                    Log.e(LOG_TITLE, e.getMessage());
-                    Toast.makeText(context, "Nem sikerült kapcsolódni", Toast.LENGTH_SHORT).show();
+                while (rs.next()) {
+                    id = Integer.parseInt(rs.getString(1));
+                    name = rs.getString(2);
+                    number = Integer.parseInt(rs.getString(3));
+                    data_list.add(new CustomData(id, name, number));
                 }
-            } else {
-                Toast.makeText(context, "Nincsenek kapcsolódási adatok", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(context, "Nincsenek kapcsolódási adatok", Toast.LENGTH_SHORT).show();
-        }
 
-        Log.i(LOG_TITLE, "Sikeres adatbázis kapcsolat. (" + ip + ", " + port + ", " + DATABASE + ")");
-        return con;
+            Log.i(LOG_TITLE, "SIKERES (" + select + ")");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            Log.e(LOG_TITLE, "SIKERTELEN (" + select + ")");
+        }
     }
+
 }

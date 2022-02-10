@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AdminCheckUserActivity;
 import nb.app.waterdelivery.data.SaveLocalDatas;
-import nb.app.waterdelivery.data.Users;
 import nb.app.waterdelivery.data.Waters;
 import nb.app.waterdelivery.waters.EditWaterActivity;
 

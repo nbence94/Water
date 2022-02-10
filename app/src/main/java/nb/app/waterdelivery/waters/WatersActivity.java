@@ -29,8 +29,6 @@ import nb.app.waterdelivery.data.Waters;
 
 public class WatersActivity extends AppCompatActivity {
 
-    private final String LOG_TITLE = "WatersActivity";
-
     DatabaseHelper dh;
     SaveLocalDatas sld;
 
@@ -60,7 +58,7 @@ public class WatersActivity extends AppCompatActivity {
         //Recycler
         recycler = findViewById(R.id.waters_recycler_gui);
         waters_list = new ArrayList<>();
-        getDatas("SELECT * FROM " + dh.WATERS + ";");
+        dh.getWatersData("SELECT * FROM " + dh.WATERS + ";", waters_list);
         adapter = new AllWatersAdapter(this, this, waters_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
@@ -74,42 +72,11 @@ public class WatersActivity extends AppCompatActivity {
             new_water_button.setVisibility(View.GONE);
         }
 
-
         new_water_button.setOnClickListener(v -> {
             finish();
             Intent new_water = new Intent(WatersActivity.this, AddWaterActivity.class);
             startActivity(new_water);
         });
-    }
-
-    private void getDatas(String select) {
-        Connection con = dh.connectionClass(this);
-
-        try {
-            if(con != null) {
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery(select);
-
-                String name;
-                int id, cost;
-
-                while(rs.next()) {
-
-                    id = Integer.parseInt(rs.getString(dh.WATERS_ID_INDEX));
-                    name = rs.getString(dh.WATERS_NAME_INDEX);
-                    cost = Integer.parseInt(rs.getString(dh.WATERS_COST_INDEX));
-
-                    waters_list.add(new Waters(id, name, cost));
-                }
-            }
-
-            Log.i(LOG_TITLE, "Adatbázis lekérdezés sikeres. (" + select + ")");
-
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Log.e(LOG_TITLE, "Sikertelen adatbázis lekérdezés");
-        }
     }
 
     @Override

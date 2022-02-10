@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.admin;
+package nb.app.waterdelivery.admin.users;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,7 +55,7 @@ public class AdminAllUsersActivity extends AppCompatActivity {
         new_user_button = findViewById(R.id.admin_users_add_button_gui);
 
         new_user_button.setOnClickListener(v -> {
-            finish();
+            //finish();
             Intent new_user = new Intent(AdminAllUsersActivity.this, AdminNewUserActivity.class);
             startActivity(new_user);
         });
@@ -71,7 +71,14 @@ public class AdminAllUsersActivity extends AppCompatActivity {
     }
 
     private void getDatas(String select) {
-        Connection con = dh.connectionClass(this);
+        //Connection con = dh.connectionClass(this);
+        Connection con = null;
+        try {
+            con = dh.connectionClass(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         try {
             if(con != null) {

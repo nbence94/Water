@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".admin.AdminAllCustomersActivity"
+    tools:context=".admin.users.AdminCheckUserJobsActivity"
     android:background="@drawable/bg_all">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/admin_customers_add_button_gui"
+        android:id="@+id/admin_list_users_jobs_add_button_gui"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="40dp"
@@ -19,32 +18,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck"
-        android:contentDescription="Új megrendelő" />
+        android:contentDescription="Tervezés" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/admin_customers_recycler_gui"
+            android:id="@+id/admin_list_users_jobs_recycler_gui"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:paddingTop="55dp"
             android:maxHeight="660dp"
+            android:paddingTop="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/admin_customers_toolbar_gui"
+            app:layout_constraintTop_toBottomOf="@+id/admin_list_users_jobs_toolbar_gui"
             app:layout_constraintVertical_bias="0.0" />
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/admin_customers_toolbar_gui"
+            android:id="@+id/admin_list_users_jobs_toolbar_gui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/all_customers_title"
+            app:title="Elkészített munkák"
             android:background="@color/toolbar_color"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.admin.AdminUserJobDetailsActivity;
-import nb.app.waterdelivery.admin.AdminUserJobsActivity;
+import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.Customers;
 import nb.app.waterdelivery.data.CustomersInJob;

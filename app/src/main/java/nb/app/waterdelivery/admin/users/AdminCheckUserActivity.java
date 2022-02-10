@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.admin;
+package nb.app.waterdelivery.admin.users;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,19 +10,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
 
+import nb.app.waterdelivery.admin.AdminUserCustomersActivity;
+import nb.app.waterdelivery.admin.users.AdminCheckUserJobsActivity;
+import nb.app.waterdelivery.admin.users.AdminUserEditActivity;
+import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Roles;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Users;
+import nb.app.waterdelivery.jobs.MyJobsActivity;
 
 public class AdminCheckUserActivity extends AppCompatActivity {
 
@@ -33,7 +40,7 @@ public class AdminCheckUserActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     TextView name_text, phone_text, more_details_btn;
-    CardView jobs_button, customers_button;
+    CardView jobs_button, customers_button, create_user_job;
     ImageView settings_button;
 
     int user_id;
@@ -52,7 +59,7 @@ public class AdminCheckUserActivity extends AppCompatActivity {
         //Vissza gomb
         toolbar = findViewById(R.id.admin_user_detail_toolbar_gui);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Elemek
@@ -62,6 +69,7 @@ public class AdminCheckUserActivity extends AppCompatActivity {
         jobs_button = findViewById(R.id.user_jobs_button_gui);
         customers_button = findViewById(R.id.user_customers_button_gui);
         settings_button = findViewById(R.id.admin_user_details_settings);
+        create_user_job = findViewById(R.id.admin_user_jobs_button_gui);
 
         //Adatok megjelenítése
         user_data_list = new ArrayList<>();
@@ -87,7 +95,7 @@ public class AdminCheckUserActivity extends AppCompatActivity {
         });
 
         jobs_button.setOnClickListener(v -> {
-            Intent jobs = new Intent(AdminCheckUserActivity.this, AdminUserJobsActivity.class);
+            Intent jobs = new Intent(AdminCheckUserActivity.this, AdminUserSettlementsActivity.class);
             jobs.putExtra("user_id", user_id);
             sld.saveCurrentUser(user_id);
             startActivity(jobs);
@@ -110,11 +118,25 @@ public class AdminCheckUserActivity extends AppCompatActivity {
             sld.saveCurrentUser(user_id);
             startActivity(update_user);
         });
-
+        
+        create_user_job.setOnClickListener(v -> {
+            Intent user_jobs = new Intent(this, AdminCheckUserJobsActivity.class);
+            sld.saveCurrentUser(user_id);
+            //sld.saveCheckStatus(true);
+            startActivity(user_jobs);
+            //Toast.makeText(this, "Itt majd össze lehet rakni valamit", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void getData(String select) {
-        Connection con = dh.connectionClass(this);
+        //Connection con = dh.connectionClass(this);
+        Connection con = null;
+        try {
+            con = dh.connectionClass(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         try {
             if(con != null) {

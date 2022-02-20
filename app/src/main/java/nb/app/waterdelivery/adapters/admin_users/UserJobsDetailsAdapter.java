@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_users;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AdminUserJobDetailsActivity;
+import nb.app.waterdelivery.admin.users.AdminUserJobDetailsActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.Customers;
 import nb.app.waterdelivery.data.CustomersInJob;

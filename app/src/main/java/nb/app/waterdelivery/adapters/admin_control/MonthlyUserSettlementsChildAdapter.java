@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_control;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,13 +23,13 @@ import java.util.Date;
 import java.util.Locale;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AllSettlementActivity;
+import nb.app.waterdelivery.admin.control.AllSettlementActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Settlement;
 
-public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettlementsChildAdapter.ViewHolder> {
+public class MonthlyUserSettlementsChildAdapter extends RecyclerView.Adapter<MonthlyUserSettlementsChildAdapter.ViewHolder> {
 
     private final String LOG_TITLE = "AllSettlementsAdapter";
 
@@ -42,7 +42,7 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
     AllSettlementActivity asa;
     SaveLocalDatas sld;
 
-    public AllSettlementsChildAdapter(Context context, Activity activity, ArrayList<Settlement> settlement_list) {
+    public MonthlyUserSettlementsChildAdapter(Context context, Activity activity, ArrayList<Settlement> settlement_list) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.activity = activity;
@@ -55,13 +55,13 @@ public class AllSettlementsChildAdapter extends RecyclerView.Adapter<AllSettleme
 
     @NonNull
     @Override
-    public AllSettlementsChildAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MonthlyUserSettlementsChildAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_settlmentname_layout, parent, false);
-        return new AllSettlementsChildAdapter.ViewHolder(view);
+        return new MonthlyUserSettlementsChildAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AllSettlementsChildAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MonthlyUserSettlementsChildAdapter.ViewHolder holder, int position) {
         holder.checkbox.setVisibility(View.VISIBLE);
 
         Settlement settlement = settlement_list.get(position);

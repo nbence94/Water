@@ -101,6 +101,7 @@ public class EditMyJobActivity extends AppCompatActivity implements EditJobOnDia
         draft_list = new ArrayList<>();
 
         getIntentData();
+        sld.saveCurrentJobID(job_id);
 
         //Listák feltöltése
 
@@ -205,8 +206,11 @@ public class EditMyJobActivity extends AppCompatActivity implements EditJobOnDia
         String fullname, created, city, address, email, phone, phoneplus;
         int customer_id, userid, water_week, bill;
 
+
         //Eddigi ürítés
-        if(!dh.sql("DELETE FROM " + dh.EDITDRAFT + " WHERE JobID = " + job_id + ";")) return;
+        //if(!dh.sql("DELETE FROM " + dh.EDITDRAFT + " WHERE JobID = " + job_id + ";")) return;
+        if(!dh.delete(dh.EDITDRAFT ,"JobID = " + job_id )) return;
+
         chosen_customers_list.clear();
         //A chosen_customers listába bekerültek a választott megrendelők. Szóval azok alapján töltődik újra a draft
         for(int i = 0; i < chosen_customers.length; i++) {
@@ -294,7 +298,7 @@ public class EditMyJobActivity extends AppCompatActivity implements EditJobOnDia
     }
 
     @Override
-    public void onAlertDialogTextChange(@NonNull ChosenCustomerWatersAdapter.ViewHolder holder, int position) {
+    public void onAlertDialogTextChange(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(mad.result_text.equals("")) {
             Toast.makeText(this, "Adj nevet a munkának!", Toast.LENGTH_SHORT).show();
             mad.closeable = false;
@@ -341,6 +345,7 @@ public class EditMyJobActivity extends AppCompatActivity implements EditJobOnDia
         startActivity(jobs);
         Toast.makeText(this, "Adatok módosítva", Toast.LENGTH_SHORT).show();
         mad.closeable = true;
+        sld.saveCurrentJobID(-1);
     }
 
     private void getIntentData() {

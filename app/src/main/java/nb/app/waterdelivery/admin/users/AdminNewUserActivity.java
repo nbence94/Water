@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -212,7 +213,7 @@ public class AdminNewUserActivity extends AppCompatActivity implements OnDialogC
     }
 
     @Override
-    public void OnPositiveClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         for(int i = 0; i < chosen_role_item.length; i++) {
             if(chosen_role_item[i]) {
                 chosen_role = role_list.get(i).getId();
@@ -224,7 +225,7 @@ public class AdminNewUserActivity extends AppCompatActivity implements OnDialogC
     }
 
     @Override
-    public void OnNegativeClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         for(int i = 0; i < chosen_role_item.length; i++) {
             chosen_role_item[i] = tmp_chosen_item[i];
         }

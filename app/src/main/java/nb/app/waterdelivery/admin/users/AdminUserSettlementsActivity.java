@@ -1,32 +1,28 @@
 package nb.app.waterdelivery.admin.users;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.adapters.AllSettlementsAdapter;
-import nb.app.waterdelivery.adapters.AllUsersAdapter;
-import nb.app.waterdelivery.adapters.UserJobsAdapter;
+import nb.app.waterdelivery.adapters.admin_users.UserJobsAdapter;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
-import nb.app.waterdelivery.data.Users;
 
 public class AdminUserSettlementsActivity extends AppCompatActivity {
+
+    //Felhasználó által leadott munkák. (Amikből az elszámolások lesznek)
 
     private final String LOG_TITLE = "AdminUserJobsActivity";
 
@@ -35,7 +31,6 @@ public class AdminUserSettlementsActivity extends AppCompatActivity {
     Toolbar toolbar;
     UserJobsAdapter adapter;
     SaveLocalDatas sld;
-    ArrayList<Jobs> jobs_list;
     ArrayList<String> months_list;
 
     public int user_id;
@@ -51,7 +46,7 @@ public class AdminUserSettlementsActivity extends AppCompatActivity {
         //Vissza gomb
         toolbar = findViewById(R.id.admin_user_jobs_toolbar_gui);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Adatok átvétele
@@ -61,7 +56,6 @@ public class AdminUserSettlementsActivity extends AppCompatActivity {
         recycler = findViewById(R.id.admin_user_jobs_recycler_gui);
         months_list = new ArrayList<>();
         showMonthsElements();
-
     }
 
     public void showMonthsElements() {
@@ -82,7 +76,7 @@ public class AdminUserSettlementsActivity extends AppCompatActivity {
     }
 
     public void loadMonths() {
-        Connection con = null;
+        Connection con;
         try {
             con = dh.connectionClass(this);
         } catch (Exception e) {
@@ -108,7 +102,7 @@ public class AdminUserSettlementsActivity extends AppCompatActivity {
             Log.i(LOG_TITLE, "SIKERES lekérdezés (" + select + ")");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-            Log.e(LOG_TITLE, "SIKERTELEN lekérdezé (" + select + ")");
+            Log.e(LOG_TITLE, "SIKERTELEN lekérdezés (" + select + ")");
         }
     }
 

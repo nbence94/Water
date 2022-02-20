@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_users;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.stream.IntStream;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.admin.users.AdminCreateJobForUserActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.alertdialog.OnDialogChoice;
 import nb.app.waterdelivery.data.Customers;
@@ -28,17 +28,16 @@ import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Draft;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Waters;
-import nb.app.waterdelivery.jobs.CreateJobActivity;
 
 
-public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomersAdapter.ViewHolder> implements OnDialogChoice {
+public class ChosenCustomersListForJobAdapter extends RecyclerView.Adapter<ChosenCustomersListForJobAdapter.ViewHolder> implements OnDialogChoice {
 
     private final String LOG_TITLE = "ChosenCustomersAdapter";
 
     Context context;
     Activity activity;
 
-    CreateJobActivity cja;
+    AdminCreateJobForUserActivity cja;
     MyAlertDialog mad;
     LayoutInflater inflater;
     DatabaseHelper dh;
@@ -49,14 +48,14 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
     ArrayList<Draft> draft_list;
 
     //Gyerek recycler
-    ChosenCustomerWatersAdapter adapter;
+    ChosenCustomerWatersListForJobAdapter adapter;
     int customer_cost;
 
     String[] waters_name_to_show;
     public boolean[] chosen_waters_boolean;
     boolean[] tmp_chosen_waters_boolean;
 
-    public ChosenCustomersAdapter(Context context, Activity activity, ArrayList<Customers> customers_data, ArrayList<Waters> water_list, ArrayList<Draft> draft_list) {
+    public ChosenCustomersListForJobAdapter(Context context, Activity activity, ArrayList<Customers> customers_data, ArrayList<Waters> water_list, ArrayList<Draft> draft_list) {
         this.inflater = LayoutInflater.from(context);
         this.customers_list = customers_data;
         this.waters_list = water_list;
@@ -66,7 +65,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
         this.activity = activity;
         dh = new DatabaseHelper(context, activity);
         sld = new SaveLocalDatas(activity);
-        this.cja = (CreateJobActivity) context;
+        this.cja = (AdminCreateJobForUserActivity) context;
         this.mad = new MyAlertDialog(context, activity);
 
         this.customer_cost = 0;
@@ -74,13 +73,13 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
 
     @NonNull
     @Override
-    public ChosenCustomersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ChosenCustomersListForJobAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_chosen_customer_layout, parent, false);
-        return new ViewHolder(view);
+        return new ChosenCustomersListForJobAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChosenCustomersListForJobAdapter.ViewHolder holder, int position) {
         ArrayList<Draft> child_draft_list = new ArrayList<>();
 
         //Elemek megadása
@@ -99,7 +98,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
         calculateCostForWater(holder, position);
 
         //Gyerek-adapter meghívás, adatok átadása
-        dh.getDraftData("SELECT * FROM " + dh.DRAFT + " WHERE CustomerID = " + customers_list.get(position).getId() + " AND UserID = " + sld.loadUserID() + ";", child_draft_list);
+        dh.getDraftData("SELECT * FROM " + dh.DRAFT + " WHERE CustomerID = " + customers_list.get(position).getId() + " AND UserID = " + sld.loadCurrentUserID() + ";", child_draft_list);
 
         //AlertDialog beállítások
         initializeArrays(waters_list.size());
@@ -122,8 +121,8 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
 
     }
 
-    private void loadElements(@NonNull ChosenCustomersAdapter.ViewHolder holder, ArrayList<Draft> draft_list) {
-        adapter = new ChosenCustomerWatersAdapter(context, activity, waters_list, draft_list);
+    private void loadElements(@NonNull ViewHolder holder, ArrayList<Draft> draft_list) {
+        adapter = new ChosenCustomerWatersListForJobAdapter(context, activity, waters_list, draft_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);
         holder.recycler.setAdapter(adapter);
@@ -131,7 +130,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
     }
 
 
-    public void calculateCostForWater(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void calculateCostForWater(@NonNull ViewHolder holder, int position) {
         customer_cost = 0;
         for(int i = 0; i < draft_list.size(); i++) {
             for(int j = 0; j < waters_list.size(); j++) {
@@ -165,7 +164,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
             Log.e(LOG_TITLE, "");
 
             //Először ürítjük a Draft táblát
-           if (!dh.sql("DELETE FROM " + dh.DRAFT + " WHERE CustomerID = " + customers_list.get(position).getId() + " AND UserID = " + sld.loadUserID())) return;
+           if (!dh.sql("DELETE FROM " + dh.DRAFT + " WHERE CustomerID = " + customers_list.get(position).getId() + " AND UserID = " + sld.loadCurrentUserID())) return;
            Log.i(LOG_TITLE, "Korábbi Draft elemek törölve.");
 
             //Töröljük a Customers And Waters tábla adatait is (A program feltételezi, hogy a választott vizek máskor is kellenek)
@@ -178,7 +177,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
             for (int i = 0; i < chosen_waters_boolean.length; i++) {
                 if (chosen_waters_boolean[i]) {
                     //Feltöltjük a Draft adatokat
-                    if (!dh.sql("INSERT INTO " + dh.DRAFT + " (UserID, CustomerID, WaterID) VALUES (" + sld.loadUserID() + ", " + customers_list.get(position).getId() + ", " + waters_list.get(i).getId() + ");")) {
+                    if (!dh.sql("INSERT INTO " + dh.DRAFT + " (UserID, CustomerID, WaterID) VALUES (" + sld.loadCurrentUserID() + ", " + customers_list.get(position).getId() + ", " + waters_list.get(i).getId() + ");")) {
                         Log.e(LOG_TITLE, "Nem sikerült feltölteni a vázlat adatokat. (DRAFT)");
                         return;
                     }
@@ -199,13 +198,14 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
             //Most a draftban átírjuk a mennyiségeket
             int draft_user, draft_customer, draft_water;
             for(int i = 0; i < draft_list.size(); i++) {
-                if(draft_list.get(i).getWater_amount() > 1 && draft_list.get(i).getCustomerid() == customers_list.get(position).getId() && draft_list.get(i).getUserid() == sld.loadUserID()) {
-                    draft_user = sld.loadUserID();
+                if(draft_list.get(i).getWater_amount() > 1 && draft_list.get(i).getCustomerid() == customers_list.get(position).getId() && draft_list.get(i).getUserid() == sld.loadCurrentUserID()) {
+                    draft_user = sld.loadCurrentUserID();
                     draft_customer = draft_list.get(i).getCustomerid();
                     draft_water = draft_list.get(i).getWaterid();
 
                     dh.sql("UPDATE " + dh.DRAFT + " SET WaterAmount = " + draft_list.get(i).getWater_amount()
                             + " WHERE UserID =" + draft_user + " AND CustomerID =" + draft_customer + " AND WaterID =" + draft_water);
+
                 }
             }
 
@@ -269,8 +269,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
     }
 
     public void setShowableNames(ArrayList<Waters> list) {
-        /*for(int i = 0; i < list.size(); i++)
-            waters_name_to_show[i] = list.get(i).getName();*/
-        IntStream.range(0, list.size()).forEach(i -> waters_name_to_show[i] = list.get(i).getName());
+        for(int i = 0; i < list.size(); i++)
+            waters_name_to_show[i] = list.get(i).getName();
     }
 }

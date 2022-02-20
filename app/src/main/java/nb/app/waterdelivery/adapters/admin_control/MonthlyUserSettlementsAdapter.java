@@ -1,12 +1,10 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_control;
 
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,34 +17,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
-import nb.app.waterdelivery.admin.AllSettlementActivity;
+import nb.app.waterdelivery.admin.control.AllSettlementActivity;
 import nb.app.waterdelivery.data.DatabaseHelper;
-import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Settlement;
 
-public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHolder> {
+public class MonthlyUserSettlementsAdapter extends RecyclerView.Adapter<MonthlyUserSettlementsAdapter.ViewHolder> {
 
     LayoutInflater inflater;
     Context context;
     Activity activity;
     ArrayList<String> months_list;
     DatabaseHelper dh;
-    AdminUserSettlementsActivity auja;
+    AllSettlementActivity msa;
 
-    UserJobsChildAdapter adapter;
+    MonthlyUserSettlementsChildAdapter adapter;
     public ArrayList<Settlement> settlement_list;
     SaveLocalDatas sld;
     ArrayList<Boolean> expanded_list;
 
-    public UserJobsAdapter(Context context, Activity activity, ArrayList<String> m_list) {
+    public MonthlyUserSettlementsAdapter(Context context, Activity activity, ArrayList<String> m_list) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.activity = activity;
         this.months_list = m_list;
         dh = new DatabaseHelper(context, activity);
-        auja = (AdminUserSettlementsActivity) context;
+        msa = (AllSettlementActivity) context;
 
         sld = new SaveLocalDatas(activity);
         settlement_list = new ArrayList<>();
@@ -58,13 +54,13 @@ public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHo
 
     @NonNull
     @Override
-    public UserJobsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MonthlyUserSettlementsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_my_settlements_layout, parent, false);
-        return new UserJobsAdapter.ViewHolder(view);
+        return new MonthlyUserSettlementsAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UserJobsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MonthlyUserSettlementsAdapter.ViewHolder holder, int position) {
         holder.name.setText(months_list.get(position));
         String[] month = months_list.get(position).split("\\.");
         showElements(holder, month[0], getMonthsNumber(month[1]));
@@ -87,13 +83,10 @@ public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHo
         holder.attention.setTooltipText("Vannak lezáratlan munkák!");
     }
 
-    public void showElements(@NonNull UserJobsAdapter.ViewHolder holder, String year, String month) {
+    public void showElements(@NonNull MonthlyUserSettlementsAdapter.ViewHolder holder, String year, String month) {
         settlement_list.clear();
-        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE UserID = " + auja.user_id + " AND YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
-        if(settlement_list.size() == 0) {
-            settlement_list.add(new Settlement(-1, "Nincs leadott munka", "","", -1, -1));
-        }
-        adapter = new UserJobsChildAdapter(context,  activity, settlement_list);
+        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE YEAR(Created) = " + year + " AND MONTH(Created) = " + month + " ORDER BY ID DESC;", settlement_list);
+        adapter = new MonthlyUserSettlementsChildAdapter(context,  activity, settlement_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);
         holder.recycler.setAdapter(adapter);

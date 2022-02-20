@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -52,18 +53,19 @@ public class MyJobsActivity extends AppCompatActivity implements myWarningDialog
         //Tervezet készítés (Munka létrehozás)
         new_draft_button = findViewById(R.id.my_jobs_add_button_gui);
 
-
-            new_draft_button.setOnClickListener(v -> {
-                if(dh.ROGZITO_ROLE != sld.loadUserRoleID()) {
-                    mad.myWarningDialog("Válassz az alábbiak közül", "Milyen tervezetet készítenél?", "Heti", "Egyéb", null, 0, this);
-                } else {
-                    openCreate();
-                }
-            });
+        new_draft_button.setOnClickListener(v -> {
+            if(dh.ROGZITO_ROLE != sld.loadUserRoleID()) {
+                mad.myWarningDialog("Válassz az alábbiak közül", "Milyen tervezetet készítenél?", "Heti", "Egyéb", null, 0, this);
+            } else {
+                openCreate();
+            }
+        });
 
         recycler = findViewById(R.id.my_jobs_recycler_gui);
         job_list = new ArrayList<>();
         showElements();
+
+        clearTable();
 
     }
 
@@ -119,6 +121,14 @@ public class MyJobsActivity extends AppCompatActivity implements myWarningDialog
             startActivity(new_draft);
         } else {
             Toast.makeText(this, "Nincs hétvége!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void clearTable() {
+        if(sld.loadCurrentJobID() > 0) {
+            if(!dh.delete(dh.EDITDRAFT, "JobID = " + sld.loadCurrentJobID())) {
+                Log.e("MyJobsActivity","Az vázlat adatok törlése sikertelen. (" + dh.EDITDRAFT + ")");
+            }
         }
     }
 }

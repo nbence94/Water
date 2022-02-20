@@ -86,7 +86,7 @@ public class MyAlertDialog {
     }
 
     @SuppressLint("CutPasteId")
-    public void AlertInputDialog(String title, String message, String button_title, int position, @NonNull ChosenCustomerWatersAdapter.ViewHolder holder, int input_type, final OnDialogTextChange listener) {
+    public void AlertInputDialog(String title, String message, String button_title, int position, @NonNull RecyclerView.ViewHolder holder, int input_type, final OnDialogTextChange listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_edittext_dialog, activity.findViewById(R.id.layoutDialogContainer));
         builder.setView(view);
@@ -176,7 +176,7 @@ public class MyAlertDialog {
 
 
     //Eredeti
-    public void AlertMultiSelectDialog(String title, String[] elements, boolean[] selected_elements, boolean[] tmp_selected_elements, String buttonYes, String ButtonNo, @NonNull ChosenCustomersAdapter.ViewHolder holder, int position, final OnDialogChoice listener) {
+    public void AlertMultiSelectDialog(String title, String[] elements, boolean[] selected_elements, boolean[] tmp_selected_elements, String buttonYes, String ButtonNo, @NonNull RecyclerView.ViewHolder holder, int position, final OnDialogChoice listener) {
         this.multi_adapter = new MultiSelectAdapter(context, activity, elements, selected_elements);
         this.selected_array = new boolean[selected_elements.length];
 
@@ -273,7 +273,7 @@ public class MyAlertDialog {
     }
 
 
-    public void AlertSingleSelectDialog(String title, String[] elements, boolean[] selected_element, boolean[] tmp_selected_element, String buttonYes, String ButtonNo, @NonNull ChosenCustomersAdapter.ViewHolder holder, int position, final OnDialogChoice listener) {
+    public void AlertSingleSelectDialog(String title, String[] elements, boolean[] selected_element, boolean[] tmp_selected_element, String buttonYes, String ButtonNo, @NonNull RecyclerView.ViewHolder holder, int position, final OnDialogChoice listener) {
         this.single_adapter = new SingleSelectAdapter(context, activity, elements, selected_element);
         this.selected_array = new boolean[selected_element.length];
 

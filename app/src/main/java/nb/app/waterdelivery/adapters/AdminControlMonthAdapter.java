@@ -18,12 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AdminMonthSettlementActivity;
-import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
+import nb.app.waterdelivery.admin.control.AdminMonthSettlementActivity;
 import nb.app.waterdelivery.data.CustomData;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;
-import nb.app.waterdelivery.data.Settlement;
 
 public class AdminControlMonthAdapter extends RecyclerView.Adapter<AdminControlMonthAdapter.ViewHolder> {
 
@@ -35,7 +33,6 @@ public class AdminControlMonthAdapter extends RecyclerView.Adapter<AdminControlM
     AdminMonthSettlementActivity auja;
 
     AdminControlMonthChildAdapter adapter;
-    //public ArrayList<Settlement> settlement_list;
     public ArrayList<CustomData> customers_list;
     SaveLocalDatas sld;
     ArrayList<Boolean> expanded_list;

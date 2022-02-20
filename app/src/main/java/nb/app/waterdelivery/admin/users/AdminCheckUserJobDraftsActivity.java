@@ -6,34 +6,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
-
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.adapters.MyJobsAdapter;
+import nb.app.waterdelivery.adapters.admin_users.AdminCurrentUserJobDraftsAdapter;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.alertdialog.myWarningDialogChoice;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.jobs.CreateJobActivity;
-import nb.app.waterdelivery.jobs.MyJobsActivity;
 
-public class AdminCheckUserJobsActivity extends AppCompatActivity implements myWarningDialogChoice {
+public class AdminCheckUserJobDraftsActivity extends AppCompatActivity implements myWarningDialogChoice {
 
     Toolbar toolbar;
     FloatingActionButton new_draft_button;
     RecyclerView recycler;
 
-    MyJobsAdapter adapter;
+    AdminCurrentUserJobDraftsAdapter adapter;
     DatabaseHelper dh;
     SaveLocalDatas sld;
     MyAlertDialog mad;
@@ -58,7 +54,6 @@ public class AdminCheckUserJobsActivity extends AppCompatActivity implements myW
         //Tervezet készítés (Munka létrehozás)
         new_draft_button = findViewById(R.id.admin_list_users_jobs_add_button_gui);
 
-
         new_draft_button.setOnClickListener(v -> {
             if(dh.ROGZITO_ROLE != sld.loadUserRoleID()) {
                 mad.myWarningDialog("Válassz az alábbiak közül", "Milyen tervezetet készítenél?", "Heti", "Egyéb", null, 0, this);
@@ -70,6 +65,7 @@ public class AdminCheckUserJobsActivity extends AppCompatActivity implements myW
         recycler = findViewById(R.id.admin_list_users_jobs_recycler_gui);
         job_list = new ArrayList<>();
         showElements();
+        clearTable();
     }
 
     @Override
@@ -83,7 +79,7 @@ public class AdminCheckUserJobsActivity extends AppCompatActivity implements myW
     public void showElements() {
         job_list.clear();
         dh.getJobsData("SELECT * FROM " + dh.JOBS + " WHERE UserID = " + sld.loadCurrentUserID() + " AND ID NOT IN ( SELECT JobID FROM " + dh.JIS + ");", job_list);
-        adapter = new MyJobsAdapter(this,  this, job_list);
+        adapter = new AdminCurrentUserJobDraftsAdapter(this,  this, job_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);
@@ -103,7 +99,7 @@ public class AdminCheckUserJobsActivity extends AppCompatActivity implements myW
         }
 
         finish();
-        Intent new_draft = new Intent(AdminCheckUserJobsActivity.this, CreateJobActivity.class);
+        Intent new_draft = new Intent(AdminCheckUserJobDraftsActivity.this, AdminCreateJobForUserActivity.class);
         startActivity(new_draft);
     }
 
@@ -119,7 +115,7 @@ public class AdminCheckUserJobsActivity extends AppCompatActivity implements myW
             }
 
             finish();
-            Intent new_draft = new Intent(AdminCheckUserJobsActivity.this, CreateJobActivity.class);
+            Intent new_draft = new Intent(AdminCheckUserJobDraftsActivity.this, AdminCreateJobForUserActivity.class);
             new_draft.putExtra("weekend", 1);
             startActivity(new_draft);
 
@@ -128,4 +124,11 @@ public class AdminCheckUserJobsActivity extends AppCompatActivity implements myW
         }
     }
 
+    private void clearTable() {
+        if(sld.loadCurrentJobID() > 0) {
+            if(!dh.delete(dh.EDITDRAFT, "JobID = " + sld.loadCurrentJobID())) {
+                Log.e("AdminCheckUserJobDraftsActivity","Az vázlat adatok törlése sikertelen. (" + dh.EDITDRAFT + ")");
+            }
+        }
+    }
 }

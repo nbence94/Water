@@ -1,9 +1,8 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_users;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AdminUserJobDetailsActivity;
+import nb.app.waterdelivery.admin.users.AdminUserJobDetailsActivity;
 import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
-import nb.app.waterdelivery.admin.AllSettlementActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;

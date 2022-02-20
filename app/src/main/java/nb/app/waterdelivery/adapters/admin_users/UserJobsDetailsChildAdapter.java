@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_users;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,15 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AdminUserJobDetailsActivity;
-import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
+import nb.app.waterdelivery.admin.users.AdminUserJobDetailsActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.Customers;
 import nb.app.waterdelivery.data.CustomersInJob;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.JobAndWaters;
 import nb.app.waterdelivery.data.SaveLocalDatas;
-import nb.app.waterdelivery.data.Settlement;
 import nb.app.waterdelivery.data.Waters;
 
 public class UserJobsDetailsChildAdapter extends RecyclerView.Adapter<UserJobsDetailsChildAdapter.ViewHolder> {
@@ -101,7 +99,6 @@ public class UserJobsDetailsChildAdapter extends RecyclerView.Adapter<UserJobsDe
             }
 
             msg.append("\n").append("BEVÉTEL").append("\n").append(income).append(" Ft");
-
             mad.AlertInfoDialog("További információ", msg.toString(),"Rendben");
         });
     }

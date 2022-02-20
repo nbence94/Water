@@ -171,7 +171,7 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
     }
 
     @Override
-    public void OnPositiveClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         String update_sql;
         for(int i = 0; i < chosen_customers.length; i++) {
             if(chosen_customers[i]) {
@@ -189,7 +189,7 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
     }
 
     @Override
-    public void OnNegativeClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         for(int i = 0; i < chosen_customers.length; i++) {
             chosen_customers[i] = tmp_chosen_customers[i];
         }

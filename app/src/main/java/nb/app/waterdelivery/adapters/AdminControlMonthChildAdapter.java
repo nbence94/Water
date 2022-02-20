@@ -16,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AdminMonthSettlementActivity;
-import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
+import nb.app.waterdelivery.admin.control.AdminMonthSettlementActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.CustomData;
 import nb.app.waterdelivery.data.DatabaseHelper;

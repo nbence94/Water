@@ -3,6 +3,7 @@ package nb.app.waterdelivery.admin;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -206,7 +207,7 @@ public class AdminNewCustomerActivity extends AppCompatActivity implements Adapt
     }
 
     @Override
-    public void OnPositiveClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         check_waters.setVisibility(View.GONE);
         water_status = false;
         for(boolean check : chosen_waters) {
@@ -219,7 +220,7 @@ public class AdminNewCustomerActivity extends AppCompatActivity implements Adapt
     }
 
     @Override
-    public void OnNegativeClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         for(int i = 0; i < chosen_waters.length; i++) {
             chosen_waters[i] = tmp_chosen_waters[i];
         }

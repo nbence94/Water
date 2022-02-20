@@ -1,10 +1,4 @@
-package nb.app.waterdelivery.jobs;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package nb.app.waterdelivery.admin.users;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,20 +7,24 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-import nb.app.waterdelivery.adapters.ChosenCustomerWatersAdapter;
+import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.adapters.admin_users.ChosenCustomersListForJobAdapter;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.alertdialog.OnDialogChoice;
-import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.adapters.ChosenCustomersAdapter;
 import nb.app.waterdelivery.alertdialog.OnDialogTextChange;
 import nb.app.waterdelivery.data.CustomerAndWaters;
 import nb.app.waterdelivery.data.Customers;
@@ -35,9 +33,9 @@ import nb.app.waterdelivery.data.Draft;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Waters;
 
-public class CreateJobActivity extends AppCompatActivity implements OnDialogChoice, OnDialogTextChange {
+public class AdminCreateJobForUserActivity extends AppCompatActivity implements OnDialogChoice, OnDialogTextChange {
 
-    private final String LOG_TITLE = "CreateJobActivity";
+    private final String LOG_TITLE = "AdminCreateJobForUserActivity";
 
     DatabaseHelper dh;
     MyAlertDialog mad;
@@ -56,7 +54,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
     ArrayList<Draft> draft_list; //Ez a biztonsági mentéshez kell. Ez alapján fog létrejobbni a Jobs tábla, stb.
 
     //Megrendelők kiválasztása és megjelenítése
-    ChosenCustomersAdapter adapter;
+    ChosenCustomersListForJobAdapter adapter;
     String[] customers_name_to_show;
     public boolean[] chosen_customers;
     boolean[] tmp_chosen_customers;
@@ -104,7 +102,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
         if(weekend == 1) {
             query = "SELECT * FROM Customers c " +
                     "WHERE ((DATEDIFF(CURDATE(), c.Created + (8 - DAYOFWEEK(c.Created)))) DIV 7 MOD c.WaterWeeks) = 0 " +
-                    "AND c.UserID = " + sld.loadUserID() + "  " +
+                    "AND c.UserID = " + sld.loadCurrentUserID() + "  " +
                     "AND c.ID NOT IN " +
                     "( SELECT c.ID " +
                     "FROM Customers c, customerinjob cij, jobs j " +
@@ -112,7 +110,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
                     "AND j.Finish IS NULL )";
         }
         else if(weekend == 0) {
-            query = "SELECT * FROM Customers c WHERE c.UserID = " + sld.loadUserID() + "  AND c.ID NOT IN " +
+            query = "SELECT * FROM Customers c WHERE c.UserID = " + sld.loadCurrentUserID() + "  AND c.ID NOT IN " +
                     "( SELECT c.ID FROM Customers c, customerinjob cij, jobs j WHERE c.ID = cij.CustomerID AND j.ID = cij.JobID AND j.Finish IS NULL )";
         }
 
@@ -157,7 +155,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
                 dh.getCustomersData("SELECT DISTINCT c.ID, c.Created, c.Fullname," +
                         " c.City, c.Address, c.Email, c.Phone, c.PhonePlus, c.WaterWeeks, c.Bill, c.UserID " +
                         "FROM " + dh.CUSTOMERS + " c, " + dh.DRAFT + " d  " +
-                        "WHERE c.ID = d.CustomerID AND d.UserID=" + sld.loadUserID() + ";", chosen_customers_list);
+                        "WHERE c.ID = d.CustomerID AND d.UserID=" + sld.loadCurrentUserID() + ";", chosen_customers_list);
                 if(chosen_customers_list.size() == 0) {
                     return;
                 }
@@ -206,7 +204,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
                 //Customerhez tartozó víz elmentve
                 for(int j = 0; j < all_caw_list.size(); j++) {
                     if(all_caw_list.get(j).getCustomerid() == customer_id) {
-                        if(!dh.sql("INSERT INTO " + dh.DRAFT + " (UserID, CustomerID, WaterID) VALUES (" + sld.loadUserID() + ",  " + customer_id + ", " + all_caw_list.get(j).getWaterid() + ");"))
+                        if(!dh.sql("INSERT INTO " + dh.DRAFT + " (UserID, CustomerID, WaterID) VALUES (" + sld.loadCurrentUserID() + ",  " + customer_id + ", " + all_caw_list.get(j).getWaterid() + ");"))
                             return;
                     }
                 }
@@ -220,7 +218,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
 
         //Eddigi ürítés
         sld.saveDraftStatus(false);
-        if(!dh.sql("DELETE FROM " + dh.DRAFT + " WHERE UserID = " + sld.loadUserID())) return;
+        if(!dh.sql("DELETE FROM " + dh.DRAFT + " WHERE UserID = " + sld.loadCurrentUserID())) return;
 
         //A chosen_customers listába bekerültek a választott megrendelők. Szóval azok alapján töltődik újra a draft
         ChosenCustomersListLoad();
@@ -228,7 +226,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
         int draft_user, draft_customer, draft_water;
         for(int i = 0; i < draft_list.size(); i++) {
             if(draft_list.get(i).getWater_amount() > 1) {
-                draft_user = sld.loadUserID();
+                draft_user = sld.loadCurrentUserID();
                 draft_customer = draft_list.get(i).getCustomerid();
                 draft_water = draft_list.get(i).getWaterid();
 
@@ -251,8 +249,8 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
 
     public void showCustomersInRecyclerView() {
         draft_list.clear();
-        dh.getDraftData("SELECT * FROM " + dh.DRAFT + " WHERE UserID = " + sld.loadUserID() + ";", draft_list);
-        adapter = new ChosenCustomersAdapter(this, this, chosen_customers_list, all_water_list, draft_list);
+        dh.getDraftData("SELECT * FROM " + dh.DRAFT + " WHERE UserID = " + sld.loadCurrentUserID() + ";", draft_list);
+        adapter = new ChosenCustomersListForJobAdapter(this, this, chosen_customers_list, all_water_list, draft_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);
@@ -263,7 +261,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
         String result;
         if(draft_list.size() > 0) {
             int total_cost;
-            total_cost = dh.getExactInt("SELECT SUM(w.Price * d.WaterAmount) FROM Waters w, Draft d WHERE w.ID = d.WaterID AND d.UserID = " + sld.loadUserID() + ";");
+            total_cost = dh.getExactInt("SELECT SUM(w.Price * d.WaterAmount) FROM Waters w, Draft d WHERE w.ID = d.WaterID AND d.UserID = " + sld.loadCurrentUserID() + ";");
             result = String.format("%,d", total_cost).replace(",", " ");
             global_income = total_cost;
             result += " Ft";
@@ -296,17 +294,17 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
         String created_date = sdf.format(new Date());
 
 
-        if(!dh.sql("INSERT INTO " + dh.JOBS + " (Name, Created, Income, UserID) VALUES ('" + mad.result_text + "', '" + created_date + "'," + global_income + ", " + sld.loadUserID() + ");")) {
+        if(!dh.sql("INSERT INTO " + dh.JOBS + " (Name, Created, Income, UserID) VALUES ('" + mad.result_text + "', '" + created_date + "'," + global_income + ", " + sld.loadCurrentUserID() + ");")) {
             return;
         }
         Log.i(LOG_TITLE, "Munka feltöltve");
 
-        int new_job_id = dh.getExactInt("SELECT ID FROM ( SELECT UserID, MAX(ID) AS ID FROM Jobs Group By UserID ) AS GetID WHERE UserID = " + sld.loadUserID() + "");
+        int new_job_id = dh.getExactInt("SELECT ID FROM ( SELECT UserID, MAX(ID) AS ID FROM Jobs Group By UserID ) AS GetID WHERE UserID = " + sld.loadCurrentUserID() + "");
         Log.i(LOG_TITLE, "Új azonosító lekérve");
 
         ArrayList<Integer> identifiers = new ArrayList<>();
         for(int i = 0; i < draft_list.size(); i++) {
-            if(draft_list.get(i).getUserid() == sld.loadUserID() && !identifiers.contains(draft_list.get(i).getCustomerid())) {
+            if(draft_list.get(i).getUserid() == sld.loadCurrentUserID() && !identifiers.contains(draft_list.get(i).getCustomerid())) {
                 if(!dh.sql("INSERT INTO " + dh.CIJ + " (JobID, CustomerID) " +
                         "VALUES (" + new_job_id + ", " + draft_list.get(i).getCustomerid() + ");" )) {
                     if(!dh.sql("DELETE FROM " + dh.CIJ + " WHERE JobID = " + new_job_id + ";")) return;
@@ -319,7 +317,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
         Log.i(LOG_TITLE, "A megrendelők feltöltve a Munkához, ");
 
         for(int i = 0; i < draft_list.size(); i++) {
-            if (draft_list.get(i).getUserid() == sld.loadUserID() ) {
+            if (draft_list.get(i).getUserid() == sld.loadCurrentUserID() ) {
                 if (!dh.sql("INSERT INTO " + dh.JAW + " (JobID, CustomerID, WaterID, WaterAmount) " +
                         "VALUES (" + new_job_id + ", " + draft_list.get(i).getCustomerid() + ", " + draft_list.get(i).getWaterid() + ", " + draft_list.get(i).getWater_amount() + ");")) {
                     if (!dh.sql("DELETE FROM " + dh.CIJ + " WHERE JobID = " + new_job_id + ";"))
@@ -333,14 +331,14 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
             }
         }
 
-        if(!dh.sql("DELETE FROM " + dh.DRAFT + " WHERE UserID = " + sld.loadUserID() + ";")) {
+        if(!dh.sql("DELETE FROM " + dh.DRAFT + " WHERE UserID = " + sld.loadCurrentUserID() + ";")) {
             Log.e(LOG_TITLE, "Nem sikerült törölni a vázlatokat");
             return;
         }
 
         finish();
         setResult(1);
-        Intent jobs = new Intent(this, MyJobsActivity.class);
+        Intent jobs = new Intent(this, AdminCheckUserJobDraftsActivity.class);
         startActivity(jobs);
         Toast.makeText(this, "Munka létrehozva", Toast.LENGTH_SHORT).show();
         sld.saveDraftStatus(false);
@@ -350,8 +348,6 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
     private void getIntentData() {
         if(getIntent().hasExtra("weekend")) {
             weekend = getIntent().getIntExtra("weekend", -1);
-        } else {
-            Log.e(LOG_TITLE, "Az értékek átemelése sikertelen.");
         }
     }
 }

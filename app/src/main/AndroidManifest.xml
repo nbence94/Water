@@ -13,24 +13,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WaterDelivery">
         <activity
-            android:name=".admin.users.AdminCheckUserJobsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".admin.AdminMonthSettlementActivity"
+            android:name=".admin.users.AdminUpdateJobForUserActivity"
             android:exported="false"
-            android:parentActivityName=".admin.AdminControlActivity" />
+            android:parentActivityName=".admin.users.AdminCheckUserJobDraftsActivity"/>
         <activity
-            android:name=".admin.AdminControlActivity"
+            android:name=".admin.users.AdminCreateJobForUserActivity"
+            android:exported="false"
+            android:parentActivityName=".admin.users.AdminCheckUserJobDraftsActivity"/>
+        <activity
+            android:name=".admin.users.AdminCheckUserJobDraftsActivity"
+            android:exported="false"
+            android:parentActivityName=".admin.users.AdminCheckUserActivity"/>
+        <activity
+            android:name=".admin.control.AdminMonthSettlementActivity"
+            android:exported="false"
+            android:parentActivityName=".admin.control.AdminControlActivity" />
+        <activity
+            android:name=".admin.control.AdminControlActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".admin.AdminUserJobDetailsActivity"
+            android:name=".admin.users.AdminUserJobDetailsActivity"
             android:exported="false"
             android:parentActivityName=".admin.users.AdminUserSettlementsActivity" />
         <activity
-            android:name=".admin.AllSettlementActivity"
+            android:name=".admin.control.AllSettlementActivity"
             android:exported="false"
-            android:parentActivityName=".admin.AdminControlActivity" />
+            android:parentActivityName=".admin.control.AdminControlActivity" />
         <activity
             android:name=".settlements.MySettlementsActivity"
             android:exported="false"

@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.admin;
+package nb.app.waterdelivery.admin.users;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,21 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.adapters.MyJobsAdapter;
-import nb.app.waterdelivery.adapters.UserJobsDetailsAdapter;
-import nb.app.waterdelivery.alertdialog.MyAlertDialog;
+import nb.app.waterdelivery.adapters.admin_users.UserJobsDetailsAdapter;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 
 public class AdminUserJobDetailsActivity extends AppCompatActivity {
+
+    //Kiválasztott "leadott munkához" tartozó részmunkák listája
 
     private final String LOG_TITLE = "AdminUserJobDetailsAdapter";
 
@@ -65,7 +62,6 @@ public class AdminUserJobDetailsActivity extends AppCompatActivity {
         String income_text = "Teljes bevétel: " + income + " Ft";
         global_income_text.setText(income_text);
     }
-
 
     public void showElements() {
         job_list.clear();

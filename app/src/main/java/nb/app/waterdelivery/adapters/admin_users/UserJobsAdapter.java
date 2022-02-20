@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_users;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,32 +17,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
-import nb.app.waterdelivery.admin.AllSettlementActivity;
+import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Settlement;
 
-public class AllSettlementsAdapter extends RecyclerView.Adapter<AllSettlementsAdapter.ViewHolder> {
+public class UserJobsAdapter extends RecyclerView.Adapter<UserJobsAdapter.ViewHolder> {
+
+    //Admin - Munkatársak - Munkatárs adatai - Leadott munkák
 
     LayoutInflater inflater;
     Context context;
     Activity activity;
     ArrayList<String> months_list;
     DatabaseHelper dh;
-    AllSettlementActivity msa;
+    AdminUserSettlementsActivity auja;
 
-    AllSettlementsChildAdapter adapter;
+    UserJobsChildAdapter adapter;
     public ArrayList<Settlement> settlement_list;
     SaveLocalDatas sld;
     ArrayList<Boolean> expanded_list;
 
-    public AllSettlementsAdapter(Context context, Activity activity, ArrayList<String> m_list) {
+    public UserJobsAdapter(Context context, Activity activity, ArrayList<String> m_list) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.activity = activity;
         this.months_list = m_list;
         dh = new DatabaseHelper(context, activity);
-        msa = (AllSettlementActivity) context;
+        auja = (AdminUserSettlementsActivity) context;
 
         sld = new SaveLocalDatas(activity);
         settlement_list = new ArrayList<>();
@@ -54,13 +56,13 @@ public class AllSettlementsAdapter extends RecyclerView.Adapter<AllSettlementsAd
 
     @NonNull
     @Override
-    public AllSettlementsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserJobsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_my_settlements_layout, parent, false);
-        return new AllSettlementsAdapter.ViewHolder(view);
+        return new UserJobsAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AllSettlementsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserJobsAdapter.ViewHolder holder, int position) {
         holder.name.setText(months_list.get(position));
         String[] month = months_list.get(position).split("\\.");
         showElements(holder, month[0], getMonthsNumber(month[1]));
@@ -83,10 +85,13 @@ public class AllSettlementsAdapter extends RecyclerView.Adapter<AllSettlementsAd
         holder.attention.setTooltipText("Vannak lezáratlan munkák!");
     }
 
-    public void showElements(@NonNull AllSettlementsAdapter.ViewHolder holder, String year, String month) {
+    public void showElements(@NonNull UserJobsAdapter.ViewHolder holder, String year, String month) {
         settlement_list.clear();
-        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE YEAR(Created) = " + year + " AND MONTH(Created) = " + month + " ORDER BY ID DESC;", settlement_list);
-        adapter = new AllSettlementsChildAdapter(context,  activity, settlement_list);
+        dh.getSettlementData("SELECT * FROM " + dh.SETTLEMENT + " WHERE UserID = " + auja.user_id + " AND YEAR(Created) = " + year + " AND MONTH(Created) = " + month + ";", settlement_list);
+        if(settlement_list.size() == 0) {
+            settlement_list.add(new Settlement(-1, "Nincs leadott munka", "","", -1, -1));
+        }
+        adapter = new UserJobsChildAdapter(context,  activity, settlement_list);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);
         holder.recycler.setAdapter(adapter);

@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.admin;
+package nb.app.waterdelivery.admin.control;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,10 +17,7 @@ import java.util.Objects;
 
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.adapters.AdminControlMonthAdapter;
-import nb.app.waterdelivery.adapters.AllSettlementsAdapter;
-import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
-import nb.app.waterdelivery.data.SaveLocalDatas;
 
 public class AdminMonthSettlementActivity extends AppCompatActivity {
 
@@ -64,7 +61,7 @@ public class AdminMonthSettlementActivity extends AppCompatActivity {
 
     public void loadMonths() {
 
-        Connection con = null;
+        Connection con;
         try {
             con = dh.connectionClass(this);
         } catch (Exception e) {

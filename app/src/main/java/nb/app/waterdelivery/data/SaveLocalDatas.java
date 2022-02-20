@@ -126,6 +126,21 @@ public class SaveLocalDatas {
         edit.apply();
     }
 
+    //Munka
+    public void saveCurrentJobID(int job) {
+        SharedPreferences sp = activity.getSharedPreferences("current_job", MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putInt("job_id", job);
+        Log.i(LOG_TITLE, "Aktuális munka ID elmentve. ("  + job + ")");
+        edit.apply();
+    }
+
+    public int loadCurrentJobID() {
+        SharedPreferences sp = activity.getSharedPreferences("current_job", MODE_PRIVATE);
+        Log.i(LOG_TITLE, "loadCurrentJobID(" + sp.getInt("job_id", -1) + ")");
+        return sp.getInt("job_id", -1);
+    }
+
     //Database
     public void saveDatabaseValues(String ip, int port, String database, String username, String password) {
         SharedPreferences sp = activity.getSharedPreferences("database_data", MODE_PRIVATE);

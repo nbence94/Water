@@ -1,4 +1,4 @@
-package nb.app.waterdelivery.adapters;
+package nb.app.waterdelivery.adapters.admin_users;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,29 +15,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.admin.users.AdminUpdateJobForUserActivity;
+import nb.app.waterdelivery.alertdialog.EditJobOnDialogTextChange;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.alertdialog.OnDialogTextChange;
 import nb.app.waterdelivery.data.DatabaseHelper;
-import nb.app.waterdelivery.data.Draft;
+import nb.app.waterdelivery.data.JawDraft;
 import nb.app.waterdelivery.data.Waters;
-import nb.app.waterdelivery.jobs.CreateJobActivity;
+import nb.app.waterdelivery.jobs.EditMyJobActivity;
 
-public class ChosenCustomerWatersAdapter extends RecyclerView.Adapter<ChosenCustomerWatersAdapter.ViewHolder> implements OnDialogTextChange {
+public class UpdateChosenCustomersWaterListForJobAdapter extends RecyclerView.Adapter<UpdateChosenCustomersWaterListForJobAdapter.ViewHolder> implements OnDialogTextChange {
 
     LayoutInflater inflater;
     ArrayList<Waters> waters_list;
-    ArrayList<Draft> draft_list;
+    ArrayList<JawDraft> draft_list;
 
     MyAlertDialog mad;
-    CreateJobActivity cja;
+    AdminUpdateJobForUserActivity emja;
     DatabaseHelper dh;
 
     Context context;
     Activity activity;
     int index;
-    int water_id, customer_id, user_id;
+    int water_id, customer_id;
 
-    public ChosenCustomerWatersAdapter(Context context, Activity activity, ArrayList<Waters> waters_data, ArrayList<Draft> draft_list) {
+    public UpdateChosenCustomersWaterListForJobAdapter(Context context, Activity activity, ArrayList<Waters> waters_data, ArrayList<JawDraft> draft_list) {
         this.inflater = LayoutInflater.from(context);
         this.waters_list = waters_data;
         this.draft_list = draft_list;
@@ -46,31 +48,31 @@ public class ChosenCustomerWatersAdapter extends RecyclerView.Adapter<ChosenCust
         this.index = 0;
 
         mad = new MyAlertDialog(context, activity);
-        this.cja = (CreateJobActivity) context;
+        this.emja = (AdminUpdateJobForUserActivity) context;
         this.dh = new DatabaseHelper(context, activity);
     }
 
     @NonNull
     @Override
-    public ChosenCustomerWatersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UpdateChosenCustomersWaterListForJobAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_water_for_customer_layout, parent, false);
-        return new ChosenCustomerWatersAdapter.ViewHolder(view);
+        return new UpdateChosenCustomersWaterListForJobAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChosenCustomerWatersAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UpdateChosenCustomersWaterListForJobAdapter.ViewHolder holder, int position) {
         int water_amount = draft_list.get(position).getWater_amount();
         holder.water_amount.setText(String.valueOf(water_amount));
         calculateCost(holder, position);
+
         holder.item.setOnClickListener(v -> {
-            user_id = draft_list.get(position).getUserid();
             customer_id = draft_list.get(position).getCustomerid();
             water_id = draft_list.get(position).getWaterid();
             mad.AlertInputDialog("Kért víz mennyisége", String.valueOf(water_amount), "Rendben", position, holder,1, this);
         });
     }
 
-    private void calculateCost(@NonNull ChosenCustomerWatersAdapter.ViewHolder holder, int position) {
+    private void calculateCost(@NonNull UpdateChosenCustomersWaterListForJobAdapter.ViewHolder holder, int position) {
         for(int i = 0; i < waters_list.size(); i++) {
             if(waters_list.get(i).getId() == draft_list.get(position).getWaterid()) {
                 holder.water_name.setText(waters_list.get(i).getName());
@@ -95,7 +97,6 @@ public class ChosenCustomerWatersAdapter extends RecyclerView.Adapter<ChosenCust
 
     @Override
     public void onAlertDialogTextChange(@NonNull RecyclerView.ViewHolder holder, int position) {
-
         if(!isNumeric(mad.result_text)) {
             Toast.makeText(context, "A beírt érték nem megfelelő!", Toast.LENGTH_SHORT).show();
             return;
@@ -106,13 +107,14 @@ public class ChosenCustomerWatersAdapter extends RecyclerView.Adapter<ChosenCust
             return;
         }
 
-        if(!dh.sql("UPDATE " + dh.DRAFT + " SET WaterAmount = " + mad.result_text + " WHERE WaterID=" + water_id + " AND UserID= " + user_id + " AND CustomerID=" + customer_id + ";")) {
+        if(!dh.sql("UPDATE " + dh.EDITDRAFT + " SET WaterAmount = " + mad.result_text + " WHERE WaterID=" + water_id + " AND JobID= " + emja.job_id + " AND CustomerID=" + customer_id + ";")) {
             Toast.makeText(context, "Sikertelen módosítás", Toast.LENGTH_SHORT).show();
         }
+
         draft_list.get(position).setWater_amount(Integer.parseInt(mad.result_text));
         calculateCost((ViewHolder) holder, position);
-        cja.calculateGlobalIncome();
-        cja.showCustomersInRecyclerView();
+        emja.calculateGlobalIncome();
+        emja.showCustomersInRecyclerView();
         notifyDataSetChanged();
     }
 

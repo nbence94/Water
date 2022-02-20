@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -238,7 +239,7 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
     }
 
     @Override
-    public void OnPositiveClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnPositiveClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         check_waters.setVisibility(View.GONE);
         water_status = false;
         for(boolean check : chosen_waters) {
@@ -251,7 +252,7 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
     }
 
     @Override
-    public void OnNegativeClick(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
+    public void OnNegativeClick(@NonNull RecyclerView.ViewHolder holder, int position) {
         for(int i = 0; i < chosen_waters.length; i++) {
             chosen_waters[i] = tmp_chosen_waters[i];
         }

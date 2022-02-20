@@ -20,16 +20,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import nb.app.waterdelivery.admin.AdminUserCustomersActivity;
-import nb.app.waterdelivery.admin.users.AdminCheckUserJobsActivity;
-import nb.app.waterdelivery.admin.users.AdminUserEditActivity;
-import nb.app.waterdelivery.admin.users.AdminUserSettlementsActivity;
+import nb.app.waterdelivery.admin.users.AdminCheckUserJobDraftsActivity;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.R;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Roles;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Users;
-import nb.app.waterdelivery.jobs.MyJobsActivity;
 
 public class AdminCheckUserActivity extends AppCompatActivity {
 
@@ -94,20 +91,6 @@ public class AdminCheckUserActivity extends AppCompatActivity {
             mad.AlertInfoDialog("Adatok", data.toString(), "Rendben");
         });
 
-        jobs_button.setOnClickListener(v -> {
-            Intent jobs = new Intent(AdminCheckUserActivity.this, AdminUserSettlementsActivity.class);
-            jobs.putExtra("user_id", user_id);
-            sld.saveCurrentUser(user_id);
-            startActivity(jobs);
-        });
-
-        customers_button.setOnClickListener(v -> {
-            Intent jobs = new Intent(AdminCheckUserActivity.this, AdminUserCustomersActivity.class);
-            jobs.putExtra("user_id", user_id);
-            sld.saveCurrentUser(user_id);
-            startActivity(jobs);
-        });
-
         settings_button.setOnClickListener(v -> {
             Intent update_user = new Intent(AdminCheckUserActivity.this, AdminUserEditActivity.class);
             update_user.putExtra("user_id", user_id);
@@ -118,13 +101,29 @@ public class AdminCheckUserActivity extends AppCompatActivity {
             sld.saveCurrentUser(user_id);
             startActivity(update_user);
         });
-        
+
+        //Leadott munkák
+        jobs_button.setOnClickListener(v -> {
+            Intent jobs = new Intent(AdminCheckUserActivity.this, AdminUserSettlementsActivity.class);
+            jobs.putExtra("user_id", user_id);
+            sld.saveCurrentUser(user_id);
+            startActivity(jobs);
+        });
+
+        //Megrendelők konfigurációja
+        customers_button.setOnClickListener(v -> {
+            Intent jobs = new Intent(AdminCheckUserActivity.this, AdminUserCustomersActivity.class);
+            jobs.putExtra("user_id", user_id);
+            sld.saveCurrentUser(user_id);
+            startActivity(jobs);
+        });
+
+        //Munkatervezetek listája
         create_user_job.setOnClickListener(v -> {
-            Intent user_jobs = new Intent(this, AdminCheckUserJobsActivity.class);
+            Intent user_jobs = new Intent(this, AdminCheckUserJobDraftsActivity.class);
             sld.saveCurrentUser(user_id);
             //sld.saveCheckStatus(true);
             startActivity(user_jobs);
-            //Toast.makeText(this, "Itt majd össze lehet rakni valamit", Toast.LENGTH_SHORT).show();
         });
     }
 

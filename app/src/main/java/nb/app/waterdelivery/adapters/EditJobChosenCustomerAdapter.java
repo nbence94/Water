@@ -120,9 +120,7 @@ public class EditJobChosenCustomerAdapter extends RecyclerView.Adapter<EditJobCh
             return false;
         });
 
-
         loadElements(holder, child_draft_list);
-
     }
 
     private void loadElements(@NonNull EditJobChosenCustomerAdapter.ViewHolder holder, ArrayList<JawDraft> draft_list) {
@@ -148,7 +146,6 @@ public class EditJobChosenCustomerAdapter extends RecyclerView.Adapter<EditJobCh
         @SuppressLint("DefaultLocale") String result_cost = String.format("%,d Ft", customer_cost).replace(",", " ");
         holder.cost.setText(result_cost);
     }
-
 
     @Override
     public int getItemCount() {
@@ -208,7 +205,6 @@ public class EditJobChosenCustomerAdapter extends RecyclerView.Adapter<EditJobCh
 
                     dh.sql("UPDATE " + dh.EDITDRAFT + " SET WaterAmount = " + draft_list.get(i).getWater_amount()
                             + " WHERE JobID =" + job_id + " AND CustomerID =" + draft_customer + " AND WaterID =" + draft_water);
-
                 }
             }
 

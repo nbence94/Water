@@ -54,7 +54,7 @@ public class MyJobsActivity extends AppCompatActivity implements myWarningDialog
         new_draft_button = findViewById(R.id.my_jobs_add_button_gui);
 
         new_draft_button.setOnClickListener(v -> {
-            if(dh.ROGZITO_ROLE != sld.loadUserRoleID()) {
+            if(dh.SZALLITO_ROLE != sld.loadUserRoleID()) {
                 mad.myWarningDialog("Válassz az alábbiak közül", "Milyen tervezetet készítenél?", "Heti", "Egyéb", null, 0, this);
             } else {
                 openCreate();

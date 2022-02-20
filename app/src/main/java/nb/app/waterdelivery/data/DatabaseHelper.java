@@ -33,7 +33,9 @@ public class DatabaseHelper {
 
     //Szerepkörök
     final public int ADMIN_ROLE = 3;
+    final public int SZALLITO_ROLE = 1;
     final public int ROGZITO_ROLE = 2;
+
 
     //Táblák
     final public String USERS = "Users";

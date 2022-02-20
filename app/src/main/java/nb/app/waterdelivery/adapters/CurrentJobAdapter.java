@@ -25,6 +25,8 @@ import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
+import nb.app.waterdelivery.helper.DateTrim;
+import nb.app.waterdelivery.helper.NumberSplit;
 import nb.app.waterdelivery.jobs.JobVisitActivity;
 
 public class CurrentJobAdapter extends RecyclerView.Adapter<CurrentJobAdapter.ViewHolder> {
@@ -59,14 +61,13 @@ public class CurrentJobAdapter extends RecyclerView.Adapter<CurrentJobAdapter.Vi
     public void onBindViewHolder(@NonNull CurrentJobAdapter.ViewHolder holder, int position) {
         holder.job_name.setText(job_list.get(position).getName());
 
-        String income_text = "Bevétel: " + job_list.get(position).getIncome() + " Ft";
+        String income_text = "Bevétel: " + NumberSplit.splitNum(job_list.get(position).getIncome()) + " Ft";
         holder.income.setText(income_text);
 
         if(job_list.get(position).getFinish() != null) {
             holder.job_date.setVisibility(View.VISIBLE);
-            String date = "Lezárva: " + job_list.get(position).getFinish();
-            String[] date_part = date.split("\\.");
-            holder.job_date.setText(date_part[0]);
+            String date = "Lezárva: " + DateTrim.trim(job_list.get(position).getFinish());
+            holder.job_date.setText(date);
             holder.job_check.setChecked(true);
             holder.job_check.setEnabled(false);
         } else {

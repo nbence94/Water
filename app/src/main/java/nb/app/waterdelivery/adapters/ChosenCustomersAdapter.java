@@ -28,8 +28,8 @@ import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Draft;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Waters;
+import nb.app.waterdelivery.helper.NumberSplit;
 import nb.app.waterdelivery.jobs.CreateJobActivity;
-
 
 public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomersAdapter.ViewHolder> implements OnDialogChoice {
 
@@ -142,7 +142,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
                 }
             }
         }
-        @SuppressLint("DefaultLocale") String result_cost = String.format("%,d Ft", customer_cost).replace(",", " ");
+        String result_cost = NumberSplit.splitNum(customer_cost) + " Ft";
         holder.cost.setText(result_cost);
     }
 
@@ -269,8 +269,6 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
     }
 
     public void setShowableNames(ArrayList<Waters> list) {
-        /*for(int i = 0; i < list.size(); i++)
-            waters_name_to_show[i] = list.get(i).getName();*/
         IntStream.range(0, list.size()).forEach(i -> waters_name_to_show[i] = list.get(i).getName());
     }
 }

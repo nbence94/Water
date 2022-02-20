@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -22,6 +23,7 @@ import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.JobAndWaters;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Waters;
+import nb.app.waterdelivery.helper.NumberSplit;
 
 public class JobVisitActivity extends AppCompatActivity {
 
@@ -38,6 +40,7 @@ public class JobVisitActivity extends AppCompatActivity {
     ArrayList<JobAndWaters> waters_in_jobs_list;
     ArrayList<Waters> water_details_list;
     ArrayList<Customers> customers_detail_list;
+    ArrayList<String> customer_income;
 
     int job_id;
     String job_name;
@@ -64,23 +67,23 @@ public class JobVisitActivity extends AppCompatActivity {
         waters_in_jobs_list = new ArrayList<>();
         water_details_list = new ArrayList<>();
         customers_detail_list = new ArrayList<>();
+        customer_income = new ArrayList<>();
 
         getIntentData();//Job_ID
 
+        //--
         //Listák feltöltése
         dh.getCIJData("SELECT * FROM " + dh.CIJ + " WHERE JobID=" + job_id + ";", customers_in_jobs_list);
         dh.getJAWData("SELECT * FROM " + dh.JAW + " WHERE JobID=" + job_id + ";", waters_in_jobs_list);
         dh.getWatersData("SELECT * FROM " + dh.WATERS, water_details_list);
         dh.getCustomersData("SELECT * FROM " + dh.CUSTOMERS + " WHERE UserID=" + sld.loadUserID() + ";", customers_detail_list);
+        loadIncomes();
 
-        //--
         showElements();
-
     }
 
     public void showElements() {
-
-        adapter = new CurrentChosenJobAdapter(this,  this, customers_in_jobs_list, waters_in_jobs_list, water_details_list, customers_detail_list);
+        adapter = new CurrentChosenJobAdapter(this,  this, customers_in_jobs_list, waters_in_jobs_list, water_details_list, customers_detail_list, customer_income);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
         recycler.setAdapter(adapter);
@@ -93,6 +96,17 @@ public class JobVisitActivity extends AppCompatActivity {
             Log.i(LOG_TITLE, "Értékek átemelve. (JobID: " + job_id + ", JobName: "  + job_name + ")");
         } else {
             Log.e(LOG_TITLE, "Az értékek átemelése sikertelen.");
+        }
+    }
+
+    public void loadIncomes() {
+        int id, customer, income;
+        customer_income.clear();
+        for(int i = 0; i < customers_in_jobs_list.size(); i++) {
+            id = customers_in_jobs_list.get(i).getJobid();
+            customer = customers_in_jobs_list.get(i).getCustomerid();
+            income = dh.getExactInt("SELECT SUM(w.Price * jaw.WaterAmount) FROM " + dh.WATERS + " w, " + dh.JAW + " jaw WHERE w.ID = jaw.WaterID AND jaw.JobID = " + id + " AND CustomerID=" + customer + ";");
+            customer_income.add(String.valueOf(income));
         }
     }
 }

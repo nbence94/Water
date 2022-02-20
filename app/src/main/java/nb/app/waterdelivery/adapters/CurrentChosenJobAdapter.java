@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import nb.app.waterdelivery.R;
+import nb.app.waterdelivery.adapters.currentjob.CurrentChosenJobChildAdapter;
 import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.data.Customers;
 import nb.app.waterdelivery.data.CustomersInJob;
@@ -31,6 +33,8 @@ import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.JobAndWaters;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.Waters;
+import nb.app.waterdelivery.helper.DateTrim;
+import nb.app.waterdelivery.helper.NumberSplit;
 import nb.app.waterdelivery.jobs.JobVisitActivity;
 
 public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJobAdapter.ViewHolder>{
@@ -38,21 +42,23 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
     LayoutInflater inflater;
     Context context;
     Activity activity;
+    CurrentChosenJobChildAdapter adapter;
 
     ArrayList<CustomersInJob> customers_in_jobs_list;
     ArrayList<JobAndWaters> waters_in_jobs_list;
     ArrayList<Waters> water_details_list;
     ArrayList<Customers> customers_detail_list;
     ArrayList<Boolean> expanded_list;
+    ArrayList<JobAndWaters> jaw_list = new ArrayList<>();
+    ArrayList<String> customers_income;
 
     DatabaseHelper dh;
     MyAlertDialog mad;
     JobVisitActivity jva;
 
-
     public CurrentChosenJobAdapter(Context context, Activity activity, ArrayList<CustomersInJob> cij_list,
                                             ArrayList<JobAndWaters> wij_list, ArrayList<Waters> wd_list,
-                                             ArrayList<Customers> cd_list
+                                             ArrayList<Customers> cd_list, ArrayList<String> customers_income
     )  {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
@@ -61,6 +67,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         this.waters_in_jobs_list = wij_list;
         this.water_details_list = wd_list;
         this.customers_detail_list = cd_list;
+        this.customers_income = customers_income;
 
         dh = new DatabaseHelper(context, activity);
         mad = new MyAlertDialog(context, activity);
@@ -70,6 +77,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         for(int i = 0; i < customers_in_jobs_list.size(); i++) {
             expanded_list.add(false);
         }
+
     }
 
     @NonNull
@@ -79,90 +87,72 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         return new CurrentChosenJobAdapter.ViewHolder(view);
     }
 
+    public void showElements(@NonNull CurrentChosenJobAdapter.ViewHolder holder, int position, int customer) {
+        jaw_list.clear();
+        dh.getJAWData("SELECT * FROM " + dh.JAW + " WHERE JobID=" + waters_in_jobs_list.get(position).getJobid() + " AND CustomerID=" + customer + ";" ,jaw_list);
+        adapter = new CurrentChosenJobChildAdapter(context,  activity, water_details_list, jaw_list);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        holder.recyclerView.setLayoutManager(manager);
+        holder.recyclerView.setAdapter(adapter);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull CurrentChosenJobAdapter.ViewHolder holder, int position) {
 
+        //Fontos dolgok kinyerése
+        int customer_id = customers_in_jobs_list.get(position).getCustomerid();
+
+        int index = -1;
+        for(int i = 0; i < customers_detail_list.size(); i++) {
+            if(customer_id == customers_detail_list.get(i).getId()) {
+                index = i;
+                break;
+            }
+        }
+
+        showElements(holder, position, customer_id);
+
+        //Elemek kinyitása és összecsukása
         boolean kinyitva = expanded_list.get(position);
         holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
-
         holder.job_item.setOnClickListener(v -> {
             expanded_list.set(position, !kinyitva);
             notifyItemChanged(position);
         });
 
+        //Megrendelő adatainak kiírása
+        holder.customer_name.setText(customers_detail_list.get(index).getFullname());
 
-       int customer_id = customers_in_jobs_list.get(position).getCustomerid();
-       String name = "-";
-        String full_address = "-";
-        String phones = "Tel.: ";
-       for(int i = 0; i < customers_detail_list.size(); i++) {
-            if(customer_id == customers_detail_list.get(i).getId()) {
+        String full_address = customers_detail_list.get(index).getCity() + " - " + customers_detail_list.get(index).getAddress();
+        holder.customers_address.setText(full_address.toUpperCase(Locale.ROOT));
 
-                name = customers_detail_list.get(i).getFullname();
-                full_address = customers_detail_list.get(i).getCity() + " - " + customers_detail_list.get(i).getAddress();
-                phones += customers_detail_list.get(i).getPhone_one();
-                if(!customers_detail_list.get(i).getPhone_two().equals(""))
-                    phones += "\nTel2.: " + customers_detail_list.get(i).getPhone_two();
+        String phones = "Elérhetőség:\n" + customers_detail_list.get(index).getPhone_one();
+        if(!customers_detail_list.get(index).getPhone_two().equals("")) phones += "\n" + customers_detail_list.get(index).getPhone_two();
+        holder.customers_tel.setText(phones);
 
-                if(customers_detail_list.get(i).getBill() == 1) {
-                    holder.bill.setVisibility(View.VISIBLE);
-                } else {
-                    holder.bill.setVisibility(View.GONE);
-                }
-                break;
-            }
-       }
-       holder.customer_name.setText(name);
-       holder.bill.setTooltipText("Kér számlát");
-       holder.customers_address.setText(full_address);
+        if(customers_detail_list.get(index).getBill() == 1) {
+            holder.bill.setVisibility(View.VISIBLE);
+        } else {
+            holder.bill.setVisibility(View.GONE);
+        }
+        holder.bill.setTooltipText("Kér számlát");
 
 
-       holder.customers_tel.setText(phones);
-
-       if( customers_in_jobs_list.get(position).getFinish() != null) {
-           String finish = "Lezárva: " + customers_in_jobs_list.get(position).getFinish();
+        if(customers_in_jobs_list.get(position).getFinish() != null) {
+           String finish = "Lezárva: " + DateTrim.trim(customers_in_jobs_list.get(position).getFinish());
            holder.finish_date.setText(finish);
            holder.finish_check.setChecked(true);
            holder.finish_check.setEnabled(false);
-       } else {
+        } else {
            holder.finish_date.setVisibility(View.GONE);
            holder.finish_check.setChecked(false);
            holder.finish_check.setEnabled(true);
-       }
+        }
 
-       StringBuilder waters = new StringBuilder();
-       StringBuilder water_details = new StringBuilder();
-       int global_income = 0;
-
-       String water_name, water_amount, water_price;
-       for(int i = 0; i < waters_in_jobs_list.size(); i++) {
-           if(waters_in_jobs_list.get(i).getCustomerid() == customer_id) {
-               for(int j = 0; j < water_details_list.size(); j++) {
-                   if(water_details_list.get(j).getId() == waters_in_jobs_list.get(i).getWaterid()) {
-                        water_name = water_details_list.get(j).getName();
-                        waters.append(water_name);
-
-                        water_amount = waters_in_jobs_list.get(i).getWateramount() + " db";
-                        water_price = String.valueOf(waters_in_jobs_list.get(i).getWateramount() * water_details_list.get(j).getPrice());
-                        water_details.append("[ ").append(water_amount).append(" - ").append(water_price).append(" Ft ]");
-
-                        if(i < waters_in_jobs_list.size() - 1) {
-                            water_details.append("\n");
-                            waters.append("\n");
-                        }
-
-                        global_income += Integer.parseInt(water_price);
-                   }
-               }
-           }
-       }
-       holder.waters_text.setText(waters.toString());
-       holder.water_details_text.setText(water_details.toString());
-
-       @SuppressLint("DefaultLocale") String separated_income_text = String.format("%,d", global_income).replace(",", " ");
-       String income_text = "Teljes ár: " + separated_income_text + " Ft";
+       String income_text = "Teljes ár: " + NumberSplit.splitNum(Integer.parseInt(customers_income.get(position))) + " Ft";
        holder.income_text.setText(income_text);
 
+       //Gombok
        holder.finish_check.setOnClickListener(v -> {
            if(jva.customers_in_jobs_list.get(position).getFinish() == null) {
                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -195,6 +185,7 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
            }
        });
 
+
     }
 
     @Override
@@ -209,13 +200,15 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         ConstraintLayout item;
         ImageView bill;
         CardView job_item;
+        RecyclerView recyclerView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             customer_name = itemView.findViewById(R.id.job_customer_gui);
-            waters_text = itemView.findViewById(R.id.current_job_water_datas);
-            water_details_text = itemView.findViewById(R.id.current_job_water_details_datas);
+            //waters_text = itemView.findViewById(R.id.current_job_water_datas);
+            //water_details_text = itemView.findViewById(R.id.current_job_water_details_datas);
+            recyclerView = itemView.findViewById(R.id.current_job_water_recycler);
             income_text = itemView.findViewById(R.id.current_job_income);
             finish_date = itemView.findViewById(R.id.current_job_finish_date);
             finish_check = itemView.findViewById(R.id.current_job_customer_checkbox);

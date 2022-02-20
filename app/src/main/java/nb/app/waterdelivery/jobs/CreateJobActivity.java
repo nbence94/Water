@@ -34,6 +34,7 @@ import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Draft;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Waters;
+import nb.app.waterdelivery.helper.NumberSplit;
 
 public class CreateJobActivity extends AppCompatActivity implements OnDialogChoice, OnDialogTextChange {
 
@@ -262,11 +263,10 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
     public void calculateGlobalIncome() {
         String result;
         if(draft_list.size() > 0) {
-            int total_cost;
-            total_cost = dh.getExactInt("SELECT SUM(w.Price * d.WaterAmount) FROM Waters w, Draft d WHERE w.ID = d.WaterID AND d.UserID = " + sld.loadUserID() + ";");
-            result = String.format("%,d", total_cost).replace(",", " ");
-            global_income = total_cost;
-            result += " Ft";
+            int total_cost = dh.getExactInt("SELECT SUM(w.Price * d.WaterAmount) FROM Waters w, Draft d WHERE w.ID = d.WaterID AND d.UserID = " + sld.loadUserID() + ";");
+            /*result = String.format("%,d", total_cost).replace(",", " ");
+            global_income = total_cost;*/
+            result = NumberSplit.splitNum(total_cost) + " Ft";
         } else {
             result = "-";
         }

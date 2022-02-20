@@ -20,6 +20,8 @@ import nb.app.waterdelivery.alertdialog.MyAlertDialog;
 import nb.app.waterdelivery.alertdialog.myWarningDialogChoice;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
+import nb.app.waterdelivery.helper.DateTrim;
+import nb.app.waterdelivery.helper.NumberSplit;
 import nb.app.waterdelivery.jobs.EditMyJobActivity;
 import nb.app.waterdelivery.jobs.MyJobsActivity;
 
@@ -55,15 +57,16 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
     public void onBindViewHolder(@NonNull MyJobsAdapter.ViewHolder holder, int position) {
 
         holder.job_name.setText(job_list.get(position).getName());
-        holder.income.setText(String.valueOf(job_list.get(position).getIncome()));
+        holder.income.setText(NumberSplit.splitNum(job_list.get(position).getIncome()));
 
-        if(job_list.get(position).getFinish() != null) {
+        if(job_list.get(position).getFinish() == null) {
             holder.job_date.setVisibility(View.GONE);
         } else {
             holder.job_date.setVisibility(View.VISIBLE);
-            holder.job_date.setText(job_list.get(position).getFinish());
+            holder.job_date.setText(DateTrim.trim(job_list.get(position).getFinish()));
         }
 
+        //Elemre kattintás módosításra
         holder.item.setOnClickListener(v -> {
 
             if(!checkJobStatus(position, "Figyelmeztetés", "Nem módosítható, mert tartozik hozzá leadott víz!")) {
@@ -96,7 +99,8 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
                 " WHERE JobID = " + job_list.get(position).getId() + " AND Finish IS NOT NULL");
 
         if(number_of_rows > 0) {
-            mad.AlertInfoDialog(title,msg,"Rendben");
+
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -108,7 +112,8 @@ public class MyJobsAdapter extends RecyclerView.Adapter<MyJobsAdapter.ViewHolder
 
         int job_id = job_list.get(position).getId();
 
-        if(!checkJobStatus(position, "Figyelmeztetés", "Nem törölhető, mert tartozik hozzá leadott víz!")) {
+
+        if(!checkJobStatus(position, "Figyelmeztetés", "A munka le van zárva, nem törölhető!")) {
             return;
         }
 

@@ -25,6 +25,8 @@ import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.JobAndWaters;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.Waters;
+import nb.app.waterdelivery.helper.DateTrim;
+import nb.app.waterdelivery.helper.NumberSplit;
 
 
 public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetailsAdapter.ViewHolder>{
@@ -79,13 +81,12 @@ public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetails
         showElements(holder, position);
 
         holder.job_name.setText(job_list.get(position).getName());
-        String income_text = job_list.get(position).getIncome() + " Ft";
+        String income_text = NumberSplit.splitNum(job_list.get(position).getIncome()) + " Ft";
         holder.income.setText(income_text);
 
         String created_text = "Létrehozva: ";
         if(job_list.get(position).getCreated() != null) {
-            String[] date_array = job_list.get(position).getCreated().split("\\.");
-            created_text += date_array[0];
+            created_text += DateTrim.trim(job_list.get(position).getCreated());
         } else {
             created_text += " - ";
         }
@@ -93,8 +94,7 @@ public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetails
 
         String finished_text = "Elvégezve: ";
         if(job_list.get(position).getFinish() != null) {
-            String[] date_array = job_list.get(position).getFinish().split("\\.");
-            finished_text += date_array[0];
+            finished_text += DateTrim.trim(job_list.get(position).getFinish());
         } else {
             finished_text += " - ";
         }
@@ -115,10 +115,12 @@ public class UserJobsDetailsAdapter extends RecyclerView.Adapter<UserJobsDetails
         customers_list.clear();
         waters_list.clear();
         jaw_list.clear();
+
         dh.getCustomersData("SELECT * FROM " + dh.CUSTOMERS + " c, " + dh.CIJ + " cij WHERE c.ID = cij.CustomerID AND cij.JobID = " +  job_list.get(position).getId() + "; ", customers_list);
         dh.getCIJData("SELECT * FROM " + dh.CIJ + " WHERE jobID = " +  job_list.get(position).getId() + "; ", cij_list);
         dh.getWatersData("SELECT * FROM " + dh.WATERS, waters_list);
         dh.getJAWData("SELECT * FROM " + dh.JAW + " WHERE jobID = " + job_list.get(position).getId(), jaw_list);
+
         adapter = new UserJobsDetailsChildAdapter(context,  activity, customers_list, cij_list, waters_list, jaw_list, job_list.get(position).getId());
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recycler.setLayoutManager(manager);

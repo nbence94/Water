@@ -194,7 +194,7 @@ public class AdminUpdateJobForUserActivity extends AppCompatActivity implements 
 
     @Override
     public void OnPositiveClick(@NonNull EditJobChosenCustomerAdapter.ViewHolder holder, int position) {
-        String fullname, created, city, address, email, phone, phoneplus;
+        String fullname, created, city, address, email, phone, phoneplus, comment;
         int customer_id, userid, water_week, bill;
 
         //Eddigi ürítés
@@ -215,8 +215,9 @@ public class AdminUpdateJobForUserActivity extends AppCompatActivity implements 
                 userid = all_customers_list.get(i).getUserid();
                 water_week = all_customers_list.get(i).getWater_weeks();
                 bill = all_customers_list.get(i).getBill();
+                comment = all_customers_list.get(i).getComment();
 
-                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, userid));
+                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, comment, userid));
 
                 //Customerhez tartozó víz elmentve
                 for(int j = 0; j < all_caw_list.size(); j++) {

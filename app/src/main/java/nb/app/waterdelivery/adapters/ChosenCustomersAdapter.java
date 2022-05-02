@@ -33,6 +33,7 @@ import nb.app.waterdelivery.jobs.CreateJobActivity;
 
 public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomersAdapter.ViewHolder> implements OnDialogChoice {
 
+    //Szülő: CreateJobActivity
     private final String LOG_TITLE = "ChosenCustomersAdapter";
 
     Context context;
@@ -117,9 +118,7 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
             return false;
         });
 
-
         loadElements(holder, child_draft_list);
-
     }
 
     private void loadElements(@NonNull ChosenCustomersAdapter.ViewHolder holder, ArrayList<Draft> draft_list) {
@@ -129,7 +128,6 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
         holder.recycler.setAdapter(adapter);
         Log.i(LOG_TITLE, "Megrendelők betöltése az AlertDialogba");
     }
-
 
     public void calculateCostForWater(@NonNull ChosenCustomersAdapter.ViewHolder holder, int position) {
         customer_cost = 0;
@@ -145,7 +143,6 @@ public class ChosenCustomersAdapter extends RecyclerView.Adapter<ChosenCustomers
         String result_cost = NumberSplit.splitNum(customer_cost) + " Ft";
         holder.cost.setText(result_cost);
     }
-
 
     @Override
     public int getItemCount() {

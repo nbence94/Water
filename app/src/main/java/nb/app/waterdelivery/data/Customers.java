@@ -11,9 +11,10 @@ public class Customers {
     private String phone_two;
     private int water_weeks;
     private int bill;
+    private String comment;
     private int userid;
 
-    public Customers (int id, String created, String fullname, String city, String address, String email, String phone, String phone_plus, int water_week, int bill, int userid) {
+    public Customers (int id, String created, String fullname, String city, String address, String email, String phone, String phone_plus, int water_week, int bill, String comment, int userid) {
         this.id = id;
         this.created = created;
         this.fullname = fullname;
@@ -22,6 +23,7 @@ public class Customers {
         this.email = email;
         this.phone_one = phone;
         this.phone_two = phone_plus;
+        this.comment = comment;
         this.water_weeks = water_week;
         this.bill = bill;
         this.userid = userid;
@@ -105,6 +107,14 @@ public class Customers {
 
     public void setBill(int bill) {
         this.bill = bill;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public int getUserid() {

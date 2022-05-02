@@ -29,7 +29,7 @@ public class DatabaseHelper {
     final private String PORT = "3306";
     final private String USERNAME = "teszt_user";
     final private String PASSWORD = "jelszo123";
-    final private String DATABASE = "WaterDelivery";
+    final private String DATABASE = "WD";
 
     //Szerepkörök
     final public int ADMIN_ROLE = 3;
@@ -79,9 +79,10 @@ public class DatabaseHelper {
     final public int CUSTOMERS_EMAIL_INDEX = 6;
     final public int CUSTOMERS_PHONE_INDEX = 7;
     final public int CUSTOMERS_PHONEPLUS_INDEX = 8;
-    final public int CUSTOMERS_WATERWEEK_INDEX = 9;
-    final public int CUSTOMERS_BILL_INDEX = 10;
-    final public int CUSTOMERS_USERID_INDEX = 11;
+    final public int CUSTOMERS_COMMENT_INDEX = 9;
+    final public int CUSTOMERS_WATERWEEK_INDEX = 10;
+    final public int CUSTOMERS_BILL_INDEX = 11;
+    final public int CUSTOMERS_USERID_INDEX = 12;
 
     //Szerepkörök
     final public int ROLES_ID_INDEX = 1;
@@ -141,7 +142,7 @@ public class DatabaseHelper {
 
         String ip = sld.loadIP();
         int port = sld.loadPort();
-        String database = "WaterDelivery";
+        String database = "WD";
         String username = sld.loadUsername();
         String password = sld.loadPassword();
 
@@ -545,7 +546,7 @@ public class DatabaseHelper {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(select);
 
-                String fullname, created, city, address, email, phone, phoneplus;
+                String fullname, created, city, address, email, phone, phoneplus, comment;
                 int id, userid, water_week, bill;
 
                 while (rs.next()) {
@@ -557,12 +558,13 @@ public class DatabaseHelper {
                     email = rs.getString(CUSTOMERS_EMAIL_INDEX);
                     phone = rs.getString(CUSTOMERS_PHONE_INDEX);
                     phoneplus = rs.getString(CUSTOMERS_PHONEPLUS_INDEX);
-
+                    comment = rs.getString(CUSTOMERS_COMMENT_INDEX);
                     water_week = Integer.parseInt(rs.getString(CUSTOMERS_WATERWEEK_INDEX));
                     bill = Integer.parseInt(rs.getString(CUSTOMERS_BILL_INDEX));
+
                     userid = (rs.getString(CUSTOMERS_USERID_INDEX) != null) ? Integer.parseInt(rs.getString(CUSTOMERS_USERID_INDEX)) : -1;
 
-                    list.add(new Customers(id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, userid));
+                    list.add(new Customers(id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, comment, userid));
                 }
             }
 

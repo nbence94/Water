@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -31,10 +30,10 @@ import nb.app.waterdelivery.data.Customers;
 import nb.app.waterdelivery.data.CustomersInJob;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.JobAndWaters;
-import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.Waters;
 import nb.app.waterdelivery.helper.DateTrim;
 import nb.app.waterdelivery.helper.NumberSplit;
+import nb.app.waterdelivery.helper.PhoneNumberFormat;
 import nb.app.waterdelivery.jobs.JobVisitActivity;
 
 public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJobAdapter.ViewHolder>{
@@ -55,10 +54,11 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
     DatabaseHelper dh;
     MyAlertDialog mad;
     JobVisitActivity jva;
+    PhoneNumberFormat pnf;
 
     public CurrentChosenJobAdapter(Context context, Activity activity, ArrayList<CustomersInJob> cij_list,
                                             ArrayList<JobAndWaters> wij_list, ArrayList<Waters> wd_list,
-                                             ArrayList<Customers> cd_list, ArrayList<String> customers_income
+                                             ArrayList<Customers> cd_list, ArrayList<String> customers_income, ArrayList<Boolean> expand
     )  {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
@@ -71,8 +71,10 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
 
         dh = new DatabaseHelper(context, activity);
         mad = new MyAlertDialog(context, activity);
+        pnf = new PhoneNumberFormat();
         jva = (JobVisitActivity) context;
 
+        //this.expanded_list = expand;
         this.expanded_list = new ArrayList<>();
         for(int i = 0; i < customers_in_jobs_list.size(); i++) {
             expanded_list.add(false);
@@ -87,10 +89,11 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         return new CurrentChosenJobAdapter.ViewHolder(view);
     }
 
-    public void showElements(@NonNull CurrentChosenJobAdapter.ViewHolder holder, int position, int customer) {
+    public void showElements(@NonNull CurrentChosenJobAdapter.ViewHolder holder, int position, int customer, int closed) {
         jaw_list.clear();
         dh.getJAWData("SELECT * FROM " + dh.JAW + " WHERE JobID=" + waters_in_jobs_list.get(position).getJobid() + " AND CustomerID=" + customer + ";" ,jaw_list);
-        adapter = new CurrentChosenJobChildAdapter(context,  activity, water_details_list, jaw_list);
+
+        adapter = new CurrentChosenJobChildAdapter(context,  activity, water_details_list, jaw_list, closed);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.recyclerView.setLayoutManager(manager);
         holder.recyclerView.setAdapter(adapter);
@@ -110,13 +113,16 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
             }
         }
 
-        showElements(holder, position, customer_id);
+        //Megrendelő lezárt-e
+        int closed = customers_in_jobs_list.get(position).getFinish() == null ? 0 : 1;
+        showElements(holder, position, customer_id, closed);
 
         //Elemek kinyitása és összecsukása
         boolean kinyitva = expanded_list.get(position);
         holder.item.setVisibility(kinyitva ? View.VISIBLE : View.GONE);
         holder.job_item.setOnClickListener(v -> {
             expanded_list.set(position, !kinyitva);
+            //jva.expanded_list.set(position, !kinyitva);
             notifyItemChanged(position);
         });
 
@@ -126,8 +132,33 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         String full_address = customers_detail_list.get(index).getCity() + " - " + customers_detail_list.get(index).getAddress();
         holder.customers_address.setText(full_address.toUpperCase(Locale.ROOT));
 
-        String phones = "Elérhetőség:\n" + customers_detail_list.get(index).getPhone_one();
-        if(!customers_detail_list.get(index).getPhone_two().equals("")) phones += "\n" + customers_detail_list.get(index).getPhone_two();
+        String phones = "Elérhetőség:\n";
+        String phone_number = customers_detail_list.get(index).getPhone_one();
+        if(pnf.checkMobile(phone_number)) {
+            phones += PhoneNumberFormat.mobileFormat(phone_number);
+        }
+        else if(pnf.checkPhone(phone_number)) {
+            phones += PhoneNumberFormat.phoneFormat(phone_number);
+        }
+        else {
+            phones += customers_detail_list.get(index).getPhone_one();
+        }
+
+        if(!customers_detail_list.get(index).getPhone_two().equals("")) {
+            phone_number = customers_detail_list.get(index).getPhone_two();
+
+            if(pnf.checkMobile(phone_number)) {
+                phones += "\n" + PhoneNumberFormat.mobileFormat(phone_number);
+            }
+            else if(pnf.checkPhone(phone_number)) {
+                phones += "\n" + PhoneNumberFormat.phoneFormat(phone_number);
+            }
+            else {
+                phones += "\n" + customers_detail_list.get(index).getPhone_two();
+            }
+
+        }
+
         holder.customers_tel.setText(phones);
 
         if(customers_detail_list.get(index).getBill() == 1) {
@@ -185,7 +216,11 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
            }
        });
 
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void reload() {
+        notifyDataSetChanged();
     }
 
     @Override
@@ -193,9 +228,9 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
         return customers_in_jobs_list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView customer_name, customers_address, customers_tel, waters_text, water_details_text, income_text, finish_date;
+        TextView customer_name, customers_address, customers_tel, income_text, finish_date;
         CheckBox finish_check;
         ConstraintLayout item;
         ImageView bill;
@@ -206,8 +241,6 @@ public class CurrentChosenJobAdapter extends RecyclerView.Adapter<CurrentChosenJ
             super(itemView);
 
             customer_name = itemView.findViewById(R.id.job_customer_gui);
-            //waters_text = itemView.findViewById(R.id.current_job_water_datas);
-            //water_details_text = itemView.findViewById(R.id.current_job_water_details_datas);
             recyclerView = itemView.findViewById(R.id.current_job_water_recycler);
             income_text = itemView.findViewById(R.id.current_job_income);
             finish_date = itemView.findViewById(R.id.current_job_finish_date);

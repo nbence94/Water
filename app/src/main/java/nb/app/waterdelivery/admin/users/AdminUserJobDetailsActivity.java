@@ -16,6 +16,7 @@ import nb.app.waterdelivery.adapters.admin_users.UserJobsDetailsAdapter;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Jobs;
 import nb.app.waterdelivery.data.SaveLocalDatas;
+import nb.app.waterdelivery.helper.NumberSplit;
 
 public class AdminUserJobDetailsActivity extends AppCompatActivity {
 
@@ -59,7 +60,7 @@ public class AdminUserJobDetailsActivity extends AppCompatActivity {
         for(int i = 0; i < job_list.size(); i++) {
             income += job_list.get(i).getIncome();
         }
-        String income_text = "Teljes bevétel: " + income + " Ft";
+        String income_text = "Teljes bevétel: " + NumberSplit.splitNum(income) + " Ft";
         global_income_text.setText(income_text);
     }
 

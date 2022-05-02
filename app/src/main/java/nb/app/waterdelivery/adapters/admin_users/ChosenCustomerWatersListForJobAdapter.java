@@ -22,6 +22,7 @@ import nb.app.waterdelivery.alertdialog.OnDialogTextChange;
 import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.Draft;
 import nb.app.waterdelivery.data.Waters;
+import nb.app.waterdelivery.helper.NumberSplit;
 
 public class ChosenCustomerWatersListForJobAdapter extends RecyclerView.Adapter<ChosenCustomerWatersListForJobAdapter.ViewHolder> implements OnDialogTextChange {
 
@@ -76,7 +77,7 @@ public class ChosenCustomerWatersListForJobAdapter extends RecyclerView.Adapter<
 
             if(waters_list.get(i).getId() == draft_list.get(position).getWaterid()) {
                 holder.water_name.setText(waters_list.get(i).getName());
-                holder.water_cost.setText(String.valueOf(waters_list.get(i).getPrice() * draft_list.get(position).getWater_amount()));
+                holder.water_cost.setText(NumberSplit.splitNum(waters_list.get(i).getPrice() * draft_list.get(position).getWater_amount()));
             }
         }
     }

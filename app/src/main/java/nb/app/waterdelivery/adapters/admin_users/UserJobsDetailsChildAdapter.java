@@ -25,6 +25,8 @@ import nb.app.waterdelivery.data.DatabaseHelper;
 import nb.app.waterdelivery.data.JobAndWaters;
 import nb.app.waterdelivery.data.SaveLocalDatas;
 import nb.app.waterdelivery.data.Waters;
+import nb.app.waterdelivery.helper.DateTrim;
+import nb.app.waterdelivery.helper.NumberSplit;
 
 public class UserJobsDetailsChildAdapter extends RecyclerView.Adapter<UserJobsDetailsChildAdapter.ViewHolder> {
 
@@ -79,8 +81,9 @@ public class UserJobsDetailsChildAdapter extends RecyclerView.Adapter<UserJobsDe
 
             for(int i = 0; i < cij_list.size(); i++) {
                     if (cij_list.get(i).getCustomerid() == customers_list.get(position).getId()) {
-                        String[] date_array = cij_list.get(i).getFinish().split("\\.");
-                        msg.append("SZÁLLÍTÁS LEADVA").append("\n").append(date_array[0]).append("\n").append("\n");
+                        //String[] date_array = cij_list.get(i).getFinish().split("\\.");
+                        String done = DateTrim.trim(cij_list.get(i).getFinish());
+                        msg.append("SZÁLLÍTÁS LEADVA").append("\n").append(done).append("\n").append("\n");
                         break;
                 }
             }
@@ -98,7 +101,7 @@ public class UserJobsDetailsChildAdapter extends RecyclerView.Adapter<UserJobsDe
                 }
             }
 
-            msg.append("\n").append("BEVÉTEL").append("\n").append(income).append(" Ft");
+            msg.append("\n").append("BEVÉTEL").append("\n").append(NumberSplit.splitNum(income)).append(" Ft");
             mad.AlertInfoDialog("További információ", msg.toString(),"Rendben");
         });
     }

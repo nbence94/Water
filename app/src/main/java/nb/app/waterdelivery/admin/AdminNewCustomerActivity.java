@@ -41,7 +41,7 @@ public class AdminNewCustomerActivity extends AppCompatActivity implements Adapt
 
     Toolbar toolbar;
 
-    EditText name_field, city_field, address_field, email_field, phone_field, phoneplus_field;
+    EditText name_field, city_field, address_field, email_field, phone_field, phoneplus_field, comment_field;
     Spinner water_week_spinner;
     CheckBox bill_need_checkbox;
     FloatingActionButton save_button, add_water;
@@ -83,6 +83,7 @@ public class AdminNewCustomerActivity extends AppCompatActivity implements Adapt
         add_water = findViewById(R.id.customers_add_waters_gui);
         bill_need_checkbox = findViewById(R.id.add_customer_bill_checkbox_gui);
         save_button = findViewById(R.id.admin_add_customer_save_button_gui);
+        comment_field = findViewById(R.id.admin_add_customer_comment_gui);
 
         //Ez először legyen nem látható
         check_waters.setVisibility(View.GONE);
@@ -158,9 +159,9 @@ public class AdminNewCustomerActivity extends AppCompatActivity implements Adapt
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             String aktualis_datum = sdf.format(new Date());
 
-            String insert_customer = "INSERT INTO " + dh.CUSTOMERS + " (Created, Fullname, City, Address, Email, Phone, PhonePlus, WaterWeeks, Bill) VALUES " +
+            String insert_customer = "INSERT INTO " + dh.CUSTOMERS + " (Created, Fullname, City, Address, Email, Phone, PhonePlus, Comment, WaterWeeks, Bill) VALUES " +
                     "('" + aktualis_datum + "', '" + name_value + "', '" + city_value + "', '" + address_value + "', '" + email_value + "', "
-                    + " '" + phone_value + "', '" + phoneplus_value + "', " + ww_value + ", " + bill_status + ");";
+                    + " '" + phone_value + "', '" + phoneplus_value + "', '" + comment_field.getText().toString() + "', " + ww_value + ", " + bill_status + ");";
 
 
 

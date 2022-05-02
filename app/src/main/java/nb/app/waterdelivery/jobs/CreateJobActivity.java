@@ -156,7 +156,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
             //TODO: Majd megcsinálni, hogy ha később a ChosenCustomersAdapter-ből meghívom a cuccot, akkor ne írja ki azt, hogy piszkozat betöltve
                 //chosen customer list feltöltése
                 dh.getCustomersData("SELECT DISTINCT c.ID, c.Created, c.Fullname," +
-                        " c.City, c.Address, c.Email, c.Phone, c.PhonePlus, c.WaterWeeks, c.Bill, c.UserID " +
+                        " c.City, c.Address, c.Email, c.Phone, c.PhonePlus, c.Comment, c.WaterWeeks, c.Bill, c.UserID " +
                         "FROM " + dh.CUSTOMERS + " c, " + dh.DRAFT + " d  " +
                         "WHERE c.ID = d.CustomerID AND d.UserID=" + sld.loadUserID() + ";", chosen_customers_list);
                 if(chosen_customers_list.size() == 0) {
@@ -184,7 +184,7 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
 
     public void ChosenCustomersListLoad() {
         chosen_customers_list.clear();
-        String fullname, created, city, address, email, phone, phoneplus;
+        String fullname, created, city, address, email, phone, phoneplus, comment;
         int customer_id, userid, water_week, bill;
 
         for(int i = 0; i < chosen_customers.length; i++) {
@@ -201,8 +201,9 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
                 userid = all_customers_list.get(i).getUserid();
                 water_week = all_customers_list.get(i).getWater_weeks();
                 bill = all_customers_list.get(i).getBill();
+                comment = all_customers_list.get(i).getComment();
 
-                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, userid));
+                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, comment, userid));
 
                 //Customerhez tartozó víz elmentve
                 for(int j = 0; j < all_caw_list.size(); j++) {
@@ -264,8 +265,6 @@ public class CreateJobActivity extends AppCompatActivity implements OnDialogChoi
         String result;
         if(draft_list.size() > 0) {
             int total_cost = dh.getExactInt("SELECT SUM(w.Price * d.WaterAmount) FROM Waters w, Draft d WHERE w.ID = d.WaterID AND d.UserID = " + sld.loadUserID() + ";");
-            /*result = String.format("%,d", total_cost).replace(",", " ");
-            global_income = total_cost;*/
             result = NumberSplit.splitNum(total_cost) + " Ft";
         } else {
             result = "-";

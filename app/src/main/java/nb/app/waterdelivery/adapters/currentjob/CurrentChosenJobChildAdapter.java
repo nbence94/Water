@@ -2,6 +2,7 @@ package nb.app.waterdelivery.adapters.currentjob;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,14 +36,16 @@ public class CurrentChosenJobChildAdapter extends RecyclerView.Adapter<CurrentCh
     Activity activity;
     int index;
     int water_id, customer_id, job_id;
+    int closed;
 
-    public CurrentChosenJobChildAdapter(Context context, Activity activity, ArrayList<Waters> waters_data, ArrayList<JobAndWaters> draft_list) {
+    public CurrentChosenJobChildAdapter(Context context, Activity activity, ArrayList<Waters> waters_data, ArrayList<JobAndWaters> draft_list, int closed) {
         this.inflater = LayoutInflater.from(context);
         this.waters_list = waters_data;
         this.jaw_list = draft_list;
         this.context = context;
         this.activity = activity;
         this.index = 0;
+        this.closed = closed;
 
         mad = new MyAlertDialog(context, activity);
         this.jva = (JobVisitActivity) context;
@@ -60,10 +63,24 @@ public class CurrentChosenJobChildAdapter extends RecyclerView.Adapter<CurrentCh
     public void onBindViewHolder(@NonNull CurrentChosenJobChildAdapter.ViewHolder holder, int position) {
 
         int water_amount = jaw_list.get(position).getWateramount();
-        holder.water_name.setText(waters_list.get(position).getName());
+
+        //TODO Ezt ide tettem, majd teszteld, hogy jó-e
+        int index = 0;
+        for(int i = 0; i < waters_list.size(); i++) {
+            if(waters_list.get(i).getId() == jaw_list.get(position).getWaterid()) {
+                index = i;
+                break;
+            }
+        }
+
+
+        holder.water_name.setText(waters_list.get(index).getName());
         holder.water_amount.setText(String.valueOf(water_amount));
 
         calculateCost(holder, position);
+
+
+        holder.settings_button.setEnabled(closed == 0);
 
         holder.settings_button.setOnClickListener(v -> {
             job_id = jaw_list.get(position).getJobid();
@@ -114,9 +131,10 @@ public class CurrentChosenJobChildAdapter extends RecyclerView.Adapter<CurrentCh
         jaw_list.get(position).setWateramount(Integer.parseInt(mad.result_text));
         calculateCost((CurrentChosenJobChildAdapter.ViewHolder) holder, position);
         jva.loadIncomes();
+        //jva.reload();
         jva.showElements();
+        //TODO Talán az hatásos lenne, ha itt lenne egy metódus hívás, ami becsukja, aztán kinyitja az elemeket
         notifyDataSetChanged();
-        //TODO Jó lenne megcsinálni, hogy módosításnál ne csukódjon be a cucc
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

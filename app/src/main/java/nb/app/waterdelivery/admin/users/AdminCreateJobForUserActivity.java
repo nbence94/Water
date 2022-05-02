@@ -181,7 +181,7 @@ public class AdminCreateJobForUserActivity extends AppCompatActivity implements 
 
     public void ChosenCustomersListLoad() {
         chosen_customers_list.clear();
-        String fullname, created, city, address, email, phone, phoneplus;
+        String fullname, created, city, address, email, phone, phoneplus, comment;
         int customer_id, userid, water_week, bill;
 
         for(int i = 0; i < chosen_customers.length; i++) {
@@ -198,8 +198,9 @@ public class AdminCreateJobForUserActivity extends AppCompatActivity implements 
                 userid = all_customers_list.get(i).getUserid();
                 water_week = all_customers_list.get(i).getWater_weeks();
                 bill = all_customers_list.get(i).getBill();
+                comment = all_customers_list.get(i).getComment();
 
-                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, userid));
+                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, comment, userid));
 
                 //Customerhez tartozó víz elmentve
                 for(int j = 0; j < all_caw_list.size(); j++) {

@@ -33,6 +33,7 @@ public class MyAlertDialog {
     MultiSelectAdapter multi_adapter;
     SingleSelectAdapter single_adapter;
 
+
     //All
     Button yes_button, no_button;
     TextView dialog_title, dialog_message;

@@ -61,9 +61,13 @@
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/custom_cardview_grey_bg.xml" value="0.26615384615384613" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/custom_cardview_lightgrey_bg.xml" value="0.2703125" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/done_icon.xml" value="0.2703125" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/error_background.xml" value="0.2703125" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/error_icon.xml" value="0.2703125" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/jobs_icon.xml" value="0.26615384615384613" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/list_icon.xml" value="0.26615384615384613" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/rectangle_bg.xml" value="0.2703125" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/settings_icon.xml" value="0.26615384615384613" />
+        <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/drawable/success_background.xml" value="0.2703125" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/activity_admin_all_customers.xml" value="0.25416666666666665" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/activity_admin_check_user.xml" value="0.1671875" />
         <entry key="..\:/REPO/WaterDelivery/Water/app/src/main/res/layout/activity_admin_check_user_jobs.xml" value="0.25416666666666665" />

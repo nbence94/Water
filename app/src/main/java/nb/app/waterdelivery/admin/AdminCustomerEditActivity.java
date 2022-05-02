@@ -39,14 +39,14 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
 
     Toolbar toolbar;
 
-    EditText name_field, city_field, address_field, email_field, phone_field, phoneplus_field;
+    EditText name_field, city_field, address_field, email_field, phone_field, phoneplus_field, comment_field;
     Spinner water_week_spinner;
     CheckBox bill_need_checkbox;
     FloatingActionButton save_button, add_water;
     TextView check_waters;
 
     int customer_id;
-    String name_value, city_value, address_value, email_value, phone_value, phoneplus_value;
+    String name_value, city_value, address_value, email_value, phone_value, phoneplus_value, comment_value;
     int ww_value, bill_status;
 
     ArrayList<Waters> water_list;
@@ -82,6 +82,7 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
         check_waters = findViewById(R.id.waters_selected_gui);
         add_water = findViewById(R.id.customers_add_waters_gui);
         save_button = findViewById(R.id.admin_add_customer_save_button_gui);
+        comment_field = findViewById(R.id.admin_add_customer_comment_gui);
 
         //Spinner
         ArrayAdapter<CharSequence> AA = ArrayAdapter.createFromResource(this, R.array.weeks, android.R.layout.simple_spinner_item);
@@ -99,7 +100,7 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
         phoneplus_field.setText(phoneplus_value);
         water_week_spinner.setSelection((ww_value - 1));
         bill_need_checkbox.setChecked(bill_status == 1);
-
+        comment_field.setText(comment_value);
 
         //Víz szekció
         check_waters.setVisibility(View.GONE);//Csak akkor jelenjen meg,ha van hozzá téve víz
@@ -137,6 +138,7 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
             phone_value = phone_field.getText().toString().trim();
             phoneplus_value = phoneplus_field.getText().toString().trim();
             bill_status = (bill_need_checkbox.isChecked()) ? 1 : 0;
+            comment_value = comment_field.getText().toString().trim();
 
             if(name_value.isEmpty() || city_value.isEmpty() || address_value.isEmpty()
                     || email_value.isEmpty() || phone_value.isEmpty()) {
@@ -176,8 +178,8 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
             }
 
             String update = "UPDATE " + dh.CUSTOMERS + " SET Fullname = '" + name_value + "', City = '" + city_value + "', Address = '" + address_value + "', "
-                            + " Email = '" + email_value + "', Phone='" + phone_value + "', PhonePlus = '" + phoneplus_value + "', WaterWeeks = " + ww_value + ", Bill = " + bill_status
-                            + " WHERE ID = " + customer_id + ";";
+                            + " Email = '" + email_value + "', Phone='" + phone_value + "', PhonePlus = '" + phoneplus_value + "', WaterWeeks = " + ww_value + ", Bill = " + bill_status + ", Comment = '" + comment_value
+                            + "' WHERE ID = " + customer_id + ";";
 
             if(!dh.sql(update)) {
                 Log.e(LOG_TITLE, update);
@@ -225,6 +227,7 @@ public class AdminCustomerEditActivity extends AppCompatActivity implements Adap
 
             ww_value  =  getIntent().getIntExtra("customer_ww", -1);
             bill_status  =  getIntent().getIntExtra("customer_bill", -1);
+            comment_value = getIntent().getStringExtra("customer_comment");
         }
     }
 

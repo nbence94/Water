@@ -45,24 +45,33 @@
                 app:layout_constraintTop_toBottomOf="@+id/admin_add_customer_toolbar_gui"
                 app:layout_constraintVertical_bias="0.0">
 
+                <TextView
+                    android:id="@+id/helper_textview0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:text="Általános adatok"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <EditText
                     android:id="@+id/add_customer_name_gui"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="10dp"
                     android:hint="@string/customer_name_text"
                     android:importantForAutofill="no"
                     android:inputType="text"
                     android:minHeight="48dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/helper_textview0" />
 
                 <EditText
                     android:id="@+id/add_customer_city_gui"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
                     android:layout_marginTop="24dp"
                     android:hint="@string/customer_city_text"
                     android:importantForAutofill="no"
@@ -89,6 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:text="@string/customer_availability"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/add_customer_address_gui" />
@@ -135,6 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35dp"
                     android:text="Egyéb"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/add_customer_telephone_two_gui" />
@@ -146,6 +157,7 @@
                     android:layout_marginTop="5dp"
                     android:text="@string/customer_water_need_text"
                     android:textColor="#616161"
+                    android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/helper_textview2" />
 
@@ -154,6 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#616161"
+                    android:background="@drawable/rectangle_bg"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/helper_textview3" />
 
@@ -199,18 +212,31 @@
                     app:layout_constraintBottom_toTopOf="@+id/admin_add_customer_comment_gui"
                     app:layout_constraintStart_toEndOf="@id/customers_add_waters_gui"
                     app:layout_constraintTop_toBottomOf="@+id/add_customer_bill_checkbox_gui"
-                    app:layout_constraintVertical_bias="0.538" />
+                    app:layout_constraintVertical_bias="0.23" />
+
+                <TextView
+                    android:id="@+id/helper_textview4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:text="Megjegyzés"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/customers_add_waters_gui" />
+
 
                 <EditText
                     android:id="@+id/admin_add_customer_comment_gui"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="bottom|left"
                     android:hint="Megjegyzés (opcionális)"
                     android:inputType="textMultiLine"
-                    android:gravity="top|left"
                     android:lines="5"
-                    app:layout_constraintTop_toBottomOf="@+id/customers_add_waters_gui"
+                    android:maxLength="500"
+                    app:layout_constraintTop_toBottomOf="@+id/helper_textview4"
                     tools:ignore="TextViewEdits"
                     tools:layout_editor_absoluteX="6dp" />
 

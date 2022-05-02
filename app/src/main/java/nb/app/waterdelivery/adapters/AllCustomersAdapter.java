@@ -76,6 +76,7 @@ public class AllCustomersAdapter extends RecyclerView.Adapter<AllCustomersAdapte
             admin_customer_edit_screen.putExtra("customer_phoneplus", data_list.get(position).getPhone_two());
             admin_customer_edit_screen.putExtra("customer_ww", data_list.get(position).getWater_weeks());
             admin_customer_edit_screen.putExtra("customer_bill", data_list.get(position).getBill());
+            admin_customer_edit_screen.putExtra("customer_comment", data_list.get(position).getComment());
             activity.startActivityForResult(admin_customer_edit_screen, 1);
         });
     }

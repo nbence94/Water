@@ -178,7 +178,7 @@ public class EditMyJobActivity extends AppCompatActivity implements EditJobOnDia
             //TODO: Majd megcsinálni, hogy ha később a ChosenCustomersAdapter-ből meghívom a cuccot, akkor ne írja ki azt, hogy piszkozat betöltve
             //chosen customer list feltöltése
             dh.getCustomersData("SELECT DISTINCT c.ID, c.Created, c.Fullname," +
-                    " c.City, c.Address, c.Email, c.Phone, c.PhonePlus, c.WaterWeeks, c.Bill, c.UserID " +
+                    " c.City, c.Address, c.Email, c.Phone, c.PhonePlus, c.Comment, c.WaterWeeks, c.Bill, c.UserID " +
                     "FROM " + dh.CUSTOMERS + " c, " + dh.EDITDRAFT + " d  " +
                     "WHERE c.ID = d.CustomerID AND d.JobID=" + job_id + ";", chosen_customers_list);
 
@@ -203,7 +203,7 @@ public class EditMyJobActivity extends AppCompatActivity implements EditJobOnDia
 
     @Override
     public void OnPositiveClick(@NonNull EditJobChosenCustomerAdapter.ViewHolder holder, int position) {
-        String fullname, created, city, address, email, phone, phoneplus;
+        String fullname, created, city, address, email, phone, phoneplus, comment;
         int customer_id, userid, water_week, bill;
 
 
@@ -227,8 +227,9 @@ public class EditMyJobActivity extends AppCompatActivity implements EditJobOnDia
                 userid = all_customers_list.get(i).getUserid();
                 water_week = all_customers_list.get(i).getWater_weeks();
                 bill = all_customers_list.get(i).getBill();
+                comment = all_customers_list.get(i).getComment();
 
-                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, userid));
+                chosen_customers_list.add(new Customers(customer_id, created, fullname, city, address, email, phone, phoneplus, water_week, bill, comment, userid));
 
                 //Customerhez tartozó víz elmentve
                 for(int j = 0; j < all_caw_list.size(); j++) {

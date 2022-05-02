@@ -75,7 +75,8 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
         //Megrendelő választása
         add_customer = findViewById(R.id.admin_user_customers_add_gui);
         choseable_customers_list = new ArrayList<>();
-        getDatas("SELECT * FROM " + dh.CUSTOMERS + " WHERE UserID < 1 OR UserID IS NULL OR UserID = " + user_id + ";", choseable_customers_list);
+        //getDatas("SELECT * FROM " + dh.CUSTOMERS + " WHERE UserID < 1 OR UserID IS NULL OR UserID = " + user_id + ";", choseable_customers_list);
+        dh.getCustomersData("SELECT * FROM " + dh.CUSTOMERS + " WHERE UserID < 1 OR UserID IS NULL OR UserID = " + user_id + ";", choseable_customers_list);
 
         customers = new String[choseable_customers_list.size()];
         chosen_customers = new boolean[choseable_customers_list.size()];
@@ -105,7 +106,7 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
         }
     }
 
-    private void getDatas(String select, ArrayList<Customers> list) {
+    /*private void getDatas(String select, ArrayList<Customers> list) {
         //Connection con = dh.connectionClass(this);
         Connection con = null;
         try {
@@ -148,7 +149,7 @@ public class AdminUserCustomersActivity extends AppCompatActivity implements OnD
             throwables.printStackTrace();
             Log.e(LOG_TITLE, "Sikertelen adatbázis lekérdezés");
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
